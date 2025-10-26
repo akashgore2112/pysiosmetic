@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         :root {
             --primary: #F37021;
             --primary-light: #ff9d5c;
@@ -97,7 +97,7 @@
             position: absolute;
             inset: 0;
             z-index: 1;
-            background: 
+            background:
                 radial-gradient(circle at 20% 50%, rgba(243, 112, 33, 0.1), transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(67, 133, 245, 0.1), transparent 50%),
                 radial-gradient(circle at 40% 10%, rgba(243, 112, 33, 0.08), transparent 40%);
@@ -214,7 +214,7 @@
 
         .logo:hover { transform: scale(1.05); }
         .logo img { height: 40px; filter: drop-shadow(0 0 10px rgba(243, 112, 33, 0.3)); }
-        
+
         .nav-links {
             display: flex;
             gap: 2.5rem;
@@ -445,12 +445,12 @@
             to { opacity: 1; }
         }
 
-        /* INTERACTIVE BODY ASSESSMENT */
+        /* INTERACTIVE BODY ASSESSMENT - ENHANCED */
         .body-assessment {
-            background: linear-gradient(135deg, rgba(243, 112, 33, 0.05), rgba(67, 133, 245, 0.05));
-            border: 1px solid rgba(243, 112, 33, 0.2);
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.08), rgba(67, 133, 245, 0.08));
+            border: 1px solid rgba(243, 112, 33, 0.3);
             border-radius: 20px;
-            padding: 1.5rem;
+            padding: 2rem;
             margin-bottom: 2rem;
             animation: fadeIn 1s ease 0.5s both;
             position: relative;
@@ -485,131 +485,143 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .assessment-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
 
         .assessment-badge {
-            background: rgba(243, 112, 33, 0.1);
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.2), rgba(243, 112, 33, 0.1));
             color: var(--primary);
-            padding: 0.3rem 0.8rem;
+            padding: 0.4rem 1rem;
             border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
             animation: pulse 2s ease infinite;
+            border: 1px solid rgba(243, 112, 33, 0.3);
         }
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.9; }
         }
 
-        /* BODY MAP SECTION */
+        /* ADVANCED BODY MAP */
         .body-map-container {
             display: grid;
-            grid-template-columns: 150px 1fr;
-            gap: 1.5rem;
-            margin-top: 1rem;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .body-diagram-wrapper {
+            position: relative;
         }
 
         .body-diagram {
             position: relative;
-            height: 200px;
-            background: rgba(243, 112, 33, 0.03);
-            border-radius: 12px;
+            height: 380px;
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.05), rgba(67, 133, 245, 0.05));
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px dashed rgba(243, 112, 33, 0.2);
+            border: 2px solid rgba(243, 112, 33, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            overflow: visible;
         }
 
         .body-svg {
-            width: 100px;
-            height: 180px;
-            filter: drop-shadow(0 0 10px rgba(243, 112, 33, 0.2));
+            width: 160px;
+            height: 360px;
+            filter: drop-shadow(0 5px 20px rgba(243, 112, 33, 0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .body-diagram:hover .body-svg {
+            transform: scale(1.03);
         }
 
         .body-part {
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            fill: rgba(255, 255, 255, 0.08);
+            stroke: rgba(243, 112, 33, 0.4);
+            stroke-width: 1.5;
         }
 
         .body-part:hover {
-            fill: var(--primary);
-            filter: drop-shadow(0 0 15px rgba(243, 112, 33, 0.6));
+            fill: rgba(243, 112, 33, 0.3);
+            stroke: var(--primary);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 10px rgba(243, 112, 33, 0.8));
         }
 
         .body-part.active {
-            fill: var(--primary);
+            fill: rgba(243, 112, 33, 0.5);
+            stroke: var(--primary);
+            stroke-width: 2.5;
             animation: partPulse 1.5s ease infinite;
         }
 
         @keyframes partPulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.7; }
         }
 
-        .pain-point {
+        .pain-point-marker {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             background: var(--primary);
             border-radius: 50%;
             cursor: pointer;
-            animation: pointPulse 2s ease infinite;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             color: #fff;
             font-size: 0.7rem;
             font-weight: bold;
-        }
-
-        .pain-point::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--primary);
-            border-radius: 50%;
-            animation: ripple 2s ease infinite;
+            box-shadow: 0 0 0 0 rgba(243, 112, 33, 1);
+            animation: pointPulse 2s ease-out infinite;
+            z-index: 100;
+            transform: translate(-50%, -50%);
         }
 
         @keyframes pointPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            0% { box-shadow: 0 0 0 0 rgba(243, 112, 33, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(243, 112, 33, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(243, 112, 33, 0); }
         }
 
-        @keyframes ripple {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
+        /* PAIN CATEGORIES GRID - ENHANCED */
         .pain-categories {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
+            gap: 1rem;
         }
 
         .pain-option {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.8rem;
-            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 1.2rem 1rem;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .pain-option::before {
@@ -619,8 +631,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(243, 112, 33, 0.1), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(243, 112, 33, 0.15), transparent);
+            transition: left 0.6s ease;
         }
 
         .pain-option:hover::before {
@@ -628,22 +640,101 @@
         }
 
         .pain-option:hover {
-            background: rgba(243, 112, 33, 0.1);
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.15), rgba(243, 112, 33, 0.08));
             border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(243, 112, 33, 0.2);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(243, 112, 33, 0.25);
         }
 
         .pain-option.selected {
-            background: linear-gradient(135deg, rgba(243, 112, 33, 0.2), rgba(243, 112, 33, 0.1));
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.3), rgba(243, 112, 33, 0.15));
             border-color: var(--primary);
+            border-width: 2px;
             color: #fff;
-            box-shadow: 0 5px 20px rgba(243, 112, 33, 0.3);
+            box-shadow: 0 10px 30px rgba(243, 112, 33, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .pain-option.selected .pain-icon {
+            transform: scale(1.15);
+            filter: brightness(1.2);
         }
 
         .pain-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.3rem;
+            font-size: 2rem;
+            margin-bottom: 0.6rem;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .pain-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .pain-desc {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.3rem;
+        }
+
+        /* ASSESSMENT RESULT */
+        .assessment-result {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, rgba(67, 133, 245, 0.1), rgba(67, 133, 245, 0.05));
+            border: 1px solid rgba(67, 133, 245, 0.3);
+            border-radius: 12px;
+            display: none;
+            animation: slideInUp 0.5s ease;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .assessment-result.show {
+            display: block;
+        }
+
+        .result-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-content {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .result-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .result-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .result-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 133, 245, 0.4);
         }
 
         /* CTA SECTION */
@@ -1031,25 +1122,25 @@
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-            
+
             .text-content {
                 order: 2;
             }
-            
+
             .visual-content {
                 order: 1;
             }
-            
+
             .info-card {
                 position: static !important;
                 margin: 0.5rem;
                 display: inline-block;
             }
-            
+
             .body-map-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .trust-stats {
                 grid-template-columns: 1fr;
                 max-width: 300px;
@@ -1064,6 +1155,8 @@
             .cta-section { flex-direction: column; width: 100%; }
             .cta-button { width: 100%; justify-content: center; }
             .modal { width: 95%; padding: 1.5rem; }
+            .body-diagram { height: 320px; }
+            .body-svg { width: 120px; height: 300px; }
         }
     </style>
 </head>
@@ -1090,7 +1183,7 @@
     <div class="hero">
         <div class="animated-bg"></div>
         <canvas id="bgCanvas"></canvas>
-        
+
         <!-- NAVIGATION -->
         <nav id="navbar">
             <div class="logo">
@@ -1119,7 +1212,7 @@
                         Experience personalized physiotherapy that combines cutting-edge techniques with compassionate care. Your journey to pain-free movement starts here.
                     </p>
 
-                    <!-- INTERACTIVE BODY ASSESSMENT -->
+                    <!-- INTERACTIVE BODY ASSESSMENT - ENHANCED -->
                     <div class="body-assessment">
                         <div class="assessment-header">
                             <div class="assessment-title">
@@ -1127,68 +1220,105 @@
                             </div>
                             <div class="assessment-badge">AI-Powered</div>
                         </div>
-                        
+
                         <div class="body-map-container">
-                            <!-- BODY DIAGRAM -->
-                            <div class="body-diagram">
-                                <svg class="body-svg" viewBox="0 0 100 180">
-                                    <!-- Simple body outline -->
-                                    <g fill="rgba(255, 255, 255, 0.1)" stroke="rgba(243, 112, 33, 0.3)" stroke-width="1">
-                                        <!-- Head -->
-                                        <circle class="body-part" data-part="head" cx="50" cy="20" r="12"/>
-                                        <!-- Neck -->
-                                        <rect class="body-part" data-part="neck" x="45" y="32" width="10" height="8"/>
-                                        <!-- Shoulders -->
-                                        <ellipse class="body-part" data-part="shoulders" cx="50" cy="45" rx="25" ry="8"/>
-                                        <!-- Arms -->
-                                        <rect class="body-part" data-part="left-arm" x="15" y="45" width="8" height="40" rx="4"/>
-                                        <rect class="body-part" data-part="right-arm" x="77" y="45" width="8" height="40" rx="4"/>
-                                        <!-- Torso -->
-                                        <rect class="body-part" data-part="torso" x="35" y="45" width="30" height="40" rx="5"/>
-                                        <!-- Lower Back -->
-                                        <rect class="body-part" data-part="lower-back" x="35" y="85" width="30" height="15" rx="5"/>
-                                        <!-- Hips -->
-                                        <ellipse class="body-part" data-part="hips" cx="50" cy="105" rx="20" ry="10"/>
-                                        <!-- Legs -->
-                                        <rect class="body-part" data-part="left-leg" x="35" y="110" width="10" height="50" rx="5"/>
-                                        <rect class="body-part" data-part="right-leg" x="55" y="110" width="10" height="50" rx="5"/>
-                                        <!-- Knees -->
-                                        <circle class="body-part" data-part="left-knee" cx="40" cy="135" r="6"/>
-                                        <circle class="body-part" data-part="right-knee" cx="60" cy="135" r="6"/>
-                                        <!-- Feet -->
-                                        <ellipse class="body-part" data-part="feet" cx="50" cy="170" rx="20" ry="8"/>
-                                    </g>
-                                </svg>
-                                <!-- Pain points that can be added dynamically -->
-                                <div class="pain-point" style="top: 25%; left: 50%; display: none;">!</div>
+                            <!-- ADVANCED BODY DIAGRAM -->
+                            <div class="body-diagram-wrapper">
+                                <div class="body-diagram">
+                                    <svg class="body-svg" viewBox="0 0 100 180">
+                                        <defs>
+                                            <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" style="stop-color:rgba(243, 112, 33, 0.2);stop-opacity:1" />
+                                                <stop offset="100%" style="stop-color:rgba(67, 133, 245, 0.2);stop-opacity:1" />
+                                            </linearGradient>
+                                        </defs>
+                                        <g>
+                                            <!-- Head -->
+                                            <circle class="body-part" data-part="head" data-name="Head & Face" cx="50" cy="18" r="14"/>
+                                            <!-- Neck -->
+                                            <rect class="body-part" data-part="neck" data-name="Neck" x="44" y="32" width="12" height="10" rx="2"/>
+                                            <!-- Shoulders -->
+                                            <ellipse class="body-part" data-part="shoulders" data-name="Shoulders" cx="50" cy="47" rx="28" ry="10"/>
+                                            <circle class="body-part" data-part="left-shoulder" data-name="Left Shoulder" cx="25" cy="47" r="8"/>
+                                            <circle class="body-part" data-part="right-shoulder" data-name="Right Shoulder" cx="75" cy="47" r="8"/>
+                                            <!-- Upper Arms -->
+                                            <rect class="body-part" data-part="left-arm" data-name="Left Arm" x="14" y="52" width="10" height="35" rx="5"/>
+                                            <rect class="body-part" data-part="right-arm" data-name="Right Arm" x="76" y="52" width="10" height="35" rx="5"/>
+                                            <!-- Elbows -->
+                                            <circle class="body-part" data-part="left-elbow" data-name="Left Elbow" cx="19" cy="87" r="5"/>
+                                            <circle class="body-part" data-part="right-elbow" data-name="Right Elbow" cx="81" cy="87" r="5"/>
+                                            <!-- Upper Back/Spine -->
+                                            <rect class="body-part" data-part="upper-back" data-name="Upper Back" x="38" y="50" width="24" height="20" rx="4"/>
+                                            <!-- Mid Back -->
+                                            <rect class="body-part" data-part="mid-back" data-name="Mid Back" x="36" y="70" width="28" height="18" rx="5"/>
+                                            <!-- Lower Back -->
+                                            <rect class="body-part" data-part="lower-back" data-name="Lower Back" x="36" y="88" width="28" height="16" rx="5"/>
+                                            <!-- Hips -->
+                                            <ellipse class="body-part" data-part="hips" data-name="Hips" cx="50" cy="108" rx="22" ry="12"/>
+                                            <!-- Left Leg -->
+                                            <rect class="body-part" data-part="left-thigh" data-name="Left Thigh" x="34" y="115" width="12" height="28" rx="6"/>
+                                            <!-- Right Leg -->
+                                            <rect class="body-part" data-part="right-thigh" data-name="Right Thigh" x="54" y="115" width="12" height="28" rx="6"/>
+                                            <!-- Knees -->
+                                            <circle class="body-part" data-part="left-knee" data-name="Left Knee" cx="40" cy="145" r="7"/>
+                                            <circle class="body-part" data-part="right-knee" data-name="Right Knee" cx="60" cy="145" r="7"/>
+                                            <!-- Lower Legs -->
+                                            <rect class="body-part" data-part="left-calf" data-name="Left Calf" x="35" y="150" width="10" height="20" rx="5"/>
+                                            <rect class="body-part" data-part="right-calf" data-name="Right Calf" x="55" y="150" width="10" height="20" rx="5"/>
+                                            <!-- Feet -->
+                                            <ellipse class="body-part" data-part="left-foot" data-name="Left Foot" cx="40" cy="173" rx="8" ry="5"/>
+                                            <ellipse class="body-part" data-part="right-foot" data-name="Right Foot" cx="60" cy="173" rx="8" ry="5"/>
+                                        </g>
+                                    </svg>
+                                    <div class="pain-point-marker" id="painMarker">!</div>
+                                </div>
                             </div>
 
-                            <!-- PAIN CATEGORIES -->
+                            <!-- ENHANCED PAIN CATEGORIES -->
                             <div class="pain-categories">
-                                <div class="pain-option" onclick="selectPain(this, 'back')">
+                                <div class="pain-option" onclick="selectPain(this, 'back', 'lower-back')">
                                     <div class="pain-icon">🦴</div>
-                                    <div>Back Pain</div>
+                                    <div class="pain-label">Back Pain</div>
+                                    <div class="pain-desc">Chronic or acute</div>
                                 </div>
-                                <div class="pain-option" onclick="selectPain(this, 'neck')">
+                                <div class="pain-option" onclick="selectPain(this, 'neck', 'neck')">
                                     <div class="pain-icon">😣</div>
-                                    <div>Neck Pain</div>
+                                    <div class="pain-label">Neck Pain</div>
+                                    <div class="pain-desc">Stiffness & tension</div>
                                 </div>
-                                <div class="pain-option" onclick="selectPain(this, 'sports')">
+                                <div class="pain-option" onclick="selectPain(this, 'sports', 'left-arm')">
                                     <div class="pain-icon">⚽</div>
-                                    <div>Sports Injury</div>
+                                    <div class="pain-label">Sports Injury</div>
+                                    <div class="pain-desc">Athletic injuries</div>
                                 </div>
-                                <div class="pain-option" onclick="selectPain(this, 'knee')">
+                                <div class="pain-option" onclick="selectPain(this, 'knee', 'left-knee')">
                                     <div class="pain-icon">🦵</div>
-                                    <div>Knee Pain</div>
+                                    <div class="pain-label">Knee Pain</div>
+                                    <div class="pain-desc">Joint issues</div>
                                 </div>
-                                <div class="pain-option" onclick="selectPain(this, 'shoulder')">
+                                <div class="pain-option" onclick="selectPain(this, 'shoulder', 'shoulders')">
                                     <div class="pain-icon">💪</div>
-                                    <div>Shoulder Pain</div>
+                                    <div class="pain-label">Shoulder Pain</div>
+                                    <div class="pain-desc">Mobility issues</div>
                                 </div>
-                                <div class="pain-option" onclick="selectPain(this, 'posture')">
+                                <div class="pain-option" onclick="selectPain(this, 'posture', 'upper-back')">
                                     <div class="pain-icon">🧘</div>
-                                    <div>Posture Issues</div>
+                                    <div class="pain-label">Posture Issues</div>
+                                    <div class="pain-desc">Alignment problems</div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- ASSESSMENT RESULT -->
+                        <div class="assessment-result" id="assessmentResult">
+                            <div class="result-title">
+                                💡 Recommended Treatment
+                            </div>
+                            <div class="result-content" id="resultContent">
+                                Select a pain area to see recommended treatments.
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-btn" onclick="openModal()">Book Assessment</button>
                             </div>
                         </div>
                     </div>
@@ -1230,7 +1360,7 @@
                         <div class="spine-container">
                             <div class="spine-glow"></div>
                             <img src="https://i.postimg.cc/NFSYhY8y/Adobe-Express-file.png" alt="Spine Visualization" class="spine-image" id="spineImg">
-                            
+
                             <!-- INFO CARDS -->
                             <div class="info-card card-1">
                                 <div class="card-icon">📊</div>
@@ -1285,7 +1415,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Pain Area (Optional)</label>
-                <input type="text" class="form-input" placeholder="e.g., Lower back, Knee">
+                <input type="text" class="form-input" id="painAreaInput" placeholder="e.g., Lower back, Knee">
             </div>
             <button type="submit" class="form-submit">Book Free Assessment</button>
         </form>
@@ -1293,10 +1423,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Check if Three.js loaded properly
-        if (typeof THREE === 'undefined') {
-            console.warn('Three.js failed to load from CDN, particles will use CSS fallback');
-        }
         // REMOVE LOADER
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -1314,49 +1440,105 @@
             }
         });
 
-        // PAIN SELECTOR
+        // ENHANCED PAIN SELECTOR WITH RECOMMENDATIONS
         let selectedPain = null;
-        function selectPain(element, type) {
+        const painRecommendations = {
+            'back': {
+                title: 'Back Pain Treatment',
+                content: 'Manual therapy, core strengthening exercises, postural correction, and spinal mobilization. Typical recovery: 4-8 weeks with consistent treatment.',
+                bodyParts: ['lower-back', 'mid-back', 'upper-back']
+            },
+            'neck': {
+                title: 'Neck Pain Treatment',
+                content: 'Cervical mobilization, muscle release techniques, postural assessment, and stretching exercises. Relief often seen within 2-4 weeks.',
+                bodyParts: ['neck', 'head', 'shoulders']
+            },
+            'sports': {
+                title: 'Sports Injury Rehabilitation',
+                content: 'Sport-specific rehabilitation, functional movement training, strength conditioning, and injury prevention strategies. Timeline varies by injury severity.',
+                bodyParts: ['left-arm', 'right-arm', 'left-knee', 'right-knee', 'left-shoulder', 'right-shoulder']
+            },
+            'knee': {
+                title: 'Knee Pain Management',
+                content: 'Joint mobilization, strengthening of supporting muscles, gait analysis, and biomechanical correction. Most patients improve within 6-8 weeks.',
+                bodyParts: ['left-knee', 'right-knee', 'left-thigh', 'right-thigh']
+            },
+            'shoulder': {
+                title: 'Shoulder Pain Treatment',
+                content: 'Rotator cuff strengthening, range of motion exercises, manual therapy, and functional movement training. Recovery typically 4-12 weeks.',
+                bodyParts: ['shoulders', 'left-shoulder', 'right-shoulder', 'left-arm', 'right-arm']
+            },
+            'posture': {
+                title: 'Posture Correction Program',
+                content: 'Ergonomic assessment, postural re-education, core stability training, and muscle balance restoration. Visible improvements in 3-6 weeks.',
+                bodyParts: ['upper-back', 'mid-back', 'lower-back', 'neck', 'shoulders']
+            }
+        };
+
+        function selectPain(element, type, primaryBodyPart) {
             document.querySelectorAll('.pain-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
             selectedPain = type;
-            
-            // Highlight corresponding body part
+
+            // Update form input
+            const painAreaInput = document.getElementById('painAreaInput');
+            if (painAreaInput) {
+                painAreaInput.value = element.querySelector('.pain-label').textContent;
+            }
+
+            // Highlight corresponding body parts
             document.querySelectorAll('.body-part').forEach(part => {
                 part.classList.remove('active');
             });
-            
-            // Map pain types to body parts
-            const painMap = {
-                'back': ['torso', 'lower-back'],
-                'neck': ['neck', 'head'],
-                'sports': ['left-arm', 'right-arm', 'left-leg', 'right-leg'],
-                'knee': ['left-knee', 'right-knee'],
-                'shoulder': ['shoulders'],
-                'posture': ['torso', 'lower-back', 'shoulders']
-            };
-            
-            if (painMap[type]) {
-                painMap[type].forEach(part => {
+
+            // Show recommendation
+            const recommendation = painRecommendations[type];
+            if (recommendation) {
+                recommendation.bodyParts.forEach(part => {
                     const bodyPart = document.querySelector(`[data-part="${part}"]`);
                     if (bodyPart) bodyPart.classList.add('active');
                 });
+
+                // Show assessment result
+                const resultDiv = document.getElementById('assessmentResult');
+                const resultContent = document.getElementById('resultContent');
+                resultContent.innerHTML = `<strong>${recommendation.title}</strong><br><br>${recommendation.content}`;
+                resultDiv.classList.add('show');
             }
         }
 
-        // BODY PART CLICK
+        // BODY PART CLICK INTERACTION
         document.querySelectorAll('.body-part').forEach(part => {
-            part.addEventListener('click', function() {
+            part.addEventListener('click', function(e) {
+                const partName = this.getAttribute('data-name');
+                const partId = this.getAttribute('data-part');
+
                 document.querySelectorAll('.body-part').forEach(p => p.classList.remove('active'));
                 this.classList.add('active');
-                
-                // Show pain point
-                const painPoint = document.querySelector('.pain-point');
-                const rect = this.getBoundingClientRect();
-                const diagram = document.querySelector('.body-diagram').getBoundingClientRect();
-                painPoint.style.display = 'flex';
-                painPoint.style.left = `${rect.left - diagram.left + rect.width/2}px`;
-                painPoint.style.top = `${rect.top - diagram.top + rect.height/2}px`;
+
+                // Show pain point marker
+                const marker = document.getElementById('painMarker');
+                const svg = document.querySelector('.body-svg');
+                const diagram = document.querySelector('.body-diagram');
+
+                if (marker && svg && diagram) {
+                    const svgRect = svg.getBoundingClientRect();
+                    const diagramRect = diagram.getBoundingClientRect();
+                    const partRect = this.getBoundingClientRect();
+
+                    const markerLeft = partRect.left - diagramRect.left + (partRect.width / 2);
+                    const markerTop = partRect.top - diagramRect.top + (partRect.height / 2);
+
+                    marker.style.display = 'flex';
+                    marker.style.left = markerLeft + 'px';
+                    marker.style.top = markerTop + 'px';
+                }
+
+                // Show basic info
+                const resultDiv = document.getElementById('assessmentResult');
+                const resultContent = document.getElementById('resultContent');
+                resultContent.innerHTML = `<strong>${partName} Selected</strong><br><br>Click on a pain category above for detailed treatment recommendations, or book a free assessment for personalized care.`;
+                resultDiv.classList.add('show');
             });
         });
 
@@ -1374,7 +1556,7 @@
                     const duration = 2000;
                     const increment = target / (duration / 16);
                     let current = 0;
-                    
+
                     const updateCounter = () => {
                         current += increment;
                         if (current < target) {
@@ -1384,7 +1566,7 @@
                             counter.textContent = target % 1 === 0 ? Math.floor(target) : target.toFixed(1);
                         }
                     };
-                    
+
                     updateCounter();
                     counterObserver.unobserve(counter);
                 }
@@ -1399,6 +1581,7 @@
         let currentX = 0, currentY = 0;
 
         document.addEventListener('mousemove', (e) => {
+            if (!spineImg) return;
             const rect = spineImg.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -1407,6 +1590,7 @@
         });
 
         function animateSpine() {
+            if (!spineImg) return;
             currentX += (mouseX - currentX) * 0.1;
             currentY += (mouseY - currentY) * 0.1;
             spineImg.style.transform = `translate(-50%, -50%) rotateY(${currentX}deg) rotateX(${-currentY}deg)`;
@@ -1414,139 +1598,164 @@
         }
         animateSpine();
 
-        // THREE.JS BACKGROUND - FIXED VERSION
+        // THREE.JS BACKGROUND - FIXED AND STABLE VERSION
         const canvas = document.getElementById('bgCanvas');
-        
-        // Initialize Three.js only if canvas exists
-        if (canvas && typeof THREE !== 'undefined') {
+        let scene, camera, renderer, particles, animationId;
+
+        function initThreeJS() {
+            if (!canvas || typeof THREE === 'undefined') {
+                console.log('Three.js not available, using CSS animations');
+                if (canvas) canvas.style.display = 'none';
+                createCSSParticles();
+                return false;
+            }
+
             try {
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ 
-                    canvas, 
-                    alpha: true,
-                    antialias: true
-                });
-                
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                // Setup scene
+                scene = new THREE.Scene();
+
+                // Setup camera
+                camera = new THREE.PerspectiveCamera(
+                    75,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
                 camera.position.z = 30;
 
-                // Simple particle system
-                const particleCount = 200;
+                // Setup renderer with error handling
+                renderer = new THREE.WebGLRenderer({
+                    canvas: canvas,
+                    alpha: true,
+                    antialias: true,
+                    powerPreference: "high-performance"
+                });
+
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                // Create particle system
+                const particleCount = 150;
                 const geometry = new THREE.BufferGeometry();
                 const positions = new Float32Array(particleCount * 3);
                 const colors = new Float32Array(particleCount * 3);
+                const velocities = new Float32Array(particleCount * 3);
 
                 for(let i = 0; i < particleCount; i++) {
                     const i3 = i * 3;
-                    
-                    // Position
-                    positions[i3] = (Math.random() - 0.5) * 50;
-                    positions[i3 + 1] = (Math.random() - 0.5) * 50;
-                    positions[i3 + 2] = (Math.random() - 0.5) * 30;
-                    
-                    // Color (orange and blue theme)
+
+                    // Random positions
+                    positions[i3] = (Math.random() - 0.5) * 60;
+                    positions[i3 + 1] = (Math.random() - 0.5) * 60;
+                    positions[i3 + 2] = (Math.random() - 0.5) * 40;
+
+                    // Random velocities
+                    velocities[i3] = (Math.random() - 0.5) * 0.02;
+                    velocities[i3 + 1] = (Math.random() - 0.5) * 0.02;
+                    velocities[i3 + 2] = (Math.random() - 0.5) * 0.02;
+
+                    // Colors (orange and blue theme)
                     if (Math.random() > 0.5) {
-                        // Orange particles
                         colors[i3] = 0.95;
                         colors[i3 + 1] = 0.44;
                         colors[i3 + 2] = 0.13;
                     } else {
-                        // Blue/white particles
-                        colors[i3] = 0.5;
-                        colors[i3 + 1] = 0.7;
-                        colors[i3 + 2] = 1;
+                        colors[i3] = 0.26;
+                        colors[i3 + 1] = 0.52;
+                        colors[i3 + 2] = 0.96;
                     }
                 }
 
                 geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
                 geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
 
-                // Create material
                 const material = new THREE.PointsMaterial({
-                    size: 2,
+                    size: 2.5,
                     sizeAttenuation: true,
                     vertexColors: true,
                     transparent: true,
-                    opacity: 0.6,
+                    opacity: 0.7,
                     blending: THREE.AdditiveBlending
                 });
 
-                const particles = new THREE.Points(geometry, material);
+                particles = new THREE.Points(geometry, material);
                 scene.add(particles);
 
-                // Animation variables
-                let mouseX = 0;
-                let mouseY = 0;
-                let targetX = 0;
-                let targetY = 0;
+                // Mouse interaction
+                let mouseXNorm = 0;
+                let mouseYNorm = 0;
+                let targetXRot = 0;
+                let targetYRot = 0;
 
-                // Mouse movement
                 document.addEventListener('mousemove', (event) => {
-                    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+                    mouseXNorm = (event.clientX / window.innerWidth) * 2 - 1;
+                    mouseYNorm = -(event.clientY / window.innerHeight) * 2 + 1;
                 });
 
                 // Animation loop
                 function animate() {
-                    requestAnimationFrame(animate);
-                    
-                    // Smooth mouse follow
-                    targetX += (mouseX - targetX) * 0.02;
-                    targetY += (mouseY - targetY) * 0.02;
-                    
-                    // Rotate particles
-                    particles.rotation.y += 0.0005;
-                    particles.rotation.x += 0.0003;
-                    
-                    // Move particles based on mouse
-                    particles.position.x = targetX * 5;
-                    particles.position.y = targetY * 5;
-                    
-                    // Wave animation for particles
+                    animationId = requestAnimationFrame(animate);
+
+                    if (!particles || !particles.geometry) return;
+
+                    // Smooth rotation based on mouse
+                    targetXRot += (mouseXNorm * 0.01 - targetXRot) * 0.05;
+                    targetYRot += (mouseYNorm * 0.01 - targetYRot) * 0.05;
+
+                    particles.rotation.y += 0.0003 + targetXRot;
+                    particles.rotation.x += 0.0002 + targetYRot;
+
+                    // Animate individual particles
                     const positions = particles.geometry.attributes.position.array;
-                    const time = Date.now() * 0.0005;
-                    
+                    const velocities = particles.geometry.attributes.velocity.array;
+
                     for(let i = 0; i < particleCount; i++) {
                         const i3 = i * 3;
-                        const x = positions[i3];
-                        positions[i3 + 1] = Math.sin((x + time) * 0.3) * 3;
+
+                        // Update positions
+                        positions[i3] += velocities[i3];
+                        positions[i3 + 1] += velocities[i3 + 1];
+                        positions[i3 + 2] += velocities[i3 + 2];
+
+                        // Boundary check and bounce
+                        if (Math.abs(positions[i3]) > 30) velocities[i3] *= -1;
+                        if (Math.abs(positions[i3 + 1]) > 30) velocities[i3 + 1] *= -1;
+                        if (Math.abs(positions[i3 + 2]) > 20) velocities[i3 + 2] *= -1;
                     }
-                    
+
                     particles.geometry.attributes.position.needsUpdate = true;
-                    
+
                     renderer.render(scene, camera);
                 }
-                
+
                 animate();
 
-                // Handle window resize
+                // Handle resize
                 function onWindowResize() {
+                    if (!camera || !renderer) return;
                     camera.aspect = window.innerWidth / window.innerHeight;
                     camera.updateProjectionMatrix();
                     renderer.setSize(window.innerWidth, window.innerHeight);
                 }
-                
+
                 window.addEventListener('resize', onWindowResize);
-                
+
+                return true;
+
             } catch (error) {
-                console.log('Three.js initialization failed, falling back to CSS animation only');
-                // Hide canvas if Three.js fails
-                canvas.style.display = 'none';
-                
-                // Create CSS particle fallback
+                console.log('Three.js initialization failed:', error.message);
+                if (canvas) canvas.style.display = 'none';
                 createCSSParticles();
+                return false;
             }
-        } else {
-            // Fallback if Three.js is not loaded
-            console.log('Three.js not available, using CSS animations only');
-            if (canvas) canvas.style.display = 'none';
-            createCSSParticles();
         }
-        
-        // CSS Particle Fallback System
+
+        // CSS Particle Fallback
         function createCSSParticles() {
+            const existingContainer = document.querySelector('.particle-container');
+            if (existingContainer) return;
+
             const particleContainer = document.createElement('div');
             particleContainer.className = 'particle-container';
             particleContainer.style.cssText = `
@@ -1554,31 +1763,36 @@
                 inset: 0;
                 overflow: hidden;
                 z-index: 2;
+                pointer-events: none;
             `;
-            
-            // Create 30 CSS particles
-            for(let i = 0; i < 30; i++) {
+
+            for(let i = 0; i < 40; i++) {
                 const particle = document.createElement('div');
-                particle.className = 'particle';
+                const size = Math.random() * 4 + 2;
                 particle.style.cssText = `
                     position: absolute;
-                    width: ${Math.random() * 4 + 2}px;
-                    height: ${Math.random() * 4 + 2}px;
+                    width: ${size}px;
+                    height: ${size}px;
                     background: ${Math.random() > 0.5 ? 'rgba(243, 112, 33, 0.6)' : 'rgba(67, 133, 245, 0.6)'};
                     border-radius: 50%;
                     left: ${Math.random() * 100}%;
                     top: ${Math.random() * 100}%;
                     animation: particleFloat ${Math.random() * 10 + 10}s linear infinite;
-                    animation-delay: ${Math.random() * 10}s;
+                    animation-delay: ${Math.random() * -10}s;
                 `;
                 particleContainer.appendChild(particle);
             }
-            
-            // Add to hero section
+
             const hero = document.querySelector('.hero');
             if (hero) {
                 hero.insertBefore(particleContainer, hero.firstChild);
             }
+        }
+
+        // Initialize Three.js or fallback
+        const threeJsSuccess = initThreeJS();
+        if (!threeJsSuccess) {
+            console.log('Using CSS particle fallback');
         }
 
         // MODAL FUNCTIONS
@@ -1611,6 +1825,20 @@
         // Close modal on ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            if (renderer) {
+                renderer.dispose();
+            }
+            if (particles && particles.geometry) {
+                particles.geometry.dispose();
+                particles.material.dispose();
+            }
         });
     </script>
 </body>
