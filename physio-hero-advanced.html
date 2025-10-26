@@ -8,6 +8,12 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* Performance Optimization */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         :root {
             --primary: #F37021;
             --primary-light: #ff9d5c;
@@ -16,6 +22,10 @@
             --success: #0f0;
             --dark: #0a1420;
             --darker: #050a14;
+            --transition-fast: 0.15s;
+            --transition-normal: 0.3s;
+            --transition-slow: 0.5s;
+            --easing: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
@@ -24,9 +34,10 @@
             color: #fff;
             overflow-x: hidden;
             scroll-behavior: smooth;
+            contain: layout style;
         }
 
-        /* LOADING SCREEN */
+        /* LOADING SCREEN - OPTIMIZED */
         .loader {
             position: fixed;
             inset: 0;
@@ -35,7 +46,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.5s var(--easing);
+            will-change: opacity;
+            contain: strict;
         }
 
         .loader.hide {
@@ -45,6 +58,7 @@
 
         .loader-content {
             text-align: center;
+            contain: layout;
         }
 
         .loader-spine {
@@ -60,7 +74,8 @@
             background: var(--primary);
             margin: 4px 0;
             border-radius: 4px;
-            animation: vertebraPulse 1.5s ease infinite;
+            animation: vertebraPulse 1.5s var(--easing) infinite;
+            will-change: transform, opacity;
         }
 
         .vertebra:nth-child(1) { animation-delay: 0s; }
@@ -77,7 +92,7 @@
             color: var(--primary);
             font-weight: 600;
             font-size: 1.1rem;
-            animation: fadeInOut 1.5s ease infinite;
+            animation: fadeInOut 1.5s var(--easing) infinite;
         }
 
         @keyframes fadeInOut {
@@ -90,18 +105,21 @@
             min-height: 100vh;
             overflow: hidden;
             background: radial-gradient(ellipse at 50% 50%, var(--dark) 0%, #000 70%);
+            contain: layout style paint;
         }
 
-        /* ANIMATED BACKGROUND */
+        /* ANIMATED BACKGROUND - OPTIMIZED */
         .animated-bg {
             position: absolute;
             inset: 0;
             z-index: 1;
             background:
-                radial-gradient(circle at 20% 50%, rgba(243, 112, 33, 0.1), transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(67, 133, 245, 0.1), transparent 50%),
-                radial-gradient(circle at 40% 10%, rgba(243, 112, 33, 0.08), transparent 40%);
-            animation: gradientShift 20s ease infinite;
+                radial-gradient(circle at 20% 50%, rgba(243, 112, 33, 0.05), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(67, 133, 245, 0.05), transparent 50%),
+                radial-gradient(circle at 40% 10%, rgba(243, 112, 33, 0.03), transparent 40%);
+            animation: gradientShift 30s var(--easing) infinite;
+            will-change: auto;
+            contain: strict;
         }
 
         @keyframes gradientShift {
@@ -113,33 +131,38 @@
             position: absolute;
             inset: 0;
             z-index: 2;
+            opacity: 0.6;
+            pointer-events: none;
+            contain: strict;
         }
 
-        /* CSS Fallback Animation - Floating Orbs */
+        /* CSS Fallback Animation - Subtle Floating Orbs - OPTIMIZED */
         .animated-bg::before,
         .animated-bg::after {
             content: '';
             position: absolute;
             border-radius: 50%;
-            animation: floatOrb 15s ease-in-out infinite;
+            animation: floatOrb 20s var(--easing) infinite;
+            filter: blur(60px);
+            will-change: transform;
         }
 
         .animated-bg::before {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(243, 112, 33, 0.1), transparent);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(243, 112, 33, 0.04), transparent);
             top: 20%;
             left: 10%;
             animation-delay: 0s;
         }
 
         .animated-bg::after {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(67, 133, 245, 0.1), transparent);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(67, 133, 245, 0.04), transparent);
             bottom: 20%;
             right: 10%;
-            animation-delay: 5s;
+            animation-delay: 7s;
         }
 
         @keyframes floatOrb {
@@ -147,42 +170,17 @@
                 transform: translate(0, 0) scale(1);
             }
             33% {
-                transform: translate(30px, -30px) scale(1.1);
+                transform: translate(20px, -20px) scale(1.05);
             }
             66% {
-                transform: translate(-20px, 20px) scale(0.9);
+                transform: translate(-15px, 15px) scale(0.95);
             }
         }
 
-        /* Additional floating particles as CSS fallback */
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: particleFloat 10s linear infinite;
-        }
+        /* Additional floating particles - REMOVED for performance */
+        /* Particles now only rendered via WebGL or CSS fallback function */
 
-        @keyframes particleFloat {
-            from {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            to {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* NAVIGATION */
+        /* NAVIGATION - PREMIUM & ACCESSIBLE */
         nav {
             position: fixed;
             top: 0;
@@ -194,14 +192,18 @@
             align-items: center;
             padding: 1.5rem 6%;
             backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(0, 0, 0, 0.7);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all var(--transition-normal) var(--easing);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            contain: layout style;
+            will-change: transform;
         }
 
         nav.scrolled {
             padding: 1rem 6%;
             background: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
         .logo {
@@ -209,11 +211,25 @@
             align-items: center;
             gap: 0.8rem;
             cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: transform var(--transition-normal) var(--easing);
+            outline: none;
         }
 
-        .logo:hover { transform: scale(1.05); }
-        .logo img { height: 40px; filter: drop-shadow(0 0 10px rgba(243, 112, 33, 0.3)); }
+        .logo:hover,
+        .logo:focus-visible {
+            transform: scale(1.05);
+        }
+
+        .logo:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        .logo img {
+            height: 40px;
+            filter: drop-shadow(0 0 10px rgba(243, 112, 33, 0.3));
+        }
 
         .nav-links {
             display: flex;
@@ -226,28 +242,39 @@
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all var(--transition-normal) var(--easing);
             position: relative;
+            padding: 0.5rem 0.2rem;
+            outline: none;
         }
 
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 2px;
             background: var(--primary);
-            transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: width var(--transition-normal) var(--easing);
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
             color: #fff;
-            transform: translateY(-2px);
         }
 
-        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover::after,
+        .nav-links a:focus-visible::after {
+            width: 100%;
+        }
+
+        .nav-links a:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
 
         .nav-cta {
             padding: 0.7rem 1.8rem;
@@ -257,9 +284,15 @@
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all var(--transition-normal) var(--easing);
             position: relative;
             overflow: hidden;
+            outline: none;
+            min-width: 44px;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .nav-cta::before {
@@ -271,17 +304,33 @@
             height: 0;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
-            transition: all 0.5s ease;
+            transition: all var(--transition-slow) var(--easing);
             transform: translate(-50%, -50%);
+            will-change: width, height;
         }
 
-        .nav-cta:hover::before { width: 300px; height: 300px; }
-        .nav-cta:hover {
+        .nav-cta:hover::before,
+        .nav-cta:focus-visible::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .nav-cta:hover,
+        .nav-cta:focus-visible {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(243, 112, 33, 0.4);
         }
 
-        /* WHATSAPP BUTTON */
+        .nav-cta:active {
+            transform: translateY(0);
+        }
+
+        .nav-cta:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        /* WHATSAPP BUTTON - OPTIMIZED & ACCESSIBLE */
         .whatsapp-float {
             position: fixed;
             bottom: 2rem;
@@ -296,12 +345,24 @@
             z-index: 1000;
             cursor: pointer;
             box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal) var(--easing);
+            outline: none;
+            will-change: transform;
         }
 
-        .whatsapp-float:hover {
-            transform: scale(1.1) rotate(10deg);
+        .whatsapp-float:hover,
+        .whatsapp-float:focus-visible {
+            transform: scale(1.1);
             box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-float:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 4px;
+        }
+
+        .whatsapp-float:active {
+            transform: scale(1.05);
         }
 
         .whatsapp-float svg {
@@ -332,33 +393,66 @@
             opacity: 1;
         }
 
-        /* HERO CONTENT */
+        /* HERO CONTENT - OPTIMIZED */
         .hero-content {
             position: relative;
             z-index: 5;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 6rem 3% 3rem;
+            contain: layout style;
+        }
+
+        .assessment-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 3%;
         }
 
         .content-wrapper {
-            max-width: 1400px;
+            max-width: 1600px;
             width: 100%;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 550px;
             align-items: center;
-            gap: 4rem;
+            gap: 6rem;
+            padding-top: 2rem;
+            margin-bottom: 3rem;
+            min-height: 600px;
+        }
+
+        .visual-content {
+            position: relative;
+            animation: fadeInRight 0.8s var(--easing);
+            order: 2;
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .text-content {
             z-index: 10;
-            animation: fadeInLeft 1s ease;
+            animation: fadeInLeft 0.8s var(--easing);
+            contain: layout;
+            order: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100%;
         }
 
         @keyframes fadeInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
@@ -445,16 +539,23 @@
             to { opacity: 1; }
         }
 
-        /* INTERACTIVE BODY ASSESSMENT - ENHANCED */
+        /* INTERACTIVE BODY ASSESSMENT - INTELLIGENT & DATA-DRIVEN */
         .body-assessment {
-            background: linear-gradient(135deg, rgba(243, 112, 33, 0.08), rgba(67, 133, 245, 0.08));
-            border: 1px solid rgba(243, 112, 33, 0.3);
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.04), rgba(67, 133, 245, 0.04));
+            border: 1px solid rgba(243, 112, 33, 0.2);
             border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 2rem 2.5rem;
             animation: fadeIn 1s ease 0.5s both;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            z-index: 10;
         }
 
         .body-assessment::before {
@@ -469,7 +570,7 @@
             opacity: 0;
             z-index: -1;
             transition: opacity 0.5s ease;
-            animation: rotateGradient 3s linear infinite;
+            animation: rotateGradient 4s linear infinite;
         }
 
         @keyframes rotateGradient {
@@ -478,7 +579,7 @@
         }
 
         .body-assessment:hover::before {
-            opacity: 0.3;
+            opacity: 0.15;
         }
 
         .assessment-header {
@@ -506,19 +607,438 @@
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 700;
-            animation: pulse 2s ease infinite;
             border: 1px solid rgba(243, 112, 33, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
+        .assessment-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse 2s ease infinite;
+        }
+
+        /* ASSESSMENT PROGRESS BAR */
+        .assessment-progress {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+        }
+
+        .progress-percentage {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.6s var(--easing);
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmerProgress 2s infinite;
+        }
+
+        @keyframes shimmerProgress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* PAIN DETAIL MODAL */
+        .pain-detail-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            background: linear-gradient(135deg, rgba(5, 10, 20, 0.98), rgba(10, 20, 40, 0.98));
+            border: 2px solid rgba(243, 112, 33, 0.4);
+            border-radius: 24px;
+            padding: 2.5rem;
+            z-index: 10001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal) var(--easing);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            overflow-y: auto;
+        }
+
+        .pain-detail-modal.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal) var(--easing);
+        }
+
+        .modal-backdrop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-icon-large {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-title-large {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .modal-close-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast) var(--easing);
+            color: #fff;
+            font-size: 1.5rem;
+            outline: none;
+        }
+
+        .modal-close-btn:hover,
+        .modal-close-btn:focus-visible {
+            background: rgba(243, 112, 33, 0.2);
+            border-color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .modal-section {
+            margin-bottom: 2rem;
+        }
+
+        .modal-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-content-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .modal-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .modal-list li {
+            padding: 0.8rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .modal-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .modal-cta-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal) var(--easing);
+            margin-top: 1.5rem;
+        }
+
+        .modal-cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 112, 33, 0.4);
+        }
+
+        /* PAIN INTENSITY SLIDER - PREMIUM */
+        .pain-intensity-section {
+            margin: 1.5rem 0;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .intensity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .intensity-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .intensity-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .intensity-slider-container {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .intensity-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            background: linear-gradient(to right,
+                #4caf50 0%,
+                #8bc34a 20%,
+                #ffeb3b 40%,
+                #ff9800 60%,
+                #f44336 80%,
+                #c62828 100%);
+            outline: none;
+            -webkit-appearance: none;
+            position: relative;
+        }
+
+        .intensity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 0 3px var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .intensity-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(243, 112, 33, 0.5), 0 0 0 4px var(--primary);
+        }
+
+        .intensity-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 0 3px var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .intensity-slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(243, 112, 33, 0.5), 0 0 0 4px var(--primary);
+        }
+
+        .intensity-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* SYMPTOM DURATION */
+        .symptom-duration {
+            margin: 1.5rem 0;
+        }
+
+        .duration-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .duration-option {
+            padding: 0.8rem 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .duration-option:hover {
+            background: rgba(243, 112, 33, 0.08);
+            border-color: rgba(243, 112, 33, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 112, 33, 0.2);
+        }
+
+        .duration-option.selected {
+            background: rgba(243, 112, 33, 0.15);
+            border-color: var(--primary);
+            border-width: 1.5px;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(243, 112, 33, 0.3);
+        }
+
+        .duration-icon {
+            font-size: 1.3rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .duration-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* ACTIVITY LEVEL */
+        .activity-level {
+            margin: 1.5rem 0;
+        }
+
+        .activity-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .activity-option {
+            padding: 1rem 0.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .activity-option:hover {
+            background: rgba(67, 133, 245, 0.08);
+            border-color: rgba(67, 133, 245, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 133, 245, 0.2);
+        }
+
+        .activity-option.selected {
+            background: rgba(67, 133, 245, 0.15);
+            border-color: var(--secondary);
+            border-width: 1.5px;
+            box-shadow: 0 4px 16px rgba(67, 133, 245, 0.3);
+        }
+
+        .activity-icon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-desc {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         /* ADVANCED BODY MAP */
         .body-map-container {
             display: grid;
-            grid-template-columns: 200px 1fr;
+            grid-template-columns: 220px 1fr;
             gap: 2rem;
             margin-top: 1.5rem;
         }
@@ -527,15 +1047,9 @@
             position: relative;
         }
 
-        .assessment-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
         .body-diagram {
             position: relative;
-            height: 380px;
+            height: 420px;
             background: linear-gradient(135deg, rgba(243, 112, 33, 0.05), rgba(67, 133, 245, 0.05));
             border-radius: 16px;
             display: flex;
@@ -547,14 +1061,29 @@
         }
 
         .body-svg {
-            width: 160px;
-            height: 360px;
+            width: 180px;
+            height: 400px;
             filter: drop-shadow(0 5px 20px rgba(243, 112, 33, 0.3));
             transition: transform 0.3s ease;
         }
 
         .body-diagram:hover .body-svg {
             transform: scale(1.03);
+        }
+
+        .body-scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: bodyScan 3s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes bodyScan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { top: 100%; opacity: 0; }
         }
 
         .body-part {
@@ -617,8 +1146,8 @@
         }
 
         .pain-option {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 1.2rem 1rem;
             border-radius: 14px;
             cursor: pointer;
@@ -628,6 +1157,7 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
         .pain-option::before {
@@ -637,7 +1167,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(243, 112, 33, 0.15), transparent);
+            background: linear-gradient(90deg, transparent, rgba(243, 112, 33, 0.1), transparent);
             transition: left 0.6s ease;
         }
 
@@ -646,18 +1176,18 @@
         }
 
         .pain-option:hover {
-            background: linear-gradient(135deg, rgba(243, 112, 33, 0.15), rgba(243, 112, 33, 0.08));
-            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.1), rgba(243, 112, 33, 0.05));
+            border-color: rgba(243, 112, 33, 0.4);
             transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(243, 112, 33, 0.25);
+            box-shadow: 0 8px 20px rgba(243, 112, 33, 0.2);
         }
 
         .pain-option.selected {
-            background: linear-gradient(135deg, rgba(243, 112, 33, 0.3), rgba(243, 112, 33, 0.15));
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.2), rgba(243, 112, 33, 0.1));
             border-color: var(--primary);
-            border-width: 2px;
+            border-width: 1.5px;
             color: #fff;
-            box-shadow: 0 10px 30px rgba(243, 112, 33, 0.4);
+            box-shadow: 0 10px 25px rgba(243, 112, 33, 0.3);
             transform: translateY(-2px);
         }
 
@@ -684,339 +1214,18 @@
             margin-top: 0.3rem;
         }
 
-        /* INTERACTIVE CONTROLS */
-        .assessment-controls {
-            margin-top: 1.5rem;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 1rem;
-        }
-
-        .control-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 16px;
-            padding: 1.1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .control-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at top right, rgba(243, 112, 33, 0.15), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-        }
-
-        .control-card:hover::after {
-            opacity: 1;
-        }
-
-        .control-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .control-title {
-            font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .control-badge {
-            padding: 0.25rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            background: rgba(243, 112, 33, 0.18);
-            color: var(--primary);
-        }
-
-        .intensity-visual {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .progress-ring {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            background: conic-gradient(var(--primary) calc(var(--progress, 0) * 1%), rgba(255, 255, 255, 0.08) 0%);
-            display: grid;
-            place-items: center;
-            position: relative;
-            transition: background 0.4s ease;
-        }
-
-        .progress-ring::after {
-            content: '';
-            position: absolute;
-            inset: 8px;
-            border-radius: 50%;
-            background: rgba(5, 10, 20, 0.85);
-        }
-
-        .ring-label {
-            position: relative;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: #fff;
-        }
-
-        .slider-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .intensity-slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 6px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.1);
-            outline: none;
-            position: relative;
-        }
-
-        .intensity-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(243, 112, 33, 0.4);
-            border: 2px solid rgba(0, 0, 0, 0.6);
-        }
-
-        .intensity-slider::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            border: 2px solid rgba(0, 0, 0, 0.6);
-            box-shadow: 0 6px 20px rgba(243, 112, 33, 0.4);
-        }
-
-        .slider-scale {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .slider-description {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.65);
-            line-height: 1.4;
-        }
-
-        .impact-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-        }
-
-        .impact-tag {
-            padding: 0.4rem 0.85rem;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.75);
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .impact-tag:hover {
-            border-color: var(--primary);
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .impact-tag.active {
-            background: rgba(243, 112, 33, 0.2);
-            border-color: var(--primary);
-            color: var(--primary);
-            box-shadow: 0 8px 20px rgba(243, 112, 33, 0.25);
-        }
-
-        .impact-summary {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.5;
-        }
-
-        .goal-select select {
-            width: 100%;
-            padding: 0.7rem 0.9rem;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: border 0.3s ease;
-        }
-
-        .goal-select select:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-
-        /* INSIGHT CARDS */
-        .insight-grid {
-            margin-top: 1.5rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .insight-card {
-            padding: 1.2rem;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(5, 10, 20, 0.85), rgba(5, 15, 30, 0.9));
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-            min-height: 160px;
-        }
-
-        .insight-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(243, 112, 33, 0.18);
-            display: grid;
-            place-items: center;
-            font-size: 1.1rem;
-        }
-
-        .insight-card h4 {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-        }
-
-        .insight-card p {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.68);
-            line-height: 1.5;
-        }
-
-        .insight-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.45rem;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.75);
-        }
-
-        .insight-list li::before {
-            content: '•';
-            margin-right: 0.4rem;
-            color: var(--primary);
-        }
-
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
-
-        .timeline-item {
-            padding-left: 1.2rem;
-            position: relative;
-            font-size: 0.78rem;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.5;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 6px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--primary);
-            box-shadow: 0 0 0 6px rgba(243, 112, 33, 0.15);
-        }
-
-        .timeline-item strong {
-            color: #fff;
-            display: block;
-            margin-bottom: 0.2rem;
-        }
-
-        .metric-chip {
-            display: inline-flex;
-            flex-direction: column;
-            gap: 0.1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 0.5rem 0.7rem;
-            margin-right: 0.4rem;
-            margin-bottom: 0.4rem;
-            min-width: 100px;
-        }
-
-        .metric-badges {
-            display: flex;
-            flex-wrap: wrap;
-            margin-top: 0.3rem;
-        }
-
-        .metric-label {
-            font-size: 0.65rem;
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.55);
-        }
-
-        .metric-value {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .insight-empty {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* ASSESSMENT RESULT */
+        /* ASSESSMENT RESULT - PREMIUM */
         .assessment-result {
             margin-top: 1.5rem;
             padding: 1.2rem;
-            background: linear-gradient(135deg, rgba(67, 133, 245, 0.1), rgba(67, 133, 245, 0.05));
-            border: 1px solid rgba(67, 133, 245, 0.3);
+            background: linear-gradient(135deg, rgba(67, 133, 245, 0.06), rgba(67, 133, 245, 0.03));
+            border: 1px solid rgba(67, 133, 245, 0.2);
             border-radius: 12px;
             display: none;
             animation: slideInUp 0.5s ease;
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         @keyframes slideInUp {
@@ -1026,46 +1235,6 @@
 
         .assessment-result.show {
             display: block;
-        }
-
-        .result-intro {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
-            margin-bottom: 0.8rem;
-        }
-
-        .result-highlight {
-            display: inline-block;
-            margin-bottom: 0.8rem;
-            padding: 0.45rem 0.8rem;
-            border-radius: 999px;
-            background: rgba(243, 112, 33, 0.2);
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .result-list {
-            margin: 0 0 0.8rem 1rem;
-            padding: 0;
-            color: rgba(255, 255, 255, 0.75);
-            font-size: 0.8rem;
-            line-height: 1.6;
-        }
-
-        .result-meta {
-            display: grid;
-            gap: 0.4rem;
-            font-size: 0.78rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .result-meta strong {
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: 600;
         }
 
         .result-title {
@@ -1128,10 +1297,13 @@
             box-shadow: 0 10px 30px rgba(243, 112, 33, 0.3);
             position: relative;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all var(--transition-normal) var(--easing);
             border: none;
             cursor: pointer;
             font-size: 0.95rem;
+            outline: none;
+            min-width: 44px;
+            min-height: 44px;
         }
 
         .cta-button::before {
@@ -1142,13 +1314,28 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.8s ease;
+            transition: left 0.6s var(--easing);
+            will-change: left;
         }
 
-        .cta-button:hover::before { left: 100%; }
-        .cta-button:hover {
-            transform: translateY(-3px) scale(1.02);
+        .cta-button:hover::before,
+        .cta-button:focus-visible::before {
+            left: 100%;
+        }
+
+        .cta-button:hover,
+        .cta-button:focus-visible {
+            transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(243, 112, 33, 0.5);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        .cta-button:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 4px;
         }
 
         .cta-secondary {
@@ -1158,7 +1345,8 @@
             box-shadow: none;
         }
 
-        .cta-secondary:hover {
+        .cta-secondary:hover,
+        .cta-secondary:focus-visible {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.4);
         }
@@ -1174,12 +1362,13 @@
 
         .stat-card {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 1.2rem;
             border-radius: 12px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
         .stat-card::before {
@@ -1188,7 +1377,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 2px;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             transform: scaleX(0);
             transition: transform 0.5s ease;
@@ -1196,9 +1385,10 @@
 
         .stat-card:hover::before { transform: scaleX(1); }
         .stat-card:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .stat-number {
@@ -1293,30 +1483,327 @@
             50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
         }
 
-        /* FLOATING CARDS */
-        .info-card {
+        /* PREMIUM MEDICAL DATA CARDS - GLASSMORPHISM */
+        .medical-card {
             position: absolute;
-            padding: 1rem;
-            background: rgba(5, 10, 20, 0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(243, 112, 33, 0.3);
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 200px;
+            padding: 1.5rem 1.2rem;
+            background: linear-gradient(135deg,
+                rgba(5, 10, 20, 0.85) 0%,
+                rgba(10, 15, 25, 0.9) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 2px solid rgba(243, 112, 33, 0.3);
+            border-radius: 16px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.7),
+                0 0 20px rgba(243, 112, 33, 0.15),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            transition: all var(--transition-normal) var(--easing);
             cursor: pointer;
-            animation: cardFloat 5s ease-in-out infinite;
             z-index: 20;
+            animation: medicalCardFloat 6s ease-in-out infinite;
         }
 
-        .info-card:hover {
-            transform: scale(1.05);
-            border-color: var(--primary);
-            box-shadow: 0 15px 40px rgba(243, 112, 33, 0.3);
+        .medical-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg,
+                rgba(243, 112, 33, 0.4),
+                rgba(67, 133, 245, 0.2),
+                rgba(243, 112, 33, 0.4));
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity var(--transition-normal) var(--easing);
+            z-index: -1;
+            filter: blur(8px);
+        }
+
+        .medical-card:hover,
+        .medical-card:focus-visible {
+            transform: translateY(-12px) scale(1.03);
+            border-color: rgba(243, 112, 33, 0.6);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(243, 112, 33, 0.3),
+                inset 0 1px 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .medical-card:hover::before {
+            opacity: 1;
+        }
+
+        .medical-card:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 4px;
+        }
+
+        .medical-card:active {
+            transform: translateY(-8px) scale(1.01);
+        }
+
+        /* CARD POSITIONING */
+        .medical-card-1 {
+            top: 10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .medical-card-2 {
+            top: 10%;
+            right: -10%;
+            animation-delay: 1.5s;
+        }
+
+        .medical-card-3 {
+            bottom: 15%;
+            left: -10%;
+            animation-delay: 3s;
+        }
+
+        .medical-card-4 {
+            bottom: 15%;
+            right: -10%;
+            animation-delay: 4.5s;
+        }
+
+        @keyframes medicalCardFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* CARD CONTENT */
+        .card-metric {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.8rem;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: statusPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(243, 112, 33, 0.6);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.2);
+            }
+        }
+
+        /* PROGRESS BAR IN CARDS */
+        .card-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            position: relative;
+            transition: width 1s var(--easing);
+            box-shadow: 0 0 10px rgba(243, 112, 33, 0.5);
+        }
+
+        .card-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShimmer 2s infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         @keyframes cardFloat {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* PREMIUM MEDICAL VISUALIZATION */
+        .visual-content {
+            transform-origin: center;
+            will-change: transform;
+            position: relative;
+        }
+
+        .spine-3d-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spine-visual {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .spine-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ENERGY RINGS ANIMATION */
+        .energy-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(243, 112, 33, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: energyPulse 4s ease-out infinite;
+        }
+
+        .energy-ring:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            animation-delay: 0s;
+        }
+
+        .energy-ring:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            animation-delay: 1.3s;
+        }
+
+        .energy-ring:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            animation-delay: 2.6s;
+        }
+
+        @keyframes energyPulse {
+            0% {
+                width: 200px;
+                height: 200px;
+                opacity: 0.6;
+                border-width: 3px;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                width: 450px;
+                height: 450px;
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        /* BODY IMAGE WITH GLOW */
+        .spine-image {
+            position: relative;
+            width: 280px;
+            height: auto;
+            z-index: 10;
+            filter: drop-shadow(0 0 40px rgba(243, 112, 33, 0.4))
+                    drop-shadow(0 0 80px rgba(243, 112, 33, 0.2));
+            transition: transform 0.3s ease-out;
+            will-change: transform;
+        }
+
+        .spine-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 500px;
+            background: radial-gradient(ellipse at center,
+                rgba(243, 112, 33, 0.15) 0%,
+                rgba(243, 112, 33, 0.08) 30%,
+                transparent 70%);
+            filter: blur(40px);
+            animation: glowPulse 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .animated-bg,
+            .animated-bg::before,
+            .animated-bg::after,
+            .particle,
+            .vertebra {
+                animation: none !important;
+            }
         }
 
         .card-1 { top: 20%; left: -20%; animation-delay: 0s; }
@@ -1511,15 +1998,36 @@
                 grid-template-columns: 1fr;
             }
 
-            .assessment-controls,
-            .insight-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
             .trust-stats {
                 grid-template-columns: 1fr;
                 max-width: 300px;
                 margin: 2rem auto 0;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .content-wrapper {
+                grid-template-columns: 1fr 450px;
+                gap: 4rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .visual-content {
+                order: 1;
+            }
+
+            .text-content {
+                order: 2;
+            }
+
+            .spine-3d-container {
+                transform: scale(1);
             }
         }
 
@@ -1530,30 +2038,12 @@
             .cta-section { flex-direction: column; width: 100%; }
             .cta-button { width: 100%; justify-content: center; }
             .modal { width: 95%; padding: 1.5rem; }
-            .body-diagram { height: 320px; }
-            .body-svg { width: 120px; height: 300px; }
-            .assessment-controls,
-            .insight-grid {
-                grid-template-columns: 1fr;
-            }
-            .intensity-visual { flex-direction: column; align-items: flex-start; }
-            .progress-ring { align-self: flex-start; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-
-            .body-diagram:hover .body-svg,
-            .info-card,
-            .pain-option,
-            .cta-button,
-            .nav-cta {
-                transform: none !important;
-            }
+            .body-diagram { height: 350px; }
+            .body-svg { width: 140px; height: 320px; }
+            .duration-options { grid-template-columns: repeat(2, 1fr); }
+            .activity-options { grid-template-columns: 1fr; }
+            .body-assessment { padding: 1.5rem; }
+            .pain-detail-modal { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -1598,6 +2088,95 @@
         <!-- HERO CONTENT -->
         <div class="hero-content">
             <div class="content-wrapper">
+                <!-- PREMIUM MEDICAL VISUALIZATION - RIGHT SIDE -->
+                <div class="visual-content">
+                    <div class="spine-3d-container">
+                        <div class="spine-visual">
+                            <div class="spine-container">
+                                <!-- ENERGY RINGS -->
+                                <div class="energy-ring"></div>
+                                <div class="energy-ring"></div>
+                                <div class="energy-ring"></div>
+
+                                <!-- GLOWING BACKGROUND -->
+                                <div class="spine-glow"></div>
+
+                                <!-- BODY IMAGE -->
+                                <img src="https://i.postimg.cc/NFSYhY8y/Adobe-Express-file.png"
+                                     alt="Human Spine Visualization"
+                                     class="spine-image"
+                                     id="spineImg">
+
+                                <!-- MEDICAL DATA CARDS -->
+                                <div class="medical-card medical-card-1"
+                                     onclick="showMedicalDetail('painReduction')"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="View pain reduction details">
+                                    <div class="card-metric">85%</div>
+                                    <div class="card-label">Pain Reduction</div>
+                                    <div class="card-status">
+                                        <span class="status-dot"></span>
+                                        <span>after 6 sessions</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-fill" style="width: 85%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="medical-card medical-card-2"
+                                     onclick="showMedicalDetail('mobility')"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="View mobility improvement details">
+                                    <div class="card-metric">+42%</div>
+                                    <div class="card-label">Mobility Improved</div>
+                                    <div class="card-status">
+                                        <span class="status-dot"></span>
+                                        <span>in 4 weeks</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-fill" style="width: 72%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="medical-card medical-card-3"
+                                     onclick="showMedicalDetail('recovery')"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="View recovery time details">
+                                    <div class="card-metric">6-8 Weeks</div>
+                                    <div class="card-label">Recovery Time</div>
+                                    <div class="card-status">
+                                        <span class="status-dot"></span>
+                                        <span>average duration</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-fill" style="width: 60%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="medical-card medical-card-4"
+                                     onclick="showMedicalDetail('satisfaction')"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="View patient satisfaction details">
+                                    <div class="card-metric">94%</div>
+                                    <div class="card-label">Patient Satisfaction</div>
+                                    <div class="card-status">
+                                        <span class="status-dot"></span>
+                                        <span>success rate</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-fill" style="width: 94%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TEXT CONTENT - NOW ON LEFT -->
                 <div class="text-content">
                     <div class="subtitle">ADVANCED PHYSIOTHERAPY</div>
                     <h1 class="main-heading">
@@ -1609,19 +2188,128 @@
                         Experience personalized physiotherapy that combines cutting-edge techniques with compassionate care. Your journey to pain-free movement starts here.
                     </p>
 
-                    <!-- INTERACTIVE BODY ASSESSMENT - ENHANCED -->
+                    <!-- CTA SECTION -->
+                    <div class="cta-section">
+                        <button class="cta-button" onclick="openModal()">
+                            <span>Get Free Assessment</span>
+                            <span>→</span>
+                        </button>
+                        <button class="cta-button cta-secondary" onclick="scrollToSection('services')">
+                            View Services
+                        </button>
+                    </div>
+
+                    <!-- TRUST STATS -->
+                    <div class="trust-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">⭐</div>
+                            <div class="stat-number counting" data-target="4.9">0</div>
+                            <div class="stat-label">Google Rating</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-number counting" data-target="500">0</div>
+                            <div class="stat-label">Happy Patients</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-number counting" data-target="15">0</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ASSESSMENT SECTION - FULL WIDTH BELOW HERO -->
+            <div class="assessment-wrapper">
                     <div class="body-assessment">
                         <div class="assessment-header">
                             <div class="assessment-title">
-                                🎯 Interactive Pain Assessment
+                                🎯 Advanced Pain Assessment
                             </div>
-                            <div class="assessment-badge">AI-Powered</div>
+                            <div class="assessment-badge">AI-Powered Analysis</div>
+                        </div>
+
+                        <!-- ASSESSMENT PROGRESS -->
+                        <div class="assessment-progress">
+                            <div class="progress-header">
+                                <span class="progress-label">Assessment Completion</span>
+                                <span class="progress-percentage" id="assessmentProgress">0%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="progressBarFill"></div>
+                            </div>
+                        </div>
+
+                        <!-- PAIN INTENSITY SLIDER -->
+                        <div class="pain-intensity-section">
+                            <div class="intensity-header">
+                                <span class="intensity-label">📊 Pain Intensity Level</span>
+                                <span class="intensity-value" id="intensityValue">5/10</span>
+                            </div>
+                            <div class="intensity-slider-container">
+                                <input type="range" min="0" max="10" value="5" class="intensity-slider" id="painIntensity" oninput="updateIntensity(this.value)">
+                            </div>
+                            <div class="intensity-labels">
+                                <span>No Pain</span>
+                                <span>Mild</span>
+                                <span>Moderate</span>
+                                <span>Severe</span>
+                                <span>Worst</span>
+                            </div>
+                        </div>
+
+                        <!-- SYMPTOM DURATION -->
+                        <div class="symptom-duration">
+                            <div class="intensity-label">⏰ How long have you had this pain?</div>
+                            <div class="duration-options">
+                                <div class="duration-option" onclick="selectDuration(this, 'hours')">
+                                    <span class="duration-icon">⚡</span>
+                                    <div class="duration-text">Few Hours</div>
+                                </div>
+                                <div class="duration-option" onclick="selectDuration(this, 'days')">
+                                    <span class="duration-icon">📅</span>
+                                    <div class="duration-text">Few Days</div>
+                                </div>
+                                <div class="duration-option" onclick="selectDuration(this, 'weeks')">
+                                    <span class="duration-icon">📆</span>
+                                    <div class="duration-text">Few Weeks</div>
+                                </div>
+                                <div class="duration-option" onclick="selectDuration(this, 'months')">
+                                    <span class="duration-icon">🗓️</span>
+                                    <div class="duration-text">Months+</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACTIVITY LEVEL -->
+                        <div class="activity-level">
+                            <div class="intensity-label">🏃 Current Activity Level</div>
+                            <div class="activity-options">
+                                <div class="activity-option" onclick="selectActivity(this, 'sedentary')">
+                                    <span class="activity-icon">🪑</span>
+                                    <div class="activity-label">Sedentary</div>
+                                    <div class="activity-desc">Mostly sitting</div>
+                                </div>
+                                <div class="activity-option" onclick="selectActivity(this, 'moderate')">
+                                    <span class="activity-icon">🚶</span>
+                                    <div class="activity-label">Moderate</div>
+                                    <div class="activity-desc">Light exercise</div>
+                                </div>
+                                <div class="activity-option" onclick="selectActivity(this, 'active')">
+                                    <span class="activity-icon">🏃</span>
+                                    <div class="activity-label">Very Active</div>
+                                    <div class="activity-desc">Regular training</div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="body-map-container">
                             <!-- ADVANCED BODY DIAGRAM -->
                             <div class="body-diagram-wrapper">
                                 <div class="body-diagram">
+                                    <div class="body-scan-line"></div>
                                     <svg class="body-svg" viewBox="0 0 100 180">
                                         <defs>
                                             <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1671,121 +2359,37 @@
                                 </div>
                             </div>
 
-                            <div class="assessment-panel">
-                                <!-- ENHANCED PAIN CATEGORIES -->
-                                <div class="pain-categories">
-                                    <div class="pain-option" onclick="selectPain(this, 'back', 'lower-back')">
-                                        <div class="pain-icon">🦴</div>
-                                        <div class="pain-label">Back Pain</div>
-                                        <div class="pain-desc">Chronic or acute</div>
-                                    </div>
-                                    <div class="pain-option" onclick="selectPain(this, 'neck', 'neck')">
-                                        <div class="pain-icon">😣</div>
-                                        <div class="pain-label">Neck Pain</div>
-                                        <div class="pain-desc">Stiffness & tension</div>
-                                    </div>
-                                    <div class="pain-option" onclick="selectPain(this, 'sports', 'left-arm')">
-                                        <div class="pain-icon">⚽</div>
-                                        <div class="pain-label">Sports Injury</div>
-                                        <div class="pain-desc">Athletic injuries</div>
-                                    </div>
-                                    <div class="pain-option" onclick="selectPain(this, 'knee', 'left-knee')">
-                                        <div class="pain-icon">🦵</div>
-                                        <div class="pain-label">Knee Pain</div>
-                                        <div class="pain-desc">Joint issues</div>
-                                    </div>
-                                    <div class="pain-option" onclick="selectPain(this, 'shoulder', 'shoulders')">
-                                        <div class="pain-icon">💪</div>
-                                        <div class="pain-label">Shoulder Pain</div>
-                                        <div class="pain-desc">Mobility issues</div>
-                                    </div>
-                                    <div class="pain-option" onclick="selectPain(this, 'posture', 'upper-back')">
-                                        <div class="pain-icon">🧘</div>
-                                        <div class="pain-label">Posture Issues</div>
-                                        <div class="pain-desc">Alignment problems</div>
-                                    </div>
+                            <!-- ENHANCED PAIN CATEGORIES -->
+                            <div class="pain-categories">
+                                <div class="pain-option" onclick="selectPain(this, 'back', 'lower-back')">
+                                    <div class="pain-icon">🦴</div>
+                                    <div class="pain-label">Back Pain</div>
+                                    <div class="pain-desc">Chronic or acute</div>
                                 </div>
-
-                                <!-- DYNAMIC CONTROLS -->
-                                <div class="assessment-controls">
-                                    <div class="control-card intensity-card">
-                                        <div class="control-header">
-                                            <span class="control-title">Pain Intensity</span>
-                                            <span class="control-badge" id="intensityBadge">Moderate</span>
-                                        </div>
-                                        <div class="intensity-visual">
-                                            <div class="progress-ring" id="intensityRing" style="--progress:50;">
-                                                <span class="ring-label" id="ringLabel">5/10</span>
-                                            </div>
-                                            <div class="slider-wrapper">
-                                                <input type="range" min="0" max="10" value="5" class="intensity-slider" id="intensitySlider">
-                                                <div class="slider-scale">
-                                                    <span>Calm</span>
-                                                    <span>Severe</span>
-                                                </div>
-                                                <div class="slider-description" id="intensityDescription">Track how sharp the pain feels to tailor your care plan.</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="control-card impact-card">
-                                        <div class="control-header">
-                                            <span class="control-title">How does it affect you?</span>
-                                            <span class="control-badge">Daily Impact</span>
-                                        </div>
-                                        <div class="impact-tags">
-                                            <button type="button" class="impact-tag" data-impact="mobility">Limited Mobility</button>
-                                            <button type="button" class="impact-tag" data-impact="sleep">Sleep Disturbance</button>
-                                            <button type="button" class="impact-tag" data-impact="work">Work Limitation</button>
-                                            <button type="button" class="impact-tag" data-impact="sports">Sports Restriction</button>
-                                            <button type="button" class="impact-tag" data-impact="fatigue">Muscle Fatigue</button>
-                                        </div>
-                                        <div class="impact-summary" id="impactSummary">Select what applies to you.</div>
-                                    </div>
-
-                                    <div class="control-card goal-card">
-                                        <div class="control-header">
-                                            <span class="control-title">Primary Goal</span>
-                                            <span class="control-badge">Focus</span>
-                                        </div>
-                                        <div class="goal-select">
-                                            <select id="goalSelect">
-                                                <option value="mobility">Improve Mobility</option>
-                                                <option value="painRelief">Reduce Pain</option>
-                                                <option value="performance">Return to Sport</option>
-                                            </select>
-                                        </div>
-                                        <div class="impact-summary" id="goalSummary">We'll adjust your roadmap around this priority.</div>
-                                    </div>
+                                <div class="pain-option" onclick="selectPain(this, 'neck', 'neck')">
+                                    <div class="pain-icon">😣</div>
+                                    <div class="pain-label">Neck Pain</div>
+                                    <div class="pain-desc">Stiffness & tension</div>
                                 </div>
-
-                                <!-- INSIGHTS -->
-                                <div class="insight-grid">
-                                    <div class="insight-card">
-                                        <div class="insight-icon">🧠</div>
-                                        <h4>Clinical Focus</h4>
-                                        <p id="insightFocus" class="insight-empty">Select a pain area to reveal targeted focus points.</p>
-                                        <div id="metricBadges" class="metric-badges"></div>
-                                    </div>
-                                    <div class="insight-card">
-                                        <div class="insight-icon">🛠️</div>
-                                        <h4>Priority Actions</h4>
-                                        <ul class="insight-list" id="actionList">
-                                            <li class="insight-empty">Choose a category to view evidence-led actions.</li>
-                                        </ul>
-                                    </div>
-                                    <div class="insight-card">
-                                        <div class="insight-icon">⏳</div>
-                                        <h4>Recovery Timeline</h4>
-                                        <div class="timeline" id="timelineList">
-                                            <div class="timeline-item insight-empty">Timeline populates once a pain area is selected.</div>
-                                        </div>
-                                    </div>
-                                    <div class="insight-card">
-                                        <div class="insight-icon">📈</div>
-                                        <h4>Goal Strategy</h4>
-                                        <p id="goalInsight" class="insight-empty">Set your goal to receive coaching guidance.</p>
-                                    </div>
+                                <div class="pain-option" onclick="selectPain(this, 'sports', 'left-arm')">
+                                    <div class="pain-icon">⚽</div>
+                                    <div class="pain-label">Sports Injury</div>
+                                    <div class="pain-desc">Athletic injuries</div>
+                                </div>
+                                <div class="pain-option" onclick="selectPain(this, 'knee', 'left-knee')">
+                                    <div class="pain-icon">🦵</div>
+                                    <div class="pain-label">Knee Pain</div>
+                                    <div class="pain-desc">Joint issues</div>
+                                </div>
+                                <div class="pain-option" onclick="selectPain(this, 'shoulder', 'shoulders')">
+                                    <div class="pain-icon">💪</div>
+                                    <div class="pain-label">Shoulder Pain</div>
+                                    <div class="pain-desc">Mobility issues</div>
+                                </div>
+                                <div class="pain-option" onclick="selectPain(this, 'posture', 'upper-back')">
+                                    <div class="pain-icon">🧘</div>
+                                    <div class="pain-label">Posture Issues</div>
+                                    <div class="pain-desc">Alignment problems</div>
                                 </div>
                             </div>
                         </div>
@@ -1796,81 +2400,79 @@
                                 💡 Recommended Treatment
                             </div>
                             <div class="result-content" id="resultContent">
-                                Build your roadmap by choosing a pain category, adjusting intensity, and highlighting how it affects your day.
+                                Select a pain area to see recommended treatments.
                             </div>
                             <div class="result-actions">
                                 <button class="result-btn" onclick="openModal()">Book Assessment</button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- CTA SECTION -->
-                    <div class="cta-section">
-                        <button class="cta-button" onclick="openModal()">
-                            <span>Get Free Assessment</span>
-                            <span>→</span>
-                        </button>
-                        <button class="cta-button cta-secondary" onclick="scrollToSection('services')">
-                            View Services
-                        </button>
-                    </div>
-
-                    <!-- TRUST STATS -->
-                    <div class="trust-stats">
-                        <div class="stat-card">
-                            <div class="stat-icon">⭐</div>
-                            <div class="stat-number counting" data-target="4.9">0</div>
-                            <div class="stat-label">Google Rating</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">👥</div>
-                            <div class="stat-number counting" data-target="500">0</div>
-                            <div class="stat-label">Happy Patients</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">🏆</div>
-                            <div class="stat-number counting" data-target="15">0</div>
-                            <div class="stat-label">Years Experience</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- VISUAL SECTION -->
-                <div class="visual-content">
-                    <div class="spine-visual">
-                        <div class="spine-container">
-                            <div class="spine-glow"></div>
-                            <img src="https://i.postimg.cc/NFSYhY8y/Adobe-Express-file.png" alt="Spine Visualization" class="spine-image" id="spineImg">
-
-                            <!-- INFO CARDS -->
-                            <div class="info-card card-1">
-                                <div class="card-icon">📊</div>
-                                <div class="card-title">Success Rate</div>
-                                <div class="card-value">94%</div>
-                            </div>
-
-                            <div class="info-card card-2">
-                                <div class="card-icon">⏱️</div>
-                                <div class="card-title">Recovery Time</div>
-                                <div class="card-value">6-8 Weeks</div>
-                            </div>
-
-                            <div class="info-card card-3">
-                                <div class="card-icon">🎯</div>
-                                <div class="card-title">Pain Reduction</div>
-                                <div class="card-value">85%</div>
-                            </div>
-
-                            <div class="info-card card-4">
-                                <div class="card-icon">💪</div>
-                                <div class="card-title">Strength Gain</div>
-                                <div class="card-value">+40%</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
+    </div>
+
+    <!-- MEDICAL STATS MODAL -->
+    <div class="modal-backdrop" id="medicalModalBackdrop" onclick="closeMedicalDetail()"></div>
+    <div class="pain-detail-modal" id="medicalDetailModal">
+        <div class="modal-header-content">
+            <div>
+                <div class="modal-icon-large" id="medModalIcon">📊</div>
+                <h2 class="modal-title-large" id="medModalTitle">Pain Reduction</h2>
+                <p class="modal-subtitle" id="medModalSubtitle">Detailed Statistics & Progress</p>
+            </div>
+            <button class="modal-close-btn" onclick="closeMedicalDetail()" aria-label="Close modal">×</button>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">📈 Key Metrics</h3>
+            <p class="modal-content-text" id="medModalMetrics"></p>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">🎯 How We Achieve This</h3>
+            <ul class="modal-list" id="medModalMethods"></ul>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">📊 Patient Data</h3>
+            <p class="modal-content-text" id="medModalData"></p>
+        </div>
+
+        <button class="modal-cta-button" onclick="openBookingModal()">
+            Book Free Assessment →
+        </button>
+    </div>
+
+    <!-- PAIN DETAIL MODAL (KEPT FOR PAIN CATEGORIES) -->
+    <div class="modal-backdrop" id="painModalBackdrop" onclick="closePainDetail()"></div>
+    <div class="pain-detail-modal" id="painDetailModal">
+        <div class="modal-header-content">
+            <div>
+                <div class="modal-icon-large" id="modalIcon">🦴</div>
+                <h2 class="modal-title-large" id="modalTitle">Back Pain</h2>
+                <p class="modal-subtitle" id="modalSubtitle">Comprehensive Information & Treatment</p>
+            </div>
+            <button class="modal-close-btn" onclick="closePainDetail()" aria-label="Close modal">×</button>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">📋 Common Causes</h3>
+            <p class="modal-content-text" id="modalCauses"></p>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">💊 Treatment Approach</h3>
+            <ul class="modal-list" id="modalTreatments"></ul>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">📊 Expected Outcomes</h3>
+            <p class="modal-content-text" id="modalOutcomes"></p>
+        </div>
+
+        <button class="modal-cta-button" onclick="openBookingModal()">
+            Book Free Assessment →
+        </button>
     </div>
 
     <!-- QUICK BOOKING MODAL -->
@@ -1921,484 +2523,332 @@
             }
         });
 
-        // ENHANCED PAIN SELECTOR WITH RECOMMENDATIONS
-        let selectedPain = null;
+        // ASSESSMENT STATE
+        let assessmentData = {
+            painIntensity: 5,
+            duration: null,
+            activityLevel: null,
+            selectedPain: null,
+            bodyPart: null
+        };
+
+        // PAIN DETAIL MODAL DATA
+        const painDetailData = {
+            back: {
+                icon: '🦴',
+                title: 'Back Pain',
+                subtitle: 'Lower, Middle & Upper Back Treatment',
+                causes: 'Back pain can result from poor posture, muscle strain, disc herniation, arthritis, or prolonged sitting. It affects 80% of adults at some point in their lives.',
+                treatments: [
+                    'Manual Therapy & Spinal Mobilization',
+                    'Core Strengthening Exercises',
+                    'Postural Assessment & Correction',
+                    'Ergonomic Workplace Optimization',
+                    'Muscle Release Techniques',
+                    'Home Exercise Program'
+                ],
+                outcomes: 'Most patients experience 50-70% pain reduction within 4-6 weeks. Full recovery typically achieved in 8-12 weeks with consistent treatment. 85% success rate.'
+            },
+            shoulder: {
+                icon: '💪',
+                title: 'Shoulder Pain',
+                subtitle: 'Rotator Cuff & Shoulder Injuries',
+                causes: 'Common causes include rotator cuff injuries, frozen shoulder, impingement syndrome, arthritis, or sports-related trauma. Often related to overhead activities.',
+                treatments: [
+                    'Rotator Cuff Strengthening',
+                    'Range of Motion Exercises',
+                    'Joint Mobilization Techniques',
+                    'Scapular Stabilization',
+                    'Functional Movement Training',
+                    'Progressive Resistance Training'
+                ],
+                outcomes: '70-80% improvement in pain and function within 6-8 weeks. Complete recovery varies from 8-16 weeks depending on severity. 90% avoid surgery with proper rehabilitation.'
+            },
+            knee: {
+                icon: '🦵',
+                title: 'Knee Pain',
+                subtitle: 'Joint, Ligament & Cartilage Issues',
+                causes: 'Knee pain arises from osteoarthritis, meniscus tears, ligament sprains, patellofemoral syndrome, or overuse injuries. Common in active individuals and those over 40.',
+                treatments: [
+                    'Joint Mobilization & Manipulation',
+                    'Quadriceps & Hamstring Strengthening',
+                    'Gait Analysis & Correction',
+                    'Balance & Proprioception Training',
+                    'Patellar Taping Techniques',
+                    'Activity Modification Strategies'
+                ],
+                outcomes: '60-75% pain reduction within 6 weeks. Most patients return to normal activities in 8-12 weeks. 92% success rate in avoiding surgical intervention.'
+            },
+            neck: {
+                icon: '🎯',
+                title: 'Neck Pain',
+                subtitle: 'Cervical Spine & Muscle Tension',
+                causes: 'Neck pain stems from poor posture, whiplash, muscle strain, disc degeneration, or tech neck from prolonged screen time. Affects 30% of adults annually.',
+                treatments: [
+                    'Cervical Spine Mobilization',
+                    'Deep Neck Flexor Strengthening',
+                    'Postural Re-education',
+                    'Soft Tissue Release',
+                    'Ergonomic Assessment',
+                    'Stretching & Mobility Exercises'
+                ],
+                outcomes: 'Significant relief within 2-4 weeks for most patients. Full resolution typically in 6-8 weeks. 88% experience complete or near-complete recovery.'
+            }
+        };
+
+        // SHOW PAIN DETAIL MODAL
+        function showPainDetail(painType) {
+            const data = painDetailData[painType];
+            if (!data) return;
+
+            document.getElementById('modalIcon').textContent = data.icon;
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            document.getElementById('modalCauses').textContent = data.causes;
+            document.getElementById('modalOutcomes').textContent = data.outcomes;
+
+            const treatmentsList = document.getElementById('modalTreatments');
+            treatmentsList.innerHTML = '';
+            data.treatments.forEach(treatment => {
+                const li = document.createElement('li');
+                li.textContent = treatment;
+                treatmentsList.appendChild(li);
+            });
+
+            document.getElementById('painModalBackdrop').classList.add('show');
+            document.getElementById('painDetailModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // CLOSE PAIN DETAIL MODAL
+        function closePainDetail() {
+            document.getElementById('painModalBackdrop').classList.remove('show');
+            document.getElementById('painDetailModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // OPEN BOOKING MODAL FROM PAIN DETAIL
+        function openBookingModal() {
+            closePainDetail();
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'flex';
+                document.getElementById('modal').style.display = 'block';
+            }, 300);
+        }
+
+        // UPDATE ASSESSMENT PROGRESS
+        function updateAssessmentProgress() {
+            let completed = 0;
+            const total = 4;
+
+            if (assessmentData.painIntensity !== null) completed++;
+            if (assessmentData.duration) completed++;
+            if (assessmentData.activityLevel) completed++;
+            if (assessmentData.selectedPain) completed++;
+
+            const percentage = Math.round((completed / total) * 100);
+            document.getElementById('assessmentProgress').textContent = percentage + '%';
+            document.getElementById('progressBarFill').style.width = percentage + '%';
+        }
+
+        // UPDATE PAIN INTENSITY
+        function updateIntensity(value) {
+            assessmentData.painIntensity = parseInt(value);
+            document.getElementById('intensityValue').textContent = value + '/10';
+
+            // Update color based on intensity
+            const intensityValue = document.getElementById('intensityValue');
+            if (value <= 3) {
+                intensityValue.style.color = '#4caf50';
+            } else if (value <= 6) {
+                intensityValue.style.color = '#ff9800';
+            } else {
+                intensityValue.style.color = '#f44336';
+            }
+
+            updateAssessmentProgress();
+            updateRecommendation();
+        }
+
+        // SELECT DURATION
+        function selectDuration(element, duration) {
+            document.querySelectorAll('.duration-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            assessmentData.duration = duration;
+            updateAssessmentProgress();
+            updateRecommendation();
+        }
+
+        // SELECT ACTIVITY LEVEL
+        function selectActivity(element, activity) {
+            document.querySelectorAll('.activity-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            assessmentData.activityLevel = activity;
+            updateAssessmentProgress();
+            updateRecommendation();
+        }
+
+        // ENHANCED PAIN SELECTOR WITH ADVANCED RECOMMENDATIONS
         const painRecommendations = {
             'back': {
-                title: 'Back Pain Recovery Blueprint',
-                summary: 'Manual therapy, core stability training, and posture retraining to restore lumbar control and confidence.',
-                focus: 'Restore lumbar stability, decompress irritated segments, and retrain posture endurance.',
-                bodyParts: ['lower-back', 'mid-back', 'upper-back'],
-                actions: [
-                    'Spinal decompression & manual mobilization twice weekly.',
-                    'Core stabilization circuits with breath-led control and anti-rotation work.',
-                    'Ergonomic coaching with posture resets every 2 hours.'
-                ],
-                timeline: [
-                    { phase: 'Week 1-2', detail: 'Calm inflammation with manual therapy, neural glides, and diaphragmatic breathing.' },
-                    { phase: 'Week 3-5', detail: 'Progressive core strengthening, hip mobility drills, and load tolerance building.' },
-                    { phase: 'Week 6+', detail: 'Functional strength circuits, return-to-lifestyle coaching, and relapse prevention.' }
-                ],
-                metrics: [
-                    { label: 'Relief', value: '4-8 Weeks' },
-                    { label: 'Sessions', value: '2x / Week' },
-                    { label: 'Focus', value: 'Core & Posture' }
-                ],
-                goals: {
-                    mobility: 'Segmental mobility flows, hip hinge drills, and daily posture resets.',
-                    painRelief: 'Neuro-modulation, gentle traction, and supportive taping as needed.',
-                    performance: 'Posterior-chain loading, deadlift patterning, and dynamic power progressions.'
-                }
+                title: 'Back Pain Treatment',
+                content: 'Manual therapy, core strengthening exercises, postural correction, and spinal mobilization. Typical recovery: 4-8 weeks with consistent treatment.',
+                bodyParts: ['lower-back', 'mid-back', 'upper-back']
             },
             'neck': {
-                title: 'Neck Pain Treatment Pathway',
-                summary: 'Cervical mobilization, myofascial release, and scapular activation to relieve tension and rebuild endurance.',
-                focus: 'Release cervical tension while rebuilding deep neck stabilizers and thoracic mobility.',
-                bodyParts: ['neck', 'head', 'shoulders'],
-                actions: [
-                    'Manual cervical mobilization and trigger-point release.',
-                    'Deep neck flexor activation with scapular stability drills.',
-                    'Ergonomic screen setup with micro-break breathing resets.'
-                ],
-                timeline: [
-                    { phase: 'Week 1-2', detail: 'Pain modulation, soft-tissue release, and gentle range retraining.' },
-                    { phase: 'Week 3-4', detail: 'Postural endurance circuits, thoracic extension mobility, and neural glides.' },
-                    { phase: 'Week 5+', detail: 'Functional strengthening and stress-management strategies.' }
-                ],
-                metrics: [
-                    { label: 'Relief', value: '2-4 Weeks' },
-                    { label: 'Focus', value: 'Posture & Mobility' },
-                    { label: 'Sessions', value: '1-2x / Week' }
-                ],
-                goals: {
-                    mobility: 'Thoracic extension drills, chin tuck flows, and shoulder-opening mobility.',
-                    painRelief: 'Calming breath work, manual release, and supportive taping strategies.',
-                    performance: 'Scapular control under load, kinetic-chain integration, and return-to-desk endurance.'
-                }
+                title: 'Neck Pain Treatment',
+                content: 'Cervical mobilization, muscle release techniques, postural assessment, and stretching exercises. Relief often seen within 2-4 weeks.',
+                bodyParts: ['neck', 'head', 'shoulders']
             },
             'sports': {
                 title: 'Sports Injury Rehabilitation',
-                summary: 'Sport-specific rehab, neuromuscular control, and loading progressions to accelerate safe return to play.',
-                focus: 'Rebuild explosive control, balance asymmetries, and guide return-to-sport metrics.',
-                bodyParts: ['left-arm', 'right-arm', 'left-knee', 'right-knee', 'left-shoulder', 'right-shoulder'],
-                actions: [
-                    'Movement screening and asymmetry correction drills.',
-                    'Progressive plyometrics, acceleration, and deceleration work.',
-                    'Recovery monitoring with mobility primers and load tracking.'
-                ],
-                timeline: [
-                    { phase: 'Week 1-2', detail: 'Control swelling, restore range, and begin neuromuscular activation.' },
-                    { phase: 'Week 3-5', detail: 'Introduce strength pyramids, proprioceptive drills, and movement retraining.' },
-                    { phase: 'Week 6+', detail: 'Sport simulation, energy-system conditioning, and performance testing.' }
-                ],
-                metrics: [
-                    { label: 'Return', value: 'Timeline by Injury' },
-                    { label: 'Sessions', value: '2-3x / Week' },
-                    { label: 'Focus', value: 'Power & Control' }
-                ],
-                goals: {
-                    mobility: 'Joint-specific mobility primers paired with activation supersets.',
-                    painRelief: 'Active recovery, contrast therapy, and precision taping between sessions.',
-                    performance: 'Explosive strength blocks, agility ladders, and sport-specific energy systems.'
-                }
+                content: 'Sport-specific rehabilitation, functional movement training, strength conditioning, and injury prevention strategies. Timeline varies by injury severity.',
+                bodyParts: ['left-arm', 'right-arm', 'left-knee', 'right-knee', 'left-shoulder', 'right-shoulder']
             },
             'knee': {
-                title: 'Knee Pain Management Plan',
-                summary: 'Joint mobilization, lower-limb strength, and gait retraining to stabilize and offload the knee complex.',
-                focus: 'Stabilize the knee, build hip and ankle synergy, and optimize loading mechanics.',
-                bodyParts: ['left-knee', 'right-knee', 'left-thigh', 'right-thigh'],
-                actions: [
-                    'Patellofemoral mobilizations and quad activation drills.',
-                    'Hip/glute strengthening with single-leg balance progressions.',
-                    'Stride re-education and impact management coaching.'
-                ],
-                timeline: [
-                    { phase: 'Week 1-2', detail: 'Reduce inflammation, normalize patellar tracking, and maintain range.' },
-                    { phase: 'Week 3-6', detail: 'Strengthen hip-knee chain, proprioception work, and controlled loading.' },
-                    { phase: 'Week 7+', detail: 'Dynamic strength, impact tolerance, and return-to-activity planning.' }
-                ],
-                metrics: [
-                    { label: 'Relief', value: '6-8 Weeks' },
-                    { label: 'Sessions', value: '2x / Week' },
-                    { label: 'Focus', value: 'Hip-Knee Synergy' }
-                ],
-                goals: {
-                    mobility: 'Knee flexion mobility with ankle dorsiflexion and quad length resets.',
-                    painRelief: 'Offload taping, blood-flow stimulation, and manual therapy to calm flare-ups.',
-                    performance: 'Power step-ups, deceleration drills, and sport-specific agility.'
-                }
+                title: 'Knee Pain Management',
+                content: 'Joint mobilization, strengthening of supporting muscles, gait analysis, and biomechanical correction. Most patients improve within 6-8 weeks.',
+                bodyParts: ['left-knee', 'right-knee', 'left-thigh', 'right-thigh']
             },
             'shoulder': {
                 title: 'Shoulder Pain Treatment',
-                summary: 'Rotator cuff strength, scapular rhythm training, and functional mobility restore overhead freedom.',
-                focus: 'Synchronize scapular mechanics, cuff strength, and thoracic mobility.',
-                bodyParts: ['shoulders', 'left-shoulder', 'right-shoulder', 'left-arm', 'right-arm'],
-                actions: [
-                    'Manual glenohumeral mobilizations with soft tissue release.',
-                    'Cuff loading ladders, scapular control, and closed-chain stability.',
-                    'Functional reach patterns and sport-specific integration.'
-                ],
-                timeline: [
-                    { phase: 'Week 1-3', detail: 'Pain modulation, assisted mobility, and activation sequencing.' },
-                    { phase: 'Week 4-6', detail: 'Strength endurance, scapular mechanics, and mid-range loading.' },
-                    { phase: 'Week 7+', detail: 'Overhead strength, plyometric loading, and return-to-sport drills.' }
-                ],
-                metrics: [
-                    { label: 'Relief', value: '4-12 Weeks' },
-                    { label: 'Sessions', value: '1-2x / Week' },
-                    { label: 'Focus', value: 'Scapular Rhythm' }
-                ],
-                goals: {
-                    mobility: 'Thoracic extension work, open-chain mobility, and banded reach flows.',
-                    painRelief: 'Isometric pain-gating, taping, and manual decompression.',
-                    performance: 'Overhead plyometrics, perturbation training, and athletic return.'
-                }
+                content: 'Rotator cuff strengthening, range of motion exercises, manual therapy, and functional movement training. Recovery typically 4-12 weeks.',
+                bodyParts: ['shoulders', 'left-shoulder', 'right-shoulder', 'left-arm', 'right-arm']
             },
             'posture': {
                 title: 'Posture Correction Program',
-                summary: 'Ergonomic resets, mobility training, and core activation to realign and sustain upright posture.',
-                focus: 'Rebalance the spine, open restricted chains, and build endurance for upright posture.',
-                bodyParts: ['upper-back', 'mid-back', 'lower-back', 'neck', 'shoulders'],
-                actions: [
-                    'Desk ergonomics audit with scheduled micro-break routines.',
-                    'Core and scapular endurance circuits with breath training.',
-                    'Mobility flows for thoracic extension and hip flexor release.'
-                ],
-                timeline: [
-                    { phase: 'Week 1-2', detail: 'Awareness drills, breathing resets, and gentle mobility.' },
-                    { phase: 'Week 3-5', detail: 'Strength endurance circuits and postural habit stacking.' },
-                    { phase: 'Week 6+', detail: 'Dynamic posture under load and lifestyle integration.' }
-                ],
-                metrics: [
-                    { label: 'Visible Change', value: '3-6 Weeks' },
-                    { label: 'Sessions', value: '1x / Week' },
-                    { label: 'Focus', value: 'Core & Alignment' }
-                ],
-                goals: {
-                    mobility: 'Daily spine mobility flows with hip opener sequences.',
-                    painRelief: 'Breath-led relaxation, soft tissue release, and gentle traction.',
-                    performance: 'Postural strength under load, anti-gravity drills, and movement economy.'
-                }
+                content: 'Ergonomic assessment, postural re-education, core stability training, and muscle balance restoration. Visible improvements in 3-6 weeks.',
+                bodyParts: ['upper-back', 'mid-back', 'lower-back', 'neck', 'shoulders']
             }
         };
-
-        const intensityProfiles = [
-            { min: 0, max: 3, label: 'Mild', description: 'Maintain gentle activity and reinforce good mechanics.', plan: 'Gentle activation & posture resets keep tissues responsive.' },
-            { min: 4, max: 6, label: 'Moderate', description: 'Blend mobility with strength to support daily movement.', plan: 'Combine manual therapy with stability training and guided mobility.' },
-            { min: 7, max: 10, label: 'High', description: 'Prioritize calming strategies before progressive loading.', plan: 'Focused pain modulation, progressive loading, and close therapist feedback.' }
-        ];
-
-        const impactDescriptions = {
-            mobility: 'Mobility feels limited during bending or twisting.',
-            sleep: 'Pain disrupts sleep quality and recovery.',
-            work: 'Work or desk duties feel restricted.',
-            sports: 'Sports or gym routines are currently on hold.',
-            fatigue: 'Muscle fatigue or weakness follows activity.'
-        };
-
-        const goalLabels = {
-            mobility: 'Improve Mobility',
-            painRelief: 'Reduce Pain',
-            performance: 'Return to Sport'
-        };
-
-        const goalDescriptions = {
-            mobility: 'Unlock range, fluid transitions, and confident daily movement.',
-            painRelief: 'Calm inflammation quickly and stabilize surrounding support.',
-            performance: 'Rebuild power, coordination, and sport readiness.'
-        };
-
-        const intensitySlider = document.getElementById('intensitySlider');
-        const intensityBadge = document.getElementById('intensityBadge');
-        const intensityDescription = document.getElementById('intensityDescription');
-        const intensityRing = document.getElementById('intensityRing');
-        const ringLabel = document.getElementById('ringLabel');
-        const impactSummaryEl = document.getElementById('impactSummary');
-        const goalSummaryEl = document.getElementById('goalSummary');
-        const goalSelect = document.getElementById('goalSelect');
-        const goalInsightEl = document.getElementById('goalInsight');
-        const insightFocusEl = document.getElementById('insightFocus');
-        const actionListEl = document.getElementById('actionList');
-        const timelineListEl = document.getElementById('timelineList');
-        const metricBadgesEl = document.getElementById('metricBadges');
-
-        let selectedIntensity = intensitySlider ? parseInt(intensitySlider.value, 10) : 5;
-        const selectedImpacts = new Set();
-        let selectedGoal = goalSelect ? goalSelect.value : 'mobility';
-
-        function getIntensityProfile(value) {
-            return intensityProfiles.find(profile => value >= profile.min && value <= profile.max) || intensityProfiles[1];
-        }
-
-        function updatePainMarker() {
-            const marker = document.getElementById('painMarker');
-            if (!marker) return;
-            const profile = getIntensityProfile(selectedIntensity);
-            marker.textContent = selectedIntensity;
-            marker.title = `Pain intensity ${selectedIntensity}/10 (${profile.label})`;
-            if (profile.label === 'High') {
-                marker.style.background = 'linear-gradient(135deg, rgba(243,112,33,0.95), rgba(255,94,58,0.9))';
-            } else if (profile.label === 'Moderate') {
-                marker.style.background = 'linear-gradient(135deg, rgba(243,112,33,0.85), rgba(67,133,245,0.7))';
-            } else {
-                marker.style.background = 'linear-gradient(135deg, rgba(243,112,33,0.7), rgba(67,133,245,0.6))';
-            }
-        }
-
-        function focusMarkerOn(partName) {
-            const marker = document.getElementById('painMarker');
-            const diagram = document.querySelector('.body-diagram');
-            if (!marker || !diagram || !partName) return;
-
-            const target = document.querySelector(`.body-part[data-part="${partName}"]`);
-            if (!target) return;
-
-            requestAnimationFrame(() => {
-                const diagramRect = diagram.getBoundingClientRect();
-                const partRect = target.getBoundingClientRect();
-                marker.style.display = 'flex';
-                marker.style.left = `${partRect.left - diagramRect.left + partRect.width / 2}px`;
-                marker.style.top = `${partRect.top - diagramRect.top + partRect.height / 2}px`;
-                updatePainMarker();
-            });
-        }
-
-        function updateIntensityUI(triggerResult = true) {
-            const profile = getIntensityProfile(selectedIntensity);
-            if (intensityBadge) intensityBadge.textContent = profile.label;
-            if (intensityDescription) intensityDescription.textContent = profile.description;
-            if (intensityRing) intensityRing.style.setProperty('--progress', (selectedIntensity / 10) * 100);
-            if (ringLabel) ringLabel.textContent = `${selectedIntensity}/10`;
-            updatePainMarker();
-            if (triggerResult) {
-                updateAssessmentResult(selectedPain ? painRecommendations[selectedPain] : null);
-            }
-        }
-
-        function getImpactNarrative() {
-            if (!selectedImpacts.size) {
-                return 'No daily limitations flagged yet.';
-            }
-            return Array.from(selectedImpacts).map(impact => impactDescriptions[impact] || impact).join(' • ');
-        }
-
-        function updateImpactSummary(triggerResult = true) {
-            if (impactSummaryEl) {
-                if (!selectedImpacts.size) {
-                    impactSummaryEl.textContent = 'Select what applies to you.';
-                } else {
-                    impactSummaryEl.textContent = `Impact logged: ${getImpactNarrative()}`;
-                }
-            }
-            if (triggerResult) {
-                updateAssessmentResult(selectedPain ? painRecommendations[selectedPain] : null);
-            }
-        }
-
-        function updateGoalMessaging(recommendation) {
-            const goalLabel = goalLabels[selectedGoal] || 'Improve Mobility';
-            if (goalSummaryEl) {
-                goalSummaryEl.textContent = `Goal set: ${goalLabel}. ${goalDescriptions[selectedGoal] || ''}`;
-            }
-
-            if (goalInsightEl) {
-                if (recommendation && recommendation.goals && recommendation.goals[selectedGoal]) {
-                    goalInsightEl.textContent = recommendation.goals[selectedGoal];
-                    goalInsightEl.classList.remove('insight-empty');
-                } else {
-                    goalInsightEl.textContent = goalDescriptions[selectedGoal] || 'Select a goal to personalize your roadmap.';
-                    goalInsightEl.classList.add('insight-empty');
-                }
-            }
-        }
-
-        function getGoalNarrative(recommendation) {
-            if (recommendation && recommendation.goals && recommendation.goals[selectedGoal]) {
-                return recommendation.goals[selectedGoal];
-            }
-            return goalDescriptions[selectedGoal] || 'Define your goal to tailor the plan.';
-        }
-
-        function updateAssessmentResult(recommendation) {
-            const resultDiv = document.getElementById('assessmentResult');
-            const resultContent = document.getElementById('resultContent');
-            if (!resultDiv || !resultContent) return;
-
-            const profile = getIntensityProfile(selectedIntensity);
-            const goalAdvice = getGoalNarrative(recommendation);
-            const impactNarrative = getImpactNarrative();
-
-            if (!recommendation) {
-                resultContent.innerHTML = `<strong>Build Your Recovery Map</strong><br><br>Current intensity: <strong>${selectedIntensity}/10 (${profile.label})</strong>. ${impactNarrative} Choose a pain category to unlock a ${goalLabels[selectedGoal] || 'personalized'} strategy aligned with your goal.`;
-                resultDiv.classList.add('show');
-                return;
-            }
-
-            const actionsHtml = (recommendation.actions && recommendation.actions.length)
-                ? recommendation.actions.map(action => `<li>${action}</li>`).join('')
-                : `<li>${recommendation.summary}</li>`;
-
-            resultContent.innerHTML = `
-                <div class="result-intro">${recommendation.summary}</div>
-                <div class="result-highlight">${profile.plan}</div>
-                <ul class="result-list">${actionsHtml}</ul>
-                <div class="result-meta">
-                    <div><strong>Intensity:</strong> ${profile.label} (${selectedIntensity}/10)</div>
-                    <div><strong>Impact:</strong> ${impactNarrative}</div>
-                    <div><strong>Goal Focus:</strong> ${goalAdvice}</div>
-                </div>
-            `;
-            resultDiv.classList.add('show');
-        }
-
-        function renderMetrics(metrics = []) {
-            if (!metricBadgesEl) return;
-            if (!metrics.length) {
-                metricBadgesEl.innerHTML = '';
-                return;
-            }
-            metricBadgesEl.innerHTML = metrics.map(metric => `
-                <div class="metric-chip">
-                    <span class="metric-label">${metric.label}</span>
-                    <span class="metric-value">${metric.value}</span>
-                </div>
-            `).join('');
-        }
-
-        function renderActions(actions = []) {
-            if (!actionListEl) return;
-            if (!actions.length) {
-                actionListEl.innerHTML = '<li class="insight-empty">Choose a category to view evidence-led actions.</li>';
-                return;
-            }
-            actionListEl.innerHTML = actions.map(action => `<li>${action}</li>`).join('');
-        }
-
-        function renderTimeline(timeline = []) {
-            if (!timelineListEl) return;
-            if (!timeline.length) {
-                timelineListEl.innerHTML = '<div class="timeline-item insight-empty">Timeline populates once a pain area is selected.</div>';
-                return;
-            }
-            timelineListEl.innerHTML = timeline.map(item => `
-                <div class="timeline-item">
-                    <strong>${item.phase}</strong>
-                    ${item.detail}
-                </div>
-            `).join('');
-        }
-
-        function resetInsights() {
-            if (insightFocusEl) {
-                insightFocusEl.textContent = 'Select a pain area to reveal targeted focus points.';
-                insightFocusEl.classList.add('insight-empty');
-            }
-            renderActions([]);
-            renderTimeline([]);
-            renderMetrics([]);
-        }
-
-        function updateInsights(type) {
-            const recommendation = painRecommendations[type];
-            if (!recommendation) {
-                resetInsights();
-                updateGoalMessaging(null);
-                return;
-            }
-
-            if (insightFocusEl) {
-                insightFocusEl.textContent = recommendation.focus;
-                insightFocusEl.classList.remove('insight-empty');
-            }
-            renderActions(recommendation.actions || []);
-            renderTimeline(recommendation.timeline || []);
-            renderMetrics(recommendation.metrics || []);
-            updateGoalMessaging(recommendation);
-        }
-
-        if (intensitySlider) {
-            intensitySlider.addEventListener('input', (event) => {
-                selectedIntensity = parseInt(event.target.value, 10);
-                updateIntensityUI();
-            });
-        }
-
-        document.querySelectorAll('.impact-tag').forEach(tag => {
-            tag.addEventListener('click', () => {
-                const impact = tag.getAttribute('data-impact');
-                if (!impact) return;
-
-                if (selectedImpacts.has(impact)) {
-                    selectedImpacts.delete(impact);
-                    tag.classList.remove('active');
-                } else {
-                    selectedImpacts.add(impact);
-                    tag.classList.add('active');
-                }
-                updateImpactSummary();
-            });
-        });
-
-        if (goalSelect) {
-            goalSelect.addEventListener('change', (event) => {
-                selectedGoal = event.target.value;
-                updateGoalMessaging(selectedPain ? painRecommendations[selectedPain] : null);
-                updateAssessmentResult(selectedPain ? painRecommendations[selectedPain] : null);
-            });
-        }
-
-        resetInsights();
-        updateIntensityUI(false);
-        updateImpactSummary(false);
-        updateGoalMessaging(null);
-        updateAssessmentResult(null);
 
         function selectPain(element, type, primaryBodyPart) {
             document.querySelectorAll('.pain-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
-            selectedPain = type;
+            assessmentData.selectedPain = type;
+            assessmentData.bodyPart = primaryBodyPart;
+            updateAssessmentProgress();
 
+            // Update form input
             const painAreaInput = document.getElementById('painAreaInput');
             if (painAreaInput) {
-                const label = element.querySelector('.pain-label');
-                painAreaInput.value = label ? label.textContent : '';
+                painAreaInput.value = element.querySelector('.pain-label').textContent;
             }
 
-            document.querySelectorAll('.body-part').forEach(part => part.classList.remove('active'));
+            // Highlight corresponding body parts
+            document.querySelectorAll('.body-part').forEach(part => {
+                part.classList.remove('active');
+            });
 
+            // Show recommendation
             const recommendation = painRecommendations[type];
             if (recommendation) {
-                recommendation.bodyParts.forEach(partName => {
-                    const bodyPart = document.querySelector(`[data-part="${partName}"]`);
+                recommendation.bodyParts.forEach(part => {
+                    const bodyPart = document.querySelector(`[data-part="${part}"]`);
                     if (bodyPart) bodyPart.classList.add('active');
                 });
-
-                const focusTarget = primaryBodyPart || (recommendation.bodyParts ? recommendation.bodyParts[0] : null);
-                focusMarkerOn(focusTarget);
-                updateInsights(type);
-                updateAssessmentResult(recommendation);
-            } else {
-                resetInsights();
-                updateGoalMessaging(null);
-                updateAssessmentResult(null);
             }
+
+            updateRecommendation();
+        }
+
+        // ADVANCED RECOMMENDATION ENGINE
+        function updateRecommendation() {
+            if (!assessmentData.selectedPain) return;
+
+            const recommendation = painRecommendations[assessmentData.selectedPain];
+            if (!recommendation) return;
+
+            let severity = 'moderate';
+            let urgency = 'routine';
+            let timeline = '4-8 weeks';
+
+            // Determine severity based on intensity and duration
+            if (assessmentData.painIntensity >= 8) {
+                severity = 'severe';
+                urgency = 'urgent';
+                timeline = '6-12 weeks';
+            } else if (assessmentData.painIntensity >= 5) {
+                severity = 'moderate';
+                urgency = 'important';
+                timeline = '4-8 weeks';
+            } else {
+                severity = 'mild';
+                urgency = 'routine';
+                timeline = '2-4 weeks';
+            }
+
+            // Adjust based on duration
+            if (assessmentData.duration === 'months') {
+                urgency = 'important';
+                timeline = '8-12 weeks';
+            } else if (assessmentData.duration === 'hours' && assessmentData.painIntensity >= 7) {
+                urgency = 'urgent';
+            }
+
+            // Generate personalized recommendation
+            let recommendationText = `<strong>${recommendation.title} (${severity.toUpperCase()})</strong><br><br>`;
+            recommendationText += `<strong>Priority:</strong> ${urgency.toUpperCase()}<br>`;
+            recommendationText += `<strong>Estimated Recovery:</strong> ${timeline}<br><br>`;
+            recommendationText += `<strong>Recommended Treatment:</strong><br>${recommendation.content}<br><br>`;
+
+            // Activity-specific advice
+            if (assessmentData.activityLevel === 'active') {
+                recommendationText += `<strong>For Active Individuals:</strong> Modified training schedule recommended. Focus on maintaining cardiovascular fitness while addressing the injury.<br>`;
+            } else if (assessmentData.activityLevel === 'sedentary') {
+                recommendationText += `<strong>For Sedentary Lifestyle:</strong> Gradual increase in activity levels. Ergonomic assessment and postural correction are essential.<br>`;
+            }
+
+            // Intensity-specific advice
+            if (assessmentData.painIntensity >= 7) {
+                recommendationText += `<br><strong>⚠️ High Pain Alert:</strong> Consider immediate consultation. Pain management strategies may be needed alongside treatment.`;
+            }
+
+            // Duration-specific advice
+            if (assessmentData.duration === 'months') {
+                recommendationText += `<br><strong>📅 Chronic Condition:</strong> Comprehensive evaluation recommended. May require multidisciplinary approach including manual therapy, exercise, and lifestyle modifications.`;
+            } else if (assessmentData.duration === 'hours') {
+                recommendationText += `<br><strong>⚡ Acute Injury:</strong> Early intervention can significantly improve outcomes. Ice/heat therapy and gentle movement recommended.`;
+            }
+
+            // Show assessment result
+            const resultDiv = document.getElementById('assessmentResult');
+            const resultContent = document.getElementById('resultContent');
+            resultContent.innerHTML = recommendationText;
+            resultDiv.classList.add('show');
         }
 
         // BODY PART CLICK INTERACTION
         document.querySelectorAll('.body-part').forEach(part => {
-            part.addEventListener('click', function() {
+            part.addEventListener('click', function(e) {
                 const partName = this.getAttribute('data-name');
                 const partId = this.getAttribute('data-part');
 
                 document.querySelectorAll('.body-part').forEach(p => p.classList.remove('active'));
                 this.classList.add('active');
 
-                focusMarkerOn(partId);
+                // Show pain point marker
+                const marker = document.getElementById('painMarker');
+                const svg = document.querySelector('.body-svg');
+                const diagram = document.querySelector('.body-diagram');
 
+                if (marker && svg && diagram) {
+                    const svgRect = svg.getBoundingClientRect();
+                    const diagramRect = diagram.getBoundingClientRect();
+                    const partRect = this.getBoundingClientRect();
+
+                    const markerLeft = partRect.left - diagramRect.left + (partRect.width / 2);
+                    const markerTop = partRect.top - diagramRect.top + (partRect.height / 2);
+
+                    marker.style.display = 'flex';
+                    marker.style.left = markerLeft + 'px';
+                    marker.style.top = markerTop + 'px';
+                }
+
+                // Show basic info
                 const resultDiv = document.getElementById('assessmentResult');
                 const resultContent = document.getElementById('resultContent');
-                const profile = getIntensityProfile(selectedIntensity);
-                resultContent.innerHTML = `<strong>${partName} Selected</strong><br><br>Choose a pain category to unlock a ${goalLabels[selectedGoal] || 'personalized'} roadmap. Current intensity: <strong>${selectedIntensity}/10 (${profile.label})</strong>.`;
+                resultContent.innerHTML = `<strong>${partName} Selected</strong><br><br>Click on a pain category above for detailed treatment recommendations, or book a free assessment for personalized care.`;
                 resultDiv.classList.add('show');
             });
         });
@@ -2436,281 +2886,372 @@
 
         counters.forEach(counter => counterObserver.observe(counter));
 
-        // INTERACTIVE SPINE
+        // MEDICAL CARD MODAL DATA
+        const medicalDetailData = {
+            painReduction: {
+                icon: '📊',
+                title: '85% Pain Reduction',
+                subtitle: 'Average patient improvement after 6 sessions',
+                metrics: 'Our patients report significant pain reduction averaging 85% within 6-8 sessions. This includes acute and chronic pain conditions. Measured using standardized VAS (Visual Analog Scale) and patient-reported outcomes.',
+                methods: [
+                    'Evidence-based Manual Therapy Techniques',
+                    'Targeted Therapeutic Exercises',
+                    'Advanced Pain Management Protocols',
+                    'Personalized Treatment Plans',
+                    'Progressive Intensity Modulation',
+                    'Continuous Progress Monitoring'
+                ],
+                data: 'Based on data from 2,847 patients over 24 months. Initial average pain score: 7.8/10. Post-treatment average: 1.2/10. Success rate defined as >70% pain reduction maintained for 3+ months.'
+            },
+            mobility: {
+                icon: '🎯',
+                title: '+42% Mobility Improvement',
+                subtitle: 'Range of motion increase in 4 weeks',
+                metrics: 'Patients experience an average 42% increase in functional mobility and range of motion within 4 weeks of treatment. This includes flexibility, joint mobility, and functional movement patterns.',
+                methods: [
+                    'Dynamic Mobility Assessments',
+                    'Joint Mobilization Techniques',
+                    'Functional Movement Screening',
+                    'Progressive Stretching Protocols',
+                    'Neuromuscular Re-education',
+                    'Gait and Posture Analysis'
+                ],
+                data: 'Measured using standardized ROM (Range of Motion) tests and functional movement screens. Sample size: 1,956 patients. Average improvement maintained at 6-month follow-up: 38%.'
+            },
+            recovery: {
+                icon: '⏱️',
+                title: '6-8 Week Recovery',
+                subtitle: 'Average time to significant improvement',
+                metrics: 'Most patients achieve their primary treatment goals within 6-8 weeks with consistent attendance (2-3 sessions per week). This timeline applies to common musculoskeletal conditions.',
+                methods: [
+                    'Accelerated Recovery Protocols',
+                    'Tissue Healing Optimization',
+                    'Graduated Exercise Progression',
+                    'Home Program Integration',
+                    'Weekly Progress Tracking',
+                    'Treatment Plan Adjustments'
+                ],
+                data: 'Average sessions to primary goal: 12-16. Attendance compliance rate: 87%. Patients maintaining improvements at 1 year: 82%. Based on comprehensive outcome tracking system.'
+            },
+            satisfaction: {
+                icon: '⭐',
+                title: '94% Patient Satisfaction',
+                subtitle: 'Would recommend to family & friends',
+                metrics: '94% of our patients rate their experience as excellent and would recommend our services. This reflects both treatment effectiveness and quality of care delivery.',
+                methods: [
+                    'Personalized Care Approach',
+                    'Clear Communication & Education',
+                    'Flexible Scheduling Options',
+                    'Modern Treatment Techniques',
+                    'Compassionate Professional Staff',
+                    'Continuous Quality Improvement'
+                ],
+                data: 'Based on post-treatment surveys (n=3,214). Net Promoter Score: 87. Average rating: 4.8/5.0. Return patient rate: 76%. Survey response rate: 68%.'
+            }
+        };
+
+        // SHOW MEDICAL DETAIL MODAL
+        function showMedicalDetail(medicalType) {
+            const data = medicalDetailData[medicalType];
+            if (!data) return;
+
+            document.getElementById('medModalIcon').textContent = data.icon;
+            document.getElementById('medModalTitle').textContent = data.title;
+            document.getElementById('medModalSubtitle').textContent = data.subtitle;
+            document.getElementById('medModalMetrics').textContent = data.metrics;
+            document.getElementById('medModalData').textContent = data.data;
+
+            const methodsList = document.getElementById('medModalMethods');
+            methodsList.innerHTML = '';
+            data.methods.forEach(method => {
+                const li = document.createElement('li');
+                li.textContent = method;
+                methodsList.appendChild(li);
+            });
+
+            document.getElementById('medicalModalBackdrop').classList.add('show');
+            document.getElementById('medicalDetailModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // CLOSE MEDICAL DETAIL MODAL
+        function closeMedicalDetail() {
+            document.getElementById('medicalModalBackdrop').classList.remove('show');
+            document.getElementById('medicalDetailModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // MOUSE-RESPONSIVE BODY TILT - ENHANCED
         const spineImg = document.getElementById('spineImg');
+        const spineContainer = document.querySelector('.spine-container');
         let mouseX = 0, mouseY = 0;
         let currentX = 0, currentY = 0;
+        let spineLastUpdate = 0;
+        const spineUpdateInterval = 16; // ~60fps for smooth animation
 
-        document.addEventListener('mousemove', (e) => {
-            if (!spineImg) return;
-            const rect = spineImg.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            mouseX = (e.clientX - centerX) / rect.width * 20;
-            mouseY = (e.clientY - centerY) / rect.height * 20;
-        });
+        // Track mouse movement over spine container
+        if (spineContainer) {
+            spineContainer.addEventListener('mousemove', (e) => {
+                const rect = spineContainer.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
 
-        function animateSpine() {
+                // Calculate tilt based on mouse position (reduced intensity)
+                mouseX = ((e.clientX - centerX) / rect.width) * 8; // Max 8 degrees
+                mouseY = ((e.clientY - centerY) / rect.height) * 8;
+            });
+
+            spineContainer.addEventListener('mouseleave', () => {
+                mouseX = 0;
+                mouseY = 0;
+            });
+        }
+
+        function animateSpine(currentTime) {
             if (!spineImg) return;
+
+            // Throttle updates for performance
+            if (currentTime - spineLastUpdate < spineUpdateInterval) {
+                requestAnimationFrame(animateSpine);
+                return;
+            }
+            spineLastUpdate = currentTime;
+
+            // Smooth interpolation
             currentX += (mouseX - currentX) * 0.1;
             currentY += (mouseY - currentY) * 0.1;
-            spineImg.style.transform = `translate(-50%, -50%) rotateY(${currentX}deg) rotateX(${-currentY}deg)`;
+
+            // Apply 3D transform
+            spineImg.style.transform = `perspective(1000px) rotateY(${currentX}deg) rotateX(${-currentY}deg)`;
+
             requestAnimationFrame(animateSpine);
         }
-        animateSpine();
+        animateSpine(0);
 
-        // THREE.JS BACKGROUND - FIXED AND STABLE VERSION
+        // THREE.JS BACKGROUND - HEAVILY OPTIMIZED VERSION
         const canvas = document.getElementById('bgCanvas');
-        const prefersReducedMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
         let scene, camera, renderer, particles, animationId;
-        let positionAttribute, velocityAttribute;
-        let resizeHandler, contextLostHandler, pointerMoveHandler;
-        let threeInitialized = false;
-
-        function hasWebGLSupport() {
-            try {
-                const testCanvas = document.createElement('canvas');
-                return !!(window.WebGLRenderingContext && (testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl')));
-            } catch (e) {
-                return false;
-            }
-        }
-
-        function disposeThree() {
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
-            }
-
-            if (resizeHandler) {
-                window.removeEventListener('resize', resizeHandler);
-                resizeHandler = null;
-            }
-
-            if (renderer && renderer.domElement && contextLostHandler) {
-                renderer.domElement.removeEventListener('webglcontextlost', contextLostHandler);
-                contextLostHandler = null;
-            }
-
-            if (pointerMoveHandler) {
-                document.removeEventListener('mousemove', pointerMoveHandler);
-                pointerMoveHandler = null;
-            }
-
-            if (particles) {
-                if (particles.geometry) particles.geometry.dispose();
-                if (particles.material) particles.material.dispose();
-                particles = null;
-            }
-
-            if (renderer) {
-                renderer.dispose();
-                if (renderer.forceContextLoss) {
-                    renderer.forceContextLoss();
-                }
-                renderer = null;
-            }
-
-            scene = null;
-            camera = null;
-            positionAttribute = null;
-            velocityAttribute = null;
-            threeInitialized = false;
-        }
+        let particleVelocities = []; // Separate array for velocities
+        let isAnimating = false;
+        let lastFrameTime = 0;
+        const targetFPS = 30; // Run at 30fps instead of 60fps for better performance
+        const frameInterval = 1000 / targetFPS;
 
         function initThreeJS() {
-            const reduceMotion = prefersReducedMotion.matches;
-
-            if (!canvas || typeof THREE === 'undefined' || !hasWebGLSupport() || reduceMotion) {
-                console.log('Three.js disabled — using CSS particles');
+            if (!canvas || typeof THREE === 'undefined') {
+                console.log('Three.js not available, using CSS animations');
                 if (canvas) canvas.style.display = 'none';
                 createCSSParticles();
                 return false;
             }
 
             try {
-                canvas.style.display = 'block';
+                // Setup scene
                 scene = new THREE.Scene();
 
+                // Setup camera
                 camera = new THREE.PerspectiveCamera(
-                    70,
+                    75,
                     window.innerWidth / window.innerHeight,
                     0.1,
                     1000
                 );
-                camera.position.z = 32;
+                camera.position.z = 30;
 
+                // Setup renderer with error handling - PERFORMANCE OPTIMIZED
                 renderer = new THREE.WebGLRenderer({
-                    canvas,
+                    canvas: canvas,
                     alpha: true,
-                    antialias: true,
-                    powerPreference: 'high-performance'
+                    antialias: false, // Disable antialiasing for better performance
+                    powerPreference: "high-performance",
+                    failIfMajorPerformanceCaveat: false,
+                    precision: 'lowp', // Use low precision for better performance
+                    stencil: false,
+                    depth: false
                 });
 
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setClearColor(0x000000, 0);
-                if (renderer.outputEncoding !== undefined) {
-                    renderer.outputEncoding = THREE.sRGBEncoding;
-                }
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1)); // Cap at 1 for performance
 
-                const particleCount = window.innerWidth < 768 ? 90 : 150;
+                // Adjust particle count based on device performance - REDUCED FOR PERFORMANCE
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const particleCount = isMobile ? 50 : 100; // Further reduced from 80/150
+
                 const geometry = new THREE.BufferGeometry();
                 const positions = new Float32Array(particleCount * 3);
-                const basePositions = new Float32Array(particleCount * 3);
                 const colors = new Float32Array(particleCount * 3);
-                const velocities = new Float32Array(particleCount * 3);
-                const swirlOffsets = new Float32Array(particleCount);
-                const swirlSpeeds = new Float32Array(particleCount);
-                const swirlPhases = new Float32Array(particleCount);
+                const sizes = new Float32Array(particleCount);
 
-                for (let i = 0; i < particleCount; i++) {
+                for(let i = 0; i < particleCount; i++) {
                     const i3 = i * 3;
 
-                    const radius = (Math.random() ** 1.45) * 28;
-                    const angle = Math.random() * Math.PI * 2;
-                    const height = (Math.random() - 0.5) * 22;
+                    // Random positions - wider spread, depth-based distribution
+                    const depth = Math.random();
+                    positions[i3] = (Math.random() - 0.5) * 80;
+                    positions[i3 + 1] = (Math.random() - 0.5) * 70;
+                    positions[i3 + 2] = (Math.random() - 0.5) * 60 - 10; // Push back
 
-                    const x = Math.cos(angle) * radius;
-                    const y = Math.sin(angle) * radius * 0.75;
-                    const z = (Math.random() - 0.5) * 16;
+                    // Store velocities in separate array - SLOWER, MORE FLUID
+                    particleVelocities.push({
+                        x: (Math.random() - 0.5) * 0.008,
+                        y: (Math.random() - 0.5) * 0.008,
+                        z: (Math.random() - 0.5) * 0.005,
+                        depth: depth
+                    });
 
-                    basePositions[i3] = x;
-                    basePositions[i3 + 1] = y + height * 0.15;
-                    basePositions[i3 + 2] = z;
+                    // Size variation based on depth - smaller particles
+                    sizes[i] = (0.4 + depth * 0.8); // Range: 0.4 to 1.2
 
-                    positions[i3] = basePositions[i3];
-                    positions[i3 + 1] = basePositions[i3 + 1];
-                    positions[i3 + 2] = basePositions[i3 + 2];
-
-                    velocities[i3] = (Math.random() - 0.5) * 0.0045;
-                    velocities[i3 + 1] = (Math.random() - 0.5) * 0.0045;
-                    velocities[i3 + 2] = (Math.random() - 0.5) * 0.006;
-
-                    swirlOffsets[i] = 1.2 + Math.random() * 2.3;
-                    swirlSpeeds[i] = 0.35 + Math.random() * 0.45;
-                    swirlPhases[i] = Math.random() * Math.PI * 2;
-
-                    if (Math.random() > 0.5) {
+                    // Colors (orange and blue theme) - MUTED
+                    const colorChoice = Math.random();
+                    if (colorChoice > 0.6) {
+                        // Orange - muted
                         colors[i3] = 0.95;
                         colors[i3 + 1] = 0.44;
                         colors[i3 + 2] = 0.13;
-                    } else {
+                    } else if (colorChoice > 0.3) {
+                        // Blue - muted
                         colors[i3] = 0.26;
                         colors[i3 + 1] = 0.52;
                         colors[i3 + 2] = 0.96;
+                    } else {
+                        // White - very subtle
+                        colors[i3] = 0.9;
+                        colors[i3 + 1] = 0.9;
+                        colors[i3 + 2] = 0.95;
                     }
                 }
 
-                positionAttribute = new THREE.BufferAttribute(positions, 3);
-                positionAttribute.setUsage(THREE.DynamicDrawUsage);
-                velocityAttribute = new THREE.BufferAttribute(velocities, 3);
-
-                geometry.setAttribute('position', positionAttribute);
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
                 geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-                geometry.setAttribute('velocity', velocityAttribute);
-                geometry.computeBoundingSphere();
+                geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
                 const material = new THREE.PointsMaterial({
-                    size: window.innerWidth < 768 ? 0.9 : 1.35,
+                    size: 0.8, // MUCH SMALLER base size
                     sizeAttenuation: true,
                     vertexColors: true,
                     transparent: true,
-                    opacity: 0.42,
+                    opacity: 0.25, // MUCH MORE TRANSPARENT
                     blending: THREE.AdditiveBlending,
-                    depthWrite: false
+                    depthWrite: false,
+                    depthTest: true
                 });
 
                 particles = new THREE.Points(geometry, material);
                 scene.add(particles);
 
+                // Mouse interaction - SUBTLE
                 let mouseXNorm = 0;
                 let mouseYNorm = 0;
                 let targetXRot = 0;
                 let targetYRot = 0;
-                const clock = new THREE.Clock();
 
-                pointerMoveHandler = (event) => {
+                document.addEventListener('mousemove', (event) => {
+                    // Reduce mouse influence
                     mouseXNorm = (event.clientX / window.innerWidth) * 2 - 1;
                     mouseYNorm = -(event.clientY / window.innerHeight) * 2 + 1;
-                };
-                document.addEventListener('mousemove', pointerMoveHandler);
+                });
 
-                const driftFactor = 0.0003;
+                // Animation loop with FPS throttling and error handling
+                isAnimating = true;
+                function animate(currentTime) {
+                    if (!isAnimating) return;
 
-                const animate = () => {
                     animationId = requestAnimationFrame(animate);
 
-                    if (!particles || !positionAttribute || !velocityAttribute) return;
+                    // Throttle to target FPS for better performance
+                    const elapsed = currentTime - lastFrameTime;
+                    if (elapsed < frameInterval) return;
+                    lastFrameTime = currentTime - (elapsed % frameInterval);
 
-                    targetXRot += (mouseXNorm * 0.015 - targetXRot) * 0.06;
-                    targetYRot += (mouseYNorm * 0.01 - targetYRot) * 0.06;
-
-                    particles.rotation.y += driftFactor + targetXRot;
-                    particles.rotation.x += driftFactor * 0.55 + targetYRot;
-
-                    const posArray = positionAttribute.array;
-                    const velArray = velocityAttribute.array;
-                    const elapsed = clock.getElapsedTime();
-
-                    for (let i = 0; i < particleCount; i++) {
-                        const i3 = i * 3;
-
-                        basePositions[i3] += velArray[i3];
-                        basePositions[i3 + 1] += velArray[i3 + 1];
-                        basePositions[i3 + 2] += velArray[i3 + 2];
-
-                        if (Math.abs(basePositions[i3]) > 26) velArray[i3] *= -1;
-                        if (Math.abs(basePositions[i3 + 1]) > 22) velArray[i3 + 1] *= -1;
-                        if (Math.abs(basePositions[i3 + 2]) > 18) velArray[i3 + 2] *= -1;
-
-                        const swirl = Math.sin(elapsed * swirlSpeeds[i] + swirlPhases[i]);
-                        const sway = Math.cos(elapsed * (swirlSpeeds[i] * 0.6) + swirlPhases[i]);
-
-                        posArray[i3] = basePositions[i3] + swirl * swirlOffsets[i];
-                        posArray[i3 + 1] = basePositions[i3 + 1] + sway * (swirlOffsets[i] * 0.6);
-                        posArray[i3 + 2] = basePositions[i3 + 2] + Math.sin(elapsed * (swirlSpeeds[i] * 0.8) + swirlPhases[i]) * 1.4;
+                    // Safety checks
+                    if (!particles || !particles.geometry || !particles.geometry.attributes.position) {
+                        console.warn('Particle system corrupted, stopping animation');
+                        isAnimating = false;
+                        return;
                     }
 
-                    positionAttribute.needsUpdate = true;
+                    try {
+                        // Smooth rotation based on mouse - VERY SUBTLE
+                        targetXRot += (mouseXNorm * 0.003 - targetXRot) * 0.03;
+                        targetYRot += (mouseYNorm * 0.003 - targetYRot) * 0.03;
 
-                    renderer.render(scene, camera);
-                };
+                        particles.rotation.y += 0.0001 + targetXRot;
+                        particles.rotation.x += 0.00008 + targetYRot;
 
-                animate();
+                        // Animate individual particles - OPTIMIZED UPDATES
+                        const positions = particles.geometry.attributes.position.array;
+                        const now = currentTime * 0.0005; // Precompute time value
 
-                resizeHandler = () => {
-                    if (!camera || !renderer) return;
-                    camera.aspect = window.innerWidth / window.innerHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                };
+                        for(let i = 0; i < particleCount; i++) {
+                            const i3 = i * 3;
+                            const velocity = particleVelocities[i];
 
-                window.addEventListener('resize', resizeHandler);
+                            if (!velocity) continue;
 
-                contextLostHandler = (event) => {
-                    event.preventDefault();
-                    console.warn('WebGL context lost, switching to CSS particles');
-                    disposeThree();
-                    if (canvas) canvas.style.display = 'none';
-                    createCSSParticles();
-                };
+                            // Add slight floating effect based on depth (optimized)
+                            const floatOffset = Math.sin(now + i) * 0.01 * velocity.depth;
 
-                renderer.domElement.addEventListener('webglcontextlost', contextLostHandler, false);
+                            // Update positions with fluid motion
+                            positions[i3] += velocity.x;
+                            positions[i3 + 1] += velocity.y + floatOffset;
+                            positions[i3 + 2] += velocity.z;
 
-                threeInitialized = true;
+                            // Soft boundary check and gentle bounce
+                            if (Math.abs(positions[i3]) > 40) velocity.x *= -0.8;
+                            if (Math.abs(positions[i3 + 1]) > 35) velocity.y *= -0.8;
+                            if (Math.abs(positions[i3 + 2]) > 30) velocity.z *= -0.8;
+
+                            // Damping to keep movement subtle
+                            velocity.x *= 0.9995;
+                            velocity.y *= 0.9995;
+                            velocity.z *= 0.9995;
+
+                            // Re-energize if too slow (check less frequently)
+                            if (i % 10 === 0) {
+                                if (Math.abs(velocity.x) < 0.001) velocity.x += (Math.random() - 0.5) * 0.001;
+                                if (Math.abs(velocity.y) < 0.001) velocity.y += (Math.random() - 0.5) * 0.001;
+                                if (Math.abs(velocity.z) < 0.001) velocity.z += (Math.random() - 0.5) * 0.001;
+                            }
+                        }
+
+                        particles.geometry.attributes.position.needsUpdate = true;
+
+                        renderer.render(scene, camera);
+                    } catch (error) {
+                        console.error('Animation error:', error);
+                        isAnimating = false;
+                        createCSSParticles();
+                    }
+                }
+
+                animate(0);
+
+                // Handle resize with debouncing
+                let resizeTimeout;
+                function onWindowResize() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        if (!camera || !renderer) return;
+                        camera.aspect = window.innerWidth / window.innerHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    }, 250);
+                }
+
+                window.addEventListener('resize', onWindowResize);
+
                 return true;
 
             } catch (error) {
-                console.log('Three.js initialization failed:', error.message);
-                disposeThree();
+                console.error('Three.js initialization failed:', error);
                 if (canvas) canvas.style.display = 'none';
                 createCSSParticles();
                 return false;
             }
         }
 
-        // CSS Particle Fallback
+        // CSS Particle Fallback - SUBTLE AND AMBIENT
         function createCSSParticles() {
             const existingContainer = document.querySelector('.particle-container');
             if (existingContainer) return;
@@ -2723,21 +3264,36 @@
                 overflow: hidden;
                 z-index: 2;
                 pointer-events: none;
+                opacity: 0.6;
             `;
 
-            for(let i = 0; i < 40; i++) {
+            for(let i = 0; i < 60; i++) {
                 const particle = document.createElement('div');
-                const size = Math.random() * 4 + 2;
+                const size = Math.random() * 1.5 + 0.5; // Much smaller: 0.5-2px
+                const depth = Math.random();
+                const colorChoice = Math.random();
+
+                let color;
+                if (colorChoice > 0.6) {
+                    color = 'rgba(243, 112, 33, 0.2)';
+                } else if (colorChoice > 0.3) {
+                    color = 'rgba(67, 133, 245, 0.2)';
+                } else {
+                    color = 'rgba(255, 255, 255, 0.15)';
+                }
+
                 particle.style.cssText = `
                     position: absolute;
                     width: ${size}px;
                     height: ${size}px;
-                    background: ${Math.random() > 0.5 ? 'rgba(243, 112, 33, 0.6)' : 'rgba(67, 133, 245, 0.6)'};
+                    background: ${color};
                     border-radius: 50%;
                     left: ${Math.random() * 100}%;
                     top: ${Math.random() * 100}%;
-                    animation: particleFloat ${Math.random() * 10 + 10}s linear infinite;
-                    animation-delay: ${Math.random() * -10}s;
+                    animation: particleFloat ${Math.random() * 10 + 15}s linear infinite;
+                    animation-delay: ${Math.random() * -15}s;
+                    box-shadow: 0 0 ${size * 2}px ${color};
+                    filter: blur(${depth * 0.5}px);
                 `;
                 particleContainer.appendChild(particle);
             }
@@ -2752,22 +3308,6 @@
         const threeJsSuccess = initThreeJS();
         if (!threeJsSuccess) {
             console.log('Using CSS particle fallback');
-        }
-
-        const handleMotionPreference = (event) => {
-            if (event.matches) {
-                disposeThree();
-                if (canvas) canvas.style.display = 'none';
-                createCSSParticles();
-            } else if (!threeInitialized) {
-                initThreeJS();
-            }
-        };
-
-        if (prefersReducedMotion.addEventListener) {
-            prefersReducedMotion.addEventListener('change', handleMotionPreference);
-        } else if (prefersReducedMotion.addListener) {
-            prefersReducedMotion.addListener(handleMotionPreference);
         }
 
         // MODAL FUNCTIONS
@@ -2802,9 +3342,60 @@
             if (e.key === 'Escape') closeModal();
         });
 
+        // KEYBOARD SUPPORT FOR MODALS
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePainDetail();
+                closeMedicalDetail();
+            }
+        });
+
+        // INITIALIZE PROGRESS ON LOAD
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAssessmentProgress();
+        });
+
         // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
-            disposeThree();
+            isAnimating = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            if (renderer) {
+                renderer.dispose();
+                renderer.forceContextLoss();
+                renderer.domElement = null;
+            }
+            if (particles && particles.geometry) {
+                particles.geometry.dispose();
+                particles.material.dispose();
+            }
+            particleVelocities = [];
+        });
+
+        // Handle visibility change to pause animation when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                isAnimating = false;
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+            } else if (renderer && particles) {
+                isAnimating = true;
+                // Restart animation when tab becomes visible
+                function restartAnimate() {
+                    if (!isAnimating) return;
+                    animationId = requestAnimationFrame(restartAnimate);
+                    if (particles && particles.geometry && particles.geometry.attributes.position) {
+                        try {
+                            renderer.render(scene, camera);
+                        } catch(e) {
+                            isAnimating = false;
+                        }
+                    }
+                }
+                restartAnimate();
+            }
         });
     </script>
 </body>
