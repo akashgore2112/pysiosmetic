@@ -99,7 +99,7 @@
             background: radial-gradient(circle at 20% 30%, rgba(243, 112, 33, 0.08), transparent 55%),
                 radial-gradient(circle at 80% 60%, rgba(67, 133, 245, 0.07), transparent 50%);
             mix-blend-mode: screen;
-            opacity: 0.52;
+            opacity: 0.38;
             pointer-events: none;
             z-index: 3;
         }
@@ -110,9 +110,9 @@
             inset: 0;
             z-index: 1;
             background:
-                radial-gradient(circle at 20% 50%, rgba(243, 112, 33, 0.1), transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(67, 133, 245, 0.1), transparent 50%),
-                radial-gradient(circle at 40% 10%, rgba(243, 112, 33, 0.08), transparent 40%);
+                radial-gradient(circle at 20% 50%, rgba(243, 112, 33, 0.08), transparent 48%),
+                radial-gradient(circle at 80% 80%, rgba(67, 133, 245, 0.08), transparent 48%),
+                radial-gradient(circle at 40% 10%, rgba(243, 112, 33, 0.06), transparent 38%);
             animation: gradientShift 28s ease infinite;
         }
 
@@ -128,7 +128,7 @@
             height: 100vh;
             pointer-events: none;
             z-index: -1;
-            filter: saturate(92%) blur(0.2px);
+            filter: saturate(86%) blur(0.15px);
         }
 
         /* CSS Fallback Animation - Floating Orbs */
@@ -141,20 +141,20 @@
         }
 
         .animated-bg::before {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(243, 112, 33, 0.1), transparent);
-            top: 20%;
-            left: 10%;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(243, 112, 33, 0.08), transparent);
+            top: 22%;
+            left: 12%;
             animation-delay: 0s;
         }
 
         .animated-bg::after {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(67, 133, 245, 0.1), transparent);
-            bottom: 20%;
-            right: 10%;
+            width: 340px;
+            height: 340px;
+            background: radial-gradient(circle, rgba(67, 133, 245, 0.08), transparent);
+            bottom: 22%;
+            right: 12%;
             animation-delay: 5s;
         }
 
@@ -173,14 +173,14 @@
         /* Additional floating particles as CSS fallback */
         .particle {
             position: absolute;
-            width: 2.2px;
-            height: 2.2px;
+            width: 1.8px;
+            height: 1.8px;
             background:
                 radial-gradient(circle, rgba(243, 112, 33, 0.38) 0%, rgba(243, 112, 33, 0) 70%),
                 radial-gradient(circle, rgba(67, 133, 245, 0.28) 0%, rgba(67, 133, 245, 0) 70%);
             border-radius: 50%;
-            opacity: 0.32;
-            filter: blur(0.6px);
+            opacity: 0.24;
+            filter: blur(0.5px);
             mix-blend-mode: screen;
             animation: particleFloat 22s ease-in-out infinite;
         }
@@ -3101,7 +3101,7 @@
                     renderer.outputEncoding = THREE.sRGBEncoding;
                 }
 
-                const particleCount = window.innerWidth < 768 ? 34 : 64;
+                const particleCount = window.innerWidth < 768 ? 28 : 56;
                 const geometry = new THREE.BufferGeometry();
                 const positions = new Float32Array(particleCount * 3);
                 const colors = new Float32Array(particleCount * 3);
@@ -3137,22 +3137,22 @@
                     positions[i3 + 1] = basePositions[i3 + 1];
                     positions[i3 + 2] = basePositions[i3 + 2];
 
-                    swirlOffsets[i] = 0.11 + Math.random() * 0.18;
-                    swirlSpeeds[i] = 0.06 + Math.random() * 0.1;
+                    swirlOffsets[i] = 0.08 + Math.random() * 0.14;
+                    swirlSpeeds[i] = 0.04 + Math.random() * 0.06;
                     noiseSeeds[i] = Math.random() * Math.PI * 2;
-                    breathSpeeds[i] = 0.14 + Math.random() * 0.12;
+                    breathSpeeds[i] = 0.1 + Math.random() * 0.1;
                     layerOffsets[i] = cluster.center.y * 0.1 + Math.random() * 0.32;
-                    driftSeeds[i] = 0.06 + Math.random() * 0.1;
-                    parallaxWeights[i] = 0.12 + Math.random() * 0.18;
+                    driftSeeds[i] = 0.04 + Math.random() * 0.06;
+                    parallaxWeights[i] = 0.08 + Math.random() * 0.14;
 
                     if (Math.random() > 0.55) {
-                        colors[i3] = 0.92;
-                        colors[i3 + 1] = 0.56;
-                        colors[i3 + 2] = 0.34;
+                        colors[i3] = 0.88;
+                        colors[i3 + 1] = 0.52;
+                        colors[i3 + 2] = 0.32;
                     } else {
-                        colors[i3] = 0.38;
-                        colors[i3 + 1] = 0.66;
-                        colors[i3 + 2] = 0.98;
+                        colors[i3] = 0.32;
+                        colors[i3 + 1] = 0.6;
+                        colors[i3 + 2] = 0.94;
                     }
                 }
 
@@ -3165,13 +3165,13 @@
 
                 const particleTexture = generateParticleTexture();
                 const material = new THREE.PointsMaterial({
-                    size: window.innerWidth < 768 ? 0.52 : 0.88,
+                    size: window.innerWidth < 768 ? 0.44 : 0.74,
                     sizeAttenuation: true,
                     map: particleTexture,
                     alphaMap: particleTexture,
                     vertexColors: true,
                     transparent: true,
-                    opacity: 0.18,
+                    opacity: 0.14,
                     blending: THREE.AdditiveBlending,
                     depthWrite: false,
                     depthTest: false
@@ -3191,7 +3191,7 @@
                 pointerMoveHandler = (event) => {
                     const point = event.touches ? event.touches[0] : event;
                     if (!point) return;
-                    const strength = window.innerWidth < 768 ? 0.18 : 0.3;
+                    const strength = window.innerWidth < 768 ? 0.12 : 0.22;
                     pointerTargetX = ((point.clientX / window.innerWidth) * 2 - 1) * strength;
                     pointerTargetY = (-(point.clientY / window.innerHeight) * 2 + 1) * strength;
                 };
@@ -3221,7 +3221,7 @@
 
                 document.addEventListener('visibilitychange', visibilityChangeHandler);
 
-                const baseRotation = { x: -0.028, y: 0.12, z: 0 };
+                const baseRotation = { x: -0.024, y: 0.1, z: 0 };
 
                 animateLoop = () => {
                     animationId = requestAnimationFrame(animateLoop);
@@ -3233,11 +3233,11 @@
                     pointerCurrentX += (pointerTargetX - pointerCurrentX) * 0.018;
                     pointerCurrentY += (pointerTargetY - pointerCurrentY) * 0.018;
 
-                    const drift = Math.sin(elapsed * 0.064) * 0.009;
+                    const drift = Math.sin(elapsed * 0.052) * 0.007;
 
-                    particles.rotation.y = THREE.MathUtils.lerp(particles.rotation.y, baseRotation.y + drift + pointerCurrentX * 0.08, 0.028);
-                    particles.rotation.x = THREE.MathUtils.lerp(particles.rotation.x, baseRotation.x + pointerCurrentY * 0.06, 0.028);
-                    particles.rotation.z = THREE.MathUtils.lerp(particles.rotation.z, baseRotation.z + pointerCurrentX * 0.028, 0.028);
+                    particles.rotation.y = THREE.MathUtils.lerp(particles.rotation.y, baseRotation.y + drift + pointerCurrentX * 0.064, 0.026);
+                    particles.rotation.x = THREE.MathUtils.lerp(particles.rotation.x, baseRotation.x + pointerCurrentY * 0.052, 0.026);
+                    particles.rotation.z = THREE.MathUtils.lerp(particles.rotation.z, baseRotation.z + pointerCurrentX * 0.022, 0.026);
 
                     const posArray = positionAttribute.array;
 
@@ -3245,13 +3245,13 @@
                         const i3 = i * 3;
 
                         const swirl = Math.sin(elapsed * swirlSpeeds[i] + noiseSeeds[i]);
-                        const sway = Math.cos(elapsed * (swirlSpeeds[i] * 0.55) + noiseSeeds[i]);
+                        const sway = Math.cos(elapsed * (swirlSpeeds[i] * 0.52) + noiseSeeds[i]);
                         const breath = Math.sin(elapsed * breathSpeeds[i] + layerOffsets[i]);
                         const depthWave = Math.cos(elapsed * driftSeeds[i] + noiseSeeds[i]);
 
-                        posArray[i3] = basePositions[i3] + swirl * (swirlOffsets[i] * 0.4) + pointerCurrentX * parallaxWeights[i] * 0.54;
-                        posArray[i3 + 1] = basePositions[i3 + 1] + sway * (swirlOffsets[i] * 0.28) + breath * 0.36 + pointerCurrentY * parallaxWeights[i] * 0.24;
-                        posArray[i3 + 2] = basePositions[i3 + 2] + depthWave * (swirlOffsets[i] * 0.34);
+                        posArray[i3] = basePositions[i3] + swirl * (swirlOffsets[i] * 0.32) + pointerCurrentX * parallaxWeights[i] * 0.46;
+                        posArray[i3 + 1] = basePositions[i3 + 1] + sway * (swirlOffsets[i] * 0.22) + breath * 0.28 + pointerCurrentY * parallaxWeights[i] * 0.2;
+                        posArray[i3 + 2] = basePositions[i3 + 2] + depthWave * (swirlOffsets[i] * 0.28);
                     }
 
                     positionAttribute.needsUpdate = true;
@@ -3309,21 +3309,21 @@
                 pointer-events: none;
             `;
 
-            for(let i = 0; i < 10; i++) {
+            for(let i = 0; i < 8; i++) {
                 const particle = document.createElement('div');
-                const size = Math.random() * 1.2 + 0.6;
+                const size = Math.random() * 1.1 + 0.55;
                 particle.style.cssText = `
                     position: absolute;
                     width: ${size}px;
                     height: ${size}px;
-                    background: ${Math.random() > 0.6 ? 'rgba(243, 112, 33, 0.15)' : 'rgba(67, 133, 245, 0.14)'};
+                    background: ${Math.random() > 0.6 ? 'rgba(243, 112, 33, 0.12)' : 'rgba(67, 133, 245, 0.12)'};
                     border-radius: 50%;
                     left: ${Math.random() * 100}%;
                     top: ${Math.random() * 100}%;
-                    filter: blur(1px);
-                    opacity: 0.34;
-                    animation: particleFloat ${Math.random() * 16 + 24}s ease-in-out infinite;
-                    animation-delay: ${Math.random() * -12}s;
+                    filter: blur(0.9px);
+                    opacity: 0.28;
+                    animation: particleFloat ${Math.random() * 18 + 24}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * -14}s;
                 `;
                 particleContainer.appendChild(particle);
             }

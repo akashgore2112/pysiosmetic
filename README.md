@@ -4,7 +4,7 @@ This repository hosts the premium **PHYSIOSMETIC** hero experience showcased in 
 
 ## Updated build
 - Latest interactive hero interface, cards, and assessment tools live in [`physio-hero-advanced.html`](physio-hero-advanced.html).
-- Refined WebGL particle ambience runs automatically when the page loads. A CSS-driven fallback keeps motion subtle on devices without WebGL.
+- Refined WebGL particle ambience runs automatically when the page loads with calmer motion, softer lighting, and responsive density. A CSS-driven fallback keeps motion subtle on devices without WebGL.
 
 ## Preview locally
 1. Open `physio-hero-advanced.html` directly in your browser, or
