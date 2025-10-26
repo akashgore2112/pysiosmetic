@@ -92,6 +92,18 @@
             background: radial-gradient(ellipse at 50% 50%, var(--dark) 0%, #000 70%);
         }
 
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(243, 112, 33, 0.08), transparent 55%),
+                radial-gradient(circle at 80% 60%, rgba(67, 133, 245, 0.07), transparent 50%);
+            mix-blend-mode: screen;
+            opacity: 0.52;
+            pointer-events: none;
+            z-index: 3;
+        }
+
         /* ANIMATED BACKGROUND */
         .animated-bg {
             position: absolute;
@@ -101,7 +113,7 @@
                 radial-gradient(circle at 20% 50%, rgba(243, 112, 33, 0.1), transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(67, 133, 245, 0.1), transparent 50%),
                 radial-gradient(circle at 40% 10%, rgba(243, 112, 33, 0.08), transparent 40%);
-            animation: gradientShift 20s ease infinite;
+            animation: gradientShift 28s ease infinite;
         }
 
         @keyframes gradientShift {
@@ -113,6 +125,7 @@
             position: absolute;
             inset: 0;
             z-index: 2;
+            filter: saturate(92%) blur(0.2px);
         }
 
         /* CSS Fallback Animation - Floating Orbs */
@@ -157,27 +170,31 @@
         /* Additional floating particles as CSS fallback */
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--primary);
+            width: 2.2px;
+            height: 2.2px;
+            background:
+                radial-gradient(circle, rgba(243, 112, 33, 0.38) 0%, rgba(243, 112, 33, 0) 70%),
+                radial-gradient(circle, rgba(67, 133, 245, 0.28) 0%, rgba(67, 133, 245, 0) 70%);
             border-radius: 50%;
-            opacity: 0.6;
-            animation: particleFloat 10s linear infinite;
+            opacity: 0.32;
+            filter: blur(0.6px);
+            mix-blend-mode: screen;
+            animation: particleFloat 22s ease-in-out infinite;
         }
 
         @keyframes particleFloat {
-            from {
-                transform: translateY(100vh) rotate(0deg);
+            0% {
+                transform: translate3d(0, 85vh, 0) scale(0.5);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.6;
+            30% {
+                opacity: 0.32;
             }
-            90% {
-                opacity: 0.6;
+            60% {
+                transform: translate3d(14px, -6vh, 0) scale(0.82);
             }
-            to {
-                transform: translateY(-100vh) rotate(360deg);
+            100% {
+                transform: translate3d(-10px, -95vh, 0) scale(0.6);
                 opacity: 0;
             }
         }
@@ -347,14 +364,54 @@
             max-width: 1400px;
             width: 100%;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 4rem;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            align-items: stretch;
+            gap: 5rem;
         }
 
         .text-content {
             z-index: 10;
             animation: fadeInLeft 1s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .hero-topline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.95rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.22), rgba(243, 112, 33, 0.08));
+            border: 1px solid rgba(243, 112, 33, 0.35);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--primary);
+            box-shadow: 0 8px 22px rgba(243, 112, 33, 0.18);
+        }
+
+        .hero-pill--outline {
+            color: rgba(255, 255, 255, 0.75);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: none;
+        }
+
+        .hero-pill--accent {
+            background: linear-gradient(135deg, rgba(67, 133, 245, 0.2), rgba(67, 133, 245, 0.08));
+            border-color: rgba(67, 133, 245, 0.35);
+            color: var(--secondary);
+            box-shadow: 0 8px 22px rgba(67, 133, 245, 0.15);
         }
 
         @keyframes fadeInLeft {
@@ -368,7 +425,7 @@
             font-weight: 600;
             letter-spacing: 3px;
             text-transform: uppercase;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0;
             display: inline-block;
             position: relative;
             padding-left: 25px;
@@ -433,11 +490,148 @@
 
         .description {
             font-size: 1.05rem;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.8;
-            margin-bottom: 2rem;
-            max-width: 500px;
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.9;
+            max-width: 540px;
             animation: fadeIn 1s ease 0.4s both;
+        }
+
+        .hero-highlights {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+            grid-auto-rows: minmax(0, 1fr);
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .highlight-card {
+            position: relative;
+            padding: 1.85rem 1.75rem;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(6, 13, 24, 0.85);
+            backdrop-filter: blur(22px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.45s ease;
+        }
+
+        .highlight-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.16), rgba(67, 133, 245, 0.08));
+            opacity: 0.55;
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .highlight-card::after {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: inherit;
+            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.28), transparent 55%);
+            opacity: 0;
+            transition: opacity 0.45s ease;
+            pointer-events: none;
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .highlight-card:hover::after {
+            opacity: 0.8;
+        }
+
+        .highlight-card h3,
+        .highlight-card p,
+        .highlight-card span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight-card.primary {
+            display: grid;
+            gap: 1.05rem;
+            grid-row: span 2;
+        }
+
+        .highlight-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.45rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .highlight-headline {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+        }
+
+        .highlight-desc {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .highlight-track {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .track-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.78rem;
+            letter-spacing: 0.3px;
+        }
+
+        .highlight-mini {
+            display: grid;
+            gap: 0.85rem;
+            align-content: flex-start;
+        }
+
+        .highlight-card.highlight-mini {
+            padding: 1.55rem 1.5rem;
+        }
+
+        .highlight-mini .highlight-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.06);
+            font-size: 1.35rem;
+        }
+
+        .highlight-mini .highlight-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .highlight-mini .highlight-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.68);
         }
 
         @keyframes fadeIn {
@@ -447,38 +641,33 @@
 
         /* INTERACTIVE BODY ASSESSMENT - ENHANCED */
         .body-assessment {
-            background: linear-gradient(135deg, rgba(243, 112, 33, 0.08), rgba(67, 133, 245, 0.08));
-            border: 1px solid rgba(243, 112, 33, 0.3);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            background: radial-gradient(circle at top left, rgba(243, 112, 33, 0.12), transparent 65%),
+                        radial-gradient(circle at bottom right, rgba(67, 133, 245, 0.14), transparent 60%),
+                        rgba(5, 12, 22, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            padding: 2.2rem;
+            margin-bottom: 1.5rem;
             animation: fadeIn 1s ease 0.5s both;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(22px);
         }
 
         .body-assessment::before {
             content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--primary));
+            inset: 1px;
             border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
             opacity: 0;
-            z-index: -1;
-            transition: opacity 0.5s ease;
-            animation: rotateGradient 3s linear infinite;
-        }
-
-        @keyframes rotateGradient {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            transition: opacity 0.6s ease;
+            pointer-events: none;
         }
 
         .body-assessment:hover::before {
-            opacity: 0.3;
+            opacity: 1;
         }
 
         .assessment-header {
@@ -488,6 +677,35 @@
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
             gap: 1rem;
+        }
+
+        .assessment-subtext {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            line-height: 1.6;
+            margin-bottom: 1.8rem;
+            max-width: 540px;
+        }
+
+        .assessment-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 0.75rem;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .assessment-title {
@@ -525,6 +743,12 @@
 
         .body-diagram-wrapper {
             position: relative;
+        }
+
+        .assessment-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
         }
 
         .body-diagram {
@@ -606,22 +830,24 @@
         /* PAIN CATEGORIES GRID - ENHANCED */
         .pain-categories {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 1rem;
         }
 
         .pain-option {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 1.2rem 1rem;
-            border-radius: 14px;
+            padding: 1.1rem 1.1rem;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-align: center;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
             font-size: 0.9rem;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
         }
 
         .pain-option::before {
@@ -640,18 +866,18 @@
         }
 
         .pain-option:hover {
-            background: linear-gradient(135deg, rgba(243, 112, 33, 0.15), rgba(243, 112, 33, 0.08));
-            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.18), rgba(243, 112, 33, 0.09));
+            border-color: rgba(243, 112, 33, 0.6);
             transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(243, 112, 33, 0.25);
+            box-shadow: 0 18px 35px rgba(243, 112, 33, 0.25);
         }
 
         .pain-option.selected {
-            background: linear-gradient(135deg, rgba(243, 112, 33, 0.3), rgba(243, 112, 33, 0.15));
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.32), rgba(243, 112, 33, 0.18));
             border-color: var(--primary);
             border-width: 2px;
             color: #fff;
-            box-shadow: 0 10px 30px rgba(243, 112, 33, 0.4);
+            box-shadow: 0 18px 40px rgba(243, 112, 33, 0.4);
             transform: translateY(-2px);
         }
 
@@ -661,32 +887,365 @@
         }
 
         .pain-icon {
-            font-size: 2rem;
-            margin-bottom: 0.6rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: radial-gradient(circle at top, rgba(243, 112, 33, 0.35), rgba(243, 112, 33, 0.12));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
             transition: all 0.3s ease;
-            display: block;
         }
 
         .pain-label {
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.85);
         }
 
         .pain-desc {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.58);
+            margin-top: 0.25rem;
+            line-height: 1.5;
+        }
+
+        /* INTERACTIVE CONTROLS */
+        .assessment-controls {
+            margin-top: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .control-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(243, 112, 33, 0.15), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .control-card:hover::after {
+            opacity: 1;
+        }
+
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .control-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .control-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
             font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(243, 112, 33, 0.18);
+            color: var(--primary);
+        }
+
+        .intensity-visual {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .progress-ring {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) calc(var(--progress, 0) * 1%), rgba(255, 255, 255, 0.08) 0%);
+            display: grid;
+            place-items: center;
+            position: relative;
+            transition: background 0.4s ease;
+        }
+
+        .progress-ring::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            background: rgba(5, 10, 20, 0.85);
+        }
+
+        .ring-label {
+            position: relative;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        .slider-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .intensity-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            position: relative;
+        }
+
+        .intensity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(243, 112, 33, 0.4);
+            border: 2px solid rgba(0, 0, 0, 0.6);
+        }
+
+        .intensity-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid rgba(0, 0, 0, 0.6);
+            box-shadow: 0 6px 20px rgba(243, 112, 33, 0.4);
+        }
+
+        .slider-scale {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .slider-description {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.4;
+        }
+
+        .impact-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .impact-tag {
+            padding: 0.4rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .impact-tag:hover {
+            border-color: var(--primary);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .impact-tag.active {
+            background: rgba(243, 112, 33, 0.2);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 8px 20px rgba(243, 112, 33, 0.25);
+        }
+
+        .impact-summary {
+            font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+        }
+
+        .goal-select select {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: border 0.3s ease;
+        }
+
+        .goal-select select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* INSIGHT CARDS */
+        .insight-grid {
+            margin-top: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .insight-card {
+            padding: 1.2rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(5, 10, 20, 0.85), rgba(5, 15, 30, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            min-height: 160px;
+        }
+
+        .insight-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(243, 112, 33, 0.18);
+            display: grid;
+            place-items: center;
+            font-size: 1.1rem;
+        }
+
+        .insight-card h4 {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+        }
+
+        .insight-card p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.68);
+            line-height: 1.5;
+        }
+
+        .insight-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .insight-list li::before {
+            content: '•';
+            margin-right: 0.4rem;
+            color: var(--primary);
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .timeline-item {
+            padding-left: 1.2rem;
+            position: relative;
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 0 6px rgba(243, 112, 33, 0.15);
+        }
+
+        .timeline-item strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .metric-chip {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 0.5rem 0.7rem;
+            margin-right: 0.4rem;
+            margin-bottom: 0.4rem;
+            min-width: 100px;
+        }
+
+        .metric-badges {
+            display: flex;
+            flex-wrap: wrap;
             margin-top: 0.3rem;
+        }
+
+        .metric-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .metric-value {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .insight-empty {
+            color: rgba(255, 255, 255, 0.5);
         }
 
         /* ASSESSMENT RESULT */
         .assessment-result {
             margin-top: 1.5rem;
-            padding: 1.2rem;
-            background: linear-gradient(135deg, rgba(67, 133, 245, 0.1), rgba(67, 133, 245, 0.05));
-            border: 1px solid rgba(67, 133, 245, 0.3);
-            border-radius: 12px;
+            padding: 1.6rem;
+            background: linear-gradient(135deg, rgba(67, 133, 245, 0.12), rgba(67, 133, 245, 0.04));
+            border: 1px solid rgba(67, 133, 245, 0.35);
+            border-radius: 18px;
             display: none;
             animation: slideInUp 0.5s ease;
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(18px);
         }
 
         @keyframes slideInUp {
@@ -696,6 +1255,46 @@
 
         .assessment-result.show {
             display: block;
+        }
+
+        .result-intro {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 0.8rem;
+        }
+
+        .result-highlight {
+            display: inline-block;
+            margin-bottom: 0.8rem;
+            padding: 0.45rem 0.8rem;
+            border-radius: 999px;
+            background: rgba(243, 112, 33, 0.2);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .result-list {
+            margin: 0 0 0.8rem 1rem;
+            padding: 0;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .result-meta {
+            display: grid;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .result-meta strong {
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 600;
         }
 
         .result-title {
@@ -743,6 +1342,27 @@
             gap: 1rem;
             align-items: center;
             animation: fadeIn 1s ease 0.6s both;
+        }
+
+        .cta-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+
+        .cta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: rgba(255, 255, 255, 0.65);
         }
 
         .cta-button {
@@ -796,20 +1416,21 @@
         /* TRUST & STATS */
         .trust-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 1.3rem;
+            margin-top: 2.4rem;
             animation: fadeIn 1s ease 0.7s both;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1.2rem;
-            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 1.35rem;
+            border-radius: 18px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(12px);
         }
 
         .stat-card::before {
@@ -832,10 +1453,10 @@
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 2.1rem;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.35rem;
             font-family: 'Space Grotesk', sans-serif;
         }
 
@@ -867,6 +1488,9 @@
         .visual-content {
             position: relative;
             animation: fadeInRight 1s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
         }
 
         @keyframes fadeInRight {
@@ -884,8 +1508,26 @@
 
         .spine-container {
             position: relative;
-            width: 400px;
-            height: 550px;
+            width: 420px;
+            height: 560px;
+            padding: 3.2rem 2.4rem;
+            border-radius: 32px;
+            background: radial-gradient(circle at top, rgba(243, 112, 33, 0.18), transparent 60%),
+                        radial-gradient(circle at bottom, rgba(67, 133, 245, 0.18), transparent 60%),
+                        rgba(5, 10, 20, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(16px);
+            overflow: hidden;
+        }
+
+        .spine-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 65%);
+            opacity: 0.9;
+            pointer-events: none;
         }
 
         .spine-image {
@@ -893,10 +1535,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 350px;
-            height: 500px;
+            width: 320px;
+            height: 480px;
             object-fit: contain;
-            filter: brightness(1.1) contrast(1.1) drop-shadow(0 0 50px rgba(243, 112, 33, 0.4));
+            filter: brightness(1.08) contrast(1.05) drop-shadow(0 0 40px rgba(243, 112, 33, 0.35));
             animation: float 6s ease-in-out infinite;
             z-index: 10;
         }
@@ -911,10 +1553,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 200px;
-            height: 500px;
-            background: radial-gradient(ellipse, rgba(243, 112, 33, 0.3), transparent 60%);
-            filter: blur(60px);
+            width: 240px;
+            height: 520px;
+            background: radial-gradient(ellipse, rgba(243, 112, 33, 0.32), transparent 65%);
+            filter: blur(70px);
             animation: glowPulse 4s ease-in-out infinite;
         }
 
@@ -923,25 +1565,55 @@
             50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
         }
 
+        .visual-badge {
+            position: absolute;
+            top: 1.6rem;
+            left: 1.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.55rem 1.1rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            font-size: 0.75rem;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.75);
+            z-index: 15;
+        }
+
+        .visual-badge span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            background: rgba(243, 112, 33, 0.2);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
         /* FLOATING CARDS */
         .info-card {
             position: absolute;
-            padding: 1rem;
-            background: rgba(5, 10, 20, 0.9);
+            padding: 1.1rem 1.2rem;
+            background: linear-gradient(135deg, rgba(5, 12, 22, 0.92), rgba(5, 12, 22, 0.72));
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(243, 112, 33, 0.3);
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
             animation: cardFloat 5s ease-in-out infinite;
             z-index: 20;
+            min-width: 160px;
         }
 
         .info-card:hover {
             transform: scale(1.05);
             border-color: var(--primary);
-            box-shadow: 0 15px 40px rgba(243, 112, 33, 0.3);
+            box-shadow: 0 22px 50px rgba(243, 112, 33, 0.3);
         }
 
         @keyframes cardFloat {
@@ -949,35 +1621,107 @@
             50% { transform: translateY(-10px); }
         }
 
-        .card-1 { top: 20%; left: -20%; animation-delay: 0s; }
-        .card-2 { top: 20%; right: -20%; animation-delay: 1s; }
-        .card-3 { bottom: 25%; left: -15%; animation-delay: 2s; }
-        .card-4 { bottom: 25%; right: -15%; animation-delay: 3s; }
+        .card-1 { top: 18%; left: -18%; animation-delay: 0s; }
+        .card-2 { top: 18%; right: -18%; animation-delay: 1s; }
+        .card-3 { bottom: 22%; left: -12%; animation-delay: 2s; }
+        .card-4 { bottom: 22%; right: -12%; animation-delay: 3s; }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
 
         .card-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(243, 112, 33, 0.1);
-            border-radius: 8px;
+            width: 42px;
+            height: 42px;
+            background: radial-gradient(circle at top, rgba(243, 112, 33, 0.35), rgba(243, 112, 33, 0.12));
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            margin-bottom: 0.8rem;
         }
 
-        .card-title {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 0.3rem;
+        .card-pill {
+            padding: 0.3rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(67, 133, 245, 0.18);
+            color: var(--secondary);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
             font-weight: 600;
         }
 
+        .card-title {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
         .card-value {
-            font-size: 1.5rem;
+            font-size: 1.55rem;
             color: var(--primary);
             font-weight: 700;
             font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .card-subtext {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin-top: 0.4rem;
+            letter-spacing: 0.3px;
+        }
+
+        .visual-glass-panel {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 1.2rem;
+            flex-wrap: nowrap;
+            background: rgba(5, 12, 22, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 1.4rem 1.6rem;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.45);
+        }
+
+        .glass-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .glass-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .glass-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .glass-trend {
+            font-size: 0.75rem;
+            color: rgba(67, 133, 245, 0.75);
+            letter-spacing: 0.4px;
+        }
+
+        .glass-divider {
+            width: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            align-self: stretch;
         }
 
         /* QUICK BOOKING MODAL */
@@ -1141,9 +1885,32 @@
                 grid-template-columns: 1fr;
             }
 
+            .assessment-controls,
+            .insight-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .hero-highlights {
+                grid-template-columns: 1fr;
+                grid-auto-rows: auto;
+            }
+
+            .hero-highlights .highlight-card.primary {
+                grid-row: auto;
+            }
+
+            .visual-glass-panel {
+                flex-direction: column;
+                flex-wrap: nowrap;
+            }
+
+            .visual-glass-panel .glass-divider {
+                display: none;
+            }
+
             .trust-stats {
                 grid-template-columns: 1fr;
-                max-width: 300px;
+                max-width: 380px;
                 margin: 2rem auto 0;
             }
         }
@@ -1157,6 +1924,34 @@
             .modal { width: 95%; padding: 1.5rem; }
             .body-diagram { height: 320px; }
             .body-svg { width: 120px; height: 300px; }
+            .assessment-controls,
+            .insight-grid {
+                grid-template-columns: 1fr;
+            }
+            .intensity-visual { flex-direction: column; align-items: flex-start; }
+            .progress-ring { align-self: flex-start; }
+            .hero-topline { justify-content: center; }
+            .hero-highlights { grid-template-columns: 1fr; }
+            .hero-highlights .highlight-card.primary { grid-row: auto; }
+            .visual-glass-panel { flex-direction: column; flex-wrap: nowrap; }
+            .cta-meta { justify-content: center; }
+            .metric-chip { justify-content: center; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .body-diagram:hover .body-svg,
+            .info-card,
+            .pain-option,
+            .cta-button,
+            .nav-cta {
+                transform: none !important;
+            }
         }
     </style>
 </head>
@@ -1202,6 +1997,11 @@
         <div class="hero-content">
             <div class="content-wrapper">
                 <div class="text-content">
+                    <div class="hero-topline">
+                        <span class="hero-pill">🏥 Dubai Flagship Studio</span>
+                        <span class="hero-pill hero-pill--outline">Digital Rehab Ecosystem</span>
+                        <span class="hero-pill hero-pill--accent">ISO 13485 Protocols</span>
+                    </div>
                     <div class="subtitle">ADVANCED PHYSIOTHERAPY</div>
                     <h1 class="main-heading">
                         <span class="heading-line"><span class="heading-text">Move Without</span></span>
@@ -1209,8 +2009,31 @@
                         <span class="heading-line"><span class="heading-text highlight">Confidence.</span></span>
                     </h1>
                     <p class="description">
-                        Experience personalized physiotherapy that combines cutting-edge techniques with compassionate care. Your journey to pain-free movement starts here.
+                        Experience precision physiotherapy that blends elite clinical expertise, motion analytics, and concierge support in one flagship environment. Every protocol is tuned in real-time to how your body heals.
                     </p>
+
+                    <div class="hero-highlights">
+                        <div class="highlight-card primary">
+                            <span class="highlight-meta">Precision Intake Suite</span>
+                            <h3 class="highlight-headline">Dynamic onboarding blends gait analytics with therapist-led calibration in minutes.</h3>
+                            <p class="highlight-desc">Arrive to a pre-configured care plan, motion capture baseline, and nervous-system readiness check before your first guided movement.</p>
+                            <div class="highlight-track">
+                                <span class="track-chip">🔍 Sub-millimetre gait scan</span>
+                                <span class="track-chip">📊 Adaptive load modelling</span>
+                                <span class="track-chip">🤝 Concierge intake briefing</span>
+                            </div>
+                        </div>
+                        <div class="highlight-card highlight-mini">
+                            <div class="highlight-icon">🧠</div>
+                            <div class="highlight-title">Neuro-responsive Blocks</div>
+                            <div class="highlight-desc">Micro-dosed exercises auto-scale with HRV, breath cadence, and perceived exertion.</div>
+                        </div>
+                        <div class="highlight-card highlight-mini">
+                            <div class="highlight-icon">📡</div>
+                            <div class="highlight-title">Always-on Recovery Loop</div>
+                            <div class="highlight-desc">Remote kinematics, coaching nudges, and proactive flare prevention in a single app.</div>
+                        </div>
+                    </div>
 
                     <!-- INTERACTIVE BODY ASSESSMENT - ENHANCED -->
                     <div class="body-assessment">
@@ -1219,6 +2042,12 @@
                                 🎯 Interactive Pain Assessment
                             </div>
                             <div class="assessment-badge">AI-Powered</div>
+                        </div>
+                        <p class="assessment-subtext">Pinpoint the source of tension, explore kinetic compensations, and preview a tailored care pathway before your first session.</p>
+                        <div class="assessment-metrics">
+                            <div class="metric-chip">⏱ Live in under 90s</div>
+                            <div class="metric-chip">🧠 Therapist Verified</div>
+                            <div class="metric-chip">🔒 HIPAA Secure</div>
                         </div>
 
                         <div class="body-map-container">
@@ -1274,37 +2103,121 @@
                                 </div>
                             </div>
 
-                            <!-- ENHANCED PAIN CATEGORIES -->
-                            <div class="pain-categories">
-                                <div class="pain-option" onclick="selectPain(this, 'back', 'lower-back')">
-                                    <div class="pain-icon">🦴</div>
-                                    <div class="pain-label">Back Pain</div>
-                                    <div class="pain-desc">Chronic or acute</div>
+                            <div class="assessment-panel">
+                                <!-- ENHANCED PAIN CATEGORIES -->
+                                <div class="pain-categories">
+                                    <div class="pain-option" onclick="selectPain(this, 'back', 'lower-back')">
+                                        <div class="pain-icon">🦴</div>
+                                        <div class="pain-label">Back Pain</div>
+                                        <div class="pain-desc">Chronic or acute</div>
+                                    </div>
+                                    <div class="pain-option" onclick="selectPain(this, 'neck', 'neck')">
+                                        <div class="pain-icon">😣</div>
+                                        <div class="pain-label">Neck Pain</div>
+                                        <div class="pain-desc">Stiffness & tension</div>
+                                    </div>
+                                    <div class="pain-option" onclick="selectPain(this, 'sports', 'left-arm')">
+                                        <div class="pain-icon">⚽</div>
+                                        <div class="pain-label">Sports Injury</div>
+                                        <div class="pain-desc">Athletic injuries</div>
+                                    </div>
+                                    <div class="pain-option" onclick="selectPain(this, 'knee', 'left-knee')">
+                                        <div class="pain-icon">🦵</div>
+                                        <div class="pain-label">Knee Pain</div>
+                                        <div class="pain-desc">Joint issues</div>
+                                    </div>
+                                    <div class="pain-option" onclick="selectPain(this, 'shoulder', 'shoulders')">
+                                        <div class="pain-icon">💪</div>
+                                        <div class="pain-label">Shoulder Pain</div>
+                                        <div class="pain-desc">Mobility issues</div>
+                                    </div>
+                                    <div class="pain-option" onclick="selectPain(this, 'posture', 'upper-back')">
+                                        <div class="pain-icon">🧘</div>
+                                        <div class="pain-label">Posture Issues</div>
+                                        <div class="pain-desc">Alignment problems</div>
+                                    </div>
                                 </div>
-                                <div class="pain-option" onclick="selectPain(this, 'neck', 'neck')">
-                                    <div class="pain-icon">😣</div>
-                                    <div class="pain-label">Neck Pain</div>
-                                    <div class="pain-desc">Stiffness & tension</div>
+
+                                <!-- DYNAMIC CONTROLS -->
+                                <div class="assessment-controls">
+                                    <div class="control-card intensity-card">
+                                        <div class="control-header">
+                                            <span class="control-title">Pain Intensity</span>
+                                            <span class="control-badge" id="intensityBadge">Moderate</span>
+                                        </div>
+                                        <div class="intensity-visual">
+                                            <div class="progress-ring" id="intensityRing" style="--progress:50;">
+                                                <span class="ring-label" id="ringLabel">5/10</span>
+                                            </div>
+                                            <div class="slider-wrapper">
+                                                <input type="range" min="0" max="10" value="5" class="intensity-slider" id="intensitySlider">
+                                                <div class="slider-scale">
+                                                    <span>Calm</span>
+                                                    <span>Severe</span>
+                                                </div>
+                                                <div class="slider-description" id="intensityDescription">Track how sharp the pain feels to tailor your care plan.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="control-card impact-card">
+                                        <div class="control-header">
+                                            <span class="control-title">How does it affect you?</span>
+                                            <span class="control-badge">Daily Impact</span>
+                                        </div>
+                                        <div class="impact-tags">
+                                            <button type="button" class="impact-tag" data-impact="mobility">Limited Mobility</button>
+                                            <button type="button" class="impact-tag" data-impact="sleep">Sleep Disturbance</button>
+                                            <button type="button" class="impact-tag" data-impact="work">Work Limitation</button>
+                                            <button type="button" class="impact-tag" data-impact="sports">Sports Restriction</button>
+                                            <button type="button" class="impact-tag" data-impact="fatigue">Muscle Fatigue</button>
+                                        </div>
+                                        <div class="impact-summary" id="impactSummary">Select what applies to you.</div>
+                                    </div>
+
+                                    <div class="control-card goal-card">
+                                        <div class="control-header">
+                                            <span class="control-title">Primary Goal</span>
+                                            <span class="control-badge">Focus</span>
+                                        </div>
+                                        <div class="goal-select">
+                                            <select id="goalSelect">
+                                                <option value="mobility">Improve Mobility</option>
+                                                <option value="painRelief">Reduce Pain</option>
+                                                <option value="performance">Return to Sport</option>
+                                            </select>
+                                        </div>
+                                        <div class="impact-summary" id="goalSummary">We'll adjust your roadmap around this priority.</div>
+                                    </div>
                                 </div>
-                                <div class="pain-option" onclick="selectPain(this, 'sports', 'left-arm')">
-                                    <div class="pain-icon">⚽</div>
-                                    <div class="pain-label">Sports Injury</div>
-                                    <div class="pain-desc">Athletic injuries</div>
-                                </div>
-                                <div class="pain-option" onclick="selectPain(this, 'knee', 'left-knee')">
-                                    <div class="pain-icon">🦵</div>
-                                    <div class="pain-label">Knee Pain</div>
-                                    <div class="pain-desc">Joint issues</div>
-                                </div>
-                                <div class="pain-option" onclick="selectPain(this, 'shoulder', 'shoulders')">
-                                    <div class="pain-icon">💪</div>
-                                    <div class="pain-label">Shoulder Pain</div>
-                                    <div class="pain-desc">Mobility issues</div>
-                                </div>
-                                <div class="pain-option" onclick="selectPain(this, 'posture', 'upper-back')">
-                                    <div class="pain-icon">🧘</div>
-                                    <div class="pain-label">Posture Issues</div>
-                                    <div class="pain-desc">Alignment problems</div>
+
+                                <!-- INSIGHTS -->
+                                <div class="insight-grid">
+                                    <div class="insight-card">
+                                        <div class="insight-icon">🧠</div>
+                                        <h4>Clinical Focus</h4>
+                                        <p id="insightFocus" class="insight-empty">Select a pain area to reveal targeted focus points.</p>
+                                        <div id="metricBadges" class="metric-badges"></div>
+                                    </div>
+                                    <div class="insight-card">
+                                        <div class="insight-icon">🛠️</div>
+                                        <h4>Priority Actions</h4>
+                                        <ul class="insight-list" id="actionList">
+                                            <li class="insight-empty">Choose a category to view evidence-led actions.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="insight-card">
+                                        <div class="insight-icon">⏳</div>
+                                        <h4>Recovery Timeline</h4>
+                                        <div class="timeline" id="timelineList">
+                                            <div class="timeline-item insight-empty">Timeline populates once a pain area is selected.</div>
+                                        </div>
+                                    </div>
+                                    <div class="insight-card">
+                                        <div class="insight-icon">📈</div>
+                                        <h4>Goal Strategy</h4>
+                                        <p id="goalInsight" class="insight-empty">Set your goal to receive coaching guidance.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1315,7 +2228,7 @@
                                 💡 Recommended Treatment
                             </div>
                             <div class="result-content" id="resultContent">
-                                Select a pain area to see recommended treatments.
+                                Build your roadmap by choosing a pain category, adjusting intensity, and highlighting how it affects your day.
                             </div>
                             <div class="result-actions">
                                 <button class="result-btn" onclick="openModal()">Book Assessment</button>
@@ -1332,6 +2245,11 @@
                         <button class="cta-button cta-secondary" onclick="scrollToSection('services')">
                             View Services
                         </button>
+                    </div>
+                    <div class="cta-meta">
+                        <span class="cta-pill">⏱ 2-minute digital triage</span>
+                        <span class="cta-pill">🧑‍⚕️ Specialist concierge follow-up</span>
+                        <span class="cta-pill">📲 Ongoing recovery app access</span>
                     </div>
 
                     <!-- TRUST STATS -->
@@ -1351,6 +2269,11 @@
                             <div class="stat-number counting" data-target="15">0</div>
                             <div class="stat-label">Years Experience</div>
                         </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🧬</div>
+                            <div class="stat-number counting" data-target="32">0</div>
+                            <div class="stat-label">Clinical Pathways</div>
+                        </div>
                     </div>
                 </div>
 
@@ -1358,33 +2281,69 @@
                 <div class="visual-content">
                     <div class="spine-visual">
                         <div class="spine-container">
+                            <div class="visual-badge">AI Movement Scan <span>Live</span></div>
                             <div class="spine-glow"></div>
                             <img src="https://i.postimg.cc/NFSYhY8y/Adobe-Express-file.png" alt="Spine Visualization" class="spine-image" id="spineImg">
 
                             <!-- INFO CARDS -->
                             <div class="info-card card-1">
-                                <div class="card-icon">📊</div>
+                                <div class="card-top">
+                                    <div class="card-icon">📊</div>
+                                    <div class="card-pill">Live</div>
+                                </div>
                                 <div class="card-title">Success Rate</div>
                                 <div class="card-value">94%</div>
+                                <div class="card-subtext">Benchmark +6% vs city average</div>
                             </div>
 
                             <div class="info-card card-2">
-                                <div class="card-icon">⏱️</div>
+                                <div class="card-top">
+                                    <div class="card-icon">⏱️</div>
+                                    <div class="card-pill">Projected</div>
+                                </div>
                                 <div class="card-title">Recovery Time</div>
-                                <div class="card-value">6-8 Weeks</div>
+                                <div class="card-value">6-8 Wks</div>
+                                <div class="card-subtext">Dynamic load response updates daily</div>
                             </div>
 
                             <div class="info-card card-3">
-                                <div class="card-icon">🎯</div>
+                                <div class="card-top">
+                                    <div class="card-icon">🎯</div>
+                                    <div class="card-pill">Focus</div>
+                                </div>
                                 <div class="card-title">Pain Reduction</div>
                                 <div class="card-value">85%</div>
+                                <div class="card-subtext">High-impact myofascial release blocks</div>
                             </div>
 
                             <div class="info-card card-4">
-                                <div class="card-icon">💪</div>
+                                <div class="card-top">
+                                    <div class="card-icon">💪</div>
+                                    <div class="card-pill">Tracked</div>
+                                </div>
                                 <div class="card-title">Strength Gain</div>
                                 <div class="card-value">+40%</div>
+                                <div class="card-subtext">Neuromuscular priming + strength labs</div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="visual-glass-panel">
+                        <div class="glass-metric">
+                            <div class="glass-label">Movement Quality Index</div>
+                            <div class="glass-value">92 / 100</div>
+                            <div class="glass-trend">Stability ↑ steady this week</div>
+                        </div>
+                        <div class="glass-divider"></div>
+                        <div class="glass-metric">
+                            <div class="glass-label">Session Adherence</div>
+                            <div class="glass-value">87%</div>
+                            <div class="glass-trend">Micro-break prompts activated</div>
+                        </div>
+                        <div class="glass-divider"></div>
+                        <div class="glass-metric">
+                            <div class="glass-label">Care Team Feedback</div>
+                            <div class="glass-value">Real-time</div>
+                            <div class="glass-trend">Next review in 2h with lead therapist</div>
                         </div>
                     </div>
                 </div>
@@ -1444,100 +2403,480 @@
         let selectedPain = null;
         const painRecommendations = {
             'back': {
-                title: 'Back Pain Treatment',
-                content: 'Manual therapy, core strengthening exercises, postural correction, and spinal mobilization. Typical recovery: 4-8 weeks with consistent treatment.',
-                bodyParts: ['lower-back', 'mid-back', 'upper-back']
+                title: 'Back Pain Recovery Blueprint',
+                summary: 'Manual therapy, core stability training, and posture retraining to restore lumbar control and confidence.',
+                focus: 'Restore lumbar stability, decompress irritated segments, and retrain posture endurance.',
+                bodyParts: ['lower-back', 'mid-back', 'upper-back'],
+                actions: [
+                    'Spinal decompression & manual mobilization twice weekly.',
+                    'Core stabilization circuits with breath-led control and anti-rotation work.',
+                    'Ergonomic coaching with posture resets every 2 hours.'
+                ],
+                timeline: [
+                    { phase: 'Week 1-2', detail: 'Calm inflammation with manual therapy, neural glides, and diaphragmatic breathing.' },
+                    { phase: 'Week 3-5', detail: 'Progressive core strengthening, hip mobility drills, and load tolerance building.' },
+                    { phase: 'Week 6+', detail: 'Functional strength circuits, return-to-lifestyle coaching, and relapse prevention.' }
+                ],
+                metrics: [
+                    { label: 'Relief', value: '4-8 Weeks' },
+                    { label: 'Sessions', value: '2x / Week' },
+                    { label: 'Focus', value: 'Core & Posture' }
+                ],
+                goals: {
+                    mobility: 'Segmental mobility flows, hip hinge drills, and daily posture resets.',
+                    painRelief: 'Neuro-modulation, gentle traction, and supportive taping as needed.',
+                    performance: 'Posterior-chain loading, deadlift patterning, and dynamic power progressions.'
+                }
             },
             'neck': {
-                title: 'Neck Pain Treatment',
-                content: 'Cervical mobilization, muscle release techniques, postural assessment, and stretching exercises. Relief often seen within 2-4 weeks.',
-                bodyParts: ['neck', 'head', 'shoulders']
+                title: 'Neck Pain Treatment Pathway',
+                summary: 'Cervical mobilization, myofascial release, and scapular activation to relieve tension and rebuild endurance.',
+                focus: 'Release cervical tension while rebuilding deep neck stabilizers and thoracic mobility.',
+                bodyParts: ['neck', 'head', 'shoulders'],
+                actions: [
+                    'Manual cervical mobilization and trigger-point release.',
+                    'Deep neck flexor activation with scapular stability drills.',
+                    'Ergonomic screen setup with micro-break breathing resets.'
+                ],
+                timeline: [
+                    { phase: 'Week 1-2', detail: 'Pain modulation, soft-tissue release, and gentle range retraining.' },
+                    { phase: 'Week 3-4', detail: 'Postural endurance circuits, thoracic extension mobility, and neural glides.' },
+                    { phase: 'Week 5+', detail: 'Functional strengthening and stress-management strategies.' }
+                ],
+                metrics: [
+                    { label: 'Relief', value: '2-4 Weeks' },
+                    { label: 'Focus', value: 'Posture & Mobility' },
+                    { label: 'Sessions', value: '1-2x / Week' }
+                ],
+                goals: {
+                    mobility: 'Thoracic extension drills, chin tuck flows, and shoulder-opening mobility.',
+                    painRelief: 'Calming breath work, manual release, and supportive taping strategies.',
+                    performance: 'Scapular control under load, kinetic-chain integration, and return-to-desk endurance.'
+                }
             },
             'sports': {
                 title: 'Sports Injury Rehabilitation',
-                content: 'Sport-specific rehabilitation, functional movement training, strength conditioning, and injury prevention strategies. Timeline varies by injury severity.',
-                bodyParts: ['left-arm', 'right-arm', 'left-knee', 'right-knee', 'left-shoulder', 'right-shoulder']
+                summary: 'Sport-specific rehab, neuromuscular control, and loading progressions to accelerate safe return to play.',
+                focus: 'Rebuild explosive control, balance asymmetries, and guide return-to-sport metrics.',
+                bodyParts: ['left-arm', 'right-arm', 'left-knee', 'right-knee', 'left-shoulder', 'right-shoulder'],
+                actions: [
+                    'Movement screening and asymmetry correction drills.',
+                    'Progressive plyometrics, acceleration, and deceleration work.',
+                    'Recovery monitoring with mobility primers and load tracking.'
+                ],
+                timeline: [
+                    { phase: 'Week 1-2', detail: 'Control swelling, restore range, and begin neuromuscular activation.' },
+                    { phase: 'Week 3-5', detail: 'Introduce strength pyramids, proprioceptive drills, and movement retraining.' },
+                    { phase: 'Week 6+', detail: 'Sport simulation, energy-system conditioning, and performance testing.' }
+                ],
+                metrics: [
+                    { label: 'Return', value: 'Timeline by Injury' },
+                    { label: 'Sessions', value: '2-3x / Week' },
+                    { label: 'Focus', value: 'Power & Control' }
+                ],
+                goals: {
+                    mobility: 'Joint-specific mobility primers paired with activation supersets.',
+                    painRelief: 'Active recovery, contrast therapy, and precision taping between sessions.',
+                    performance: 'Explosive strength blocks, agility ladders, and sport-specific energy systems.'
+                }
             },
             'knee': {
-                title: 'Knee Pain Management',
-                content: 'Joint mobilization, strengthening of supporting muscles, gait analysis, and biomechanical correction. Most patients improve within 6-8 weeks.',
-                bodyParts: ['left-knee', 'right-knee', 'left-thigh', 'right-thigh']
+                title: 'Knee Pain Management Plan',
+                summary: 'Joint mobilization, lower-limb strength, and gait retraining to stabilize and offload the knee complex.',
+                focus: 'Stabilize the knee, build hip and ankle synergy, and optimize loading mechanics.',
+                bodyParts: ['left-knee', 'right-knee', 'left-thigh', 'right-thigh'],
+                actions: [
+                    'Patellofemoral mobilizations and quad activation drills.',
+                    'Hip/glute strengthening with single-leg balance progressions.',
+                    'Stride re-education and impact management coaching.'
+                ],
+                timeline: [
+                    { phase: 'Week 1-2', detail: 'Reduce inflammation, normalize patellar tracking, and maintain range.' },
+                    { phase: 'Week 3-6', detail: 'Strengthen hip-knee chain, proprioception work, and controlled loading.' },
+                    { phase: 'Week 7+', detail: 'Dynamic strength, impact tolerance, and return-to-activity planning.' }
+                ],
+                metrics: [
+                    { label: 'Relief', value: '6-8 Weeks' },
+                    { label: 'Sessions', value: '2x / Week' },
+                    { label: 'Focus', value: 'Hip-Knee Synergy' }
+                ],
+                goals: {
+                    mobility: 'Knee flexion mobility with ankle dorsiflexion and quad length resets.',
+                    painRelief: 'Offload taping, blood-flow stimulation, and manual therapy to calm flare-ups.',
+                    performance: 'Power step-ups, deceleration drills, and sport-specific agility.'
+                }
             },
             'shoulder': {
                 title: 'Shoulder Pain Treatment',
-                content: 'Rotator cuff strengthening, range of motion exercises, manual therapy, and functional movement training. Recovery typically 4-12 weeks.',
-                bodyParts: ['shoulders', 'left-shoulder', 'right-shoulder', 'left-arm', 'right-arm']
+                summary: 'Rotator cuff strength, scapular rhythm training, and functional mobility restore overhead freedom.',
+                focus: 'Synchronize scapular mechanics, cuff strength, and thoracic mobility.',
+                bodyParts: ['shoulders', 'left-shoulder', 'right-shoulder', 'left-arm', 'right-arm'],
+                actions: [
+                    'Manual glenohumeral mobilizations with soft tissue release.',
+                    'Cuff loading ladders, scapular control, and closed-chain stability.',
+                    'Functional reach patterns and sport-specific integration.'
+                ],
+                timeline: [
+                    { phase: 'Week 1-3', detail: 'Pain modulation, assisted mobility, and activation sequencing.' },
+                    { phase: 'Week 4-6', detail: 'Strength endurance, scapular mechanics, and mid-range loading.' },
+                    { phase: 'Week 7+', detail: 'Overhead strength, plyometric loading, and return-to-sport drills.' }
+                ],
+                metrics: [
+                    { label: 'Relief', value: '4-12 Weeks' },
+                    { label: 'Sessions', value: '1-2x / Week' },
+                    { label: 'Focus', value: 'Scapular Rhythm' }
+                ],
+                goals: {
+                    mobility: 'Thoracic extension work, open-chain mobility, and banded reach flows.',
+                    painRelief: 'Isometric pain-gating, taping, and manual decompression.',
+                    performance: 'Overhead plyometrics, perturbation training, and athletic return.'
+                }
             },
             'posture': {
                 title: 'Posture Correction Program',
-                content: 'Ergonomic assessment, postural re-education, core stability training, and muscle balance restoration. Visible improvements in 3-6 weeks.',
-                bodyParts: ['upper-back', 'mid-back', 'lower-back', 'neck', 'shoulders']
+                summary: 'Ergonomic resets, mobility training, and core activation to realign and sustain upright posture.',
+                focus: 'Rebalance the spine, open restricted chains, and build endurance for upright posture.',
+                bodyParts: ['upper-back', 'mid-back', 'lower-back', 'neck', 'shoulders'],
+                actions: [
+                    'Desk ergonomics audit with scheduled micro-break routines.',
+                    'Core and scapular endurance circuits with breath training.',
+                    'Mobility flows for thoracic extension and hip flexor release.'
+                ],
+                timeline: [
+                    { phase: 'Week 1-2', detail: 'Awareness drills, breathing resets, and gentle mobility.' },
+                    { phase: 'Week 3-5', detail: 'Strength endurance circuits and postural habit stacking.' },
+                    { phase: 'Week 6+', detail: 'Dynamic posture under load and lifestyle integration.' }
+                ],
+                metrics: [
+                    { label: 'Visible Change', value: '3-6 Weeks' },
+                    { label: 'Sessions', value: '1x / Week' },
+                    { label: 'Focus', value: 'Core & Alignment' }
+                ],
+                goals: {
+                    mobility: 'Daily spine mobility flows with hip opener sequences.',
+                    painRelief: 'Breath-led relaxation, soft tissue release, and gentle traction.',
+                    performance: 'Postural strength under load, anti-gravity drills, and movement economy.'
+                }
             }
         };
+
+        const intensityProfiles = [
+            { min: 0, max: 3, label: 'Mild', description: 'Maintain gentle activity and reinforce good mechanics.', plan: 'Gentle activation & posture resets keep tissues responsive.' },
+            { min: 4, max: 6, label: 'Moderate', description: 'Blend mobility with strength to support daily movement.', plan: 'Combine manual therapy with stability training and guided mobility.' },
+            { min: 7, max: 10, label: 'High', description: 'Prioritize calming strategies before progressive loading.', plan: 'Focused pain modulation, progressive loading, and close therapist feedback.' }
+        ];
+
+        const impactDescriptions = {
+            mobility: 'Mobility feels limited during bending or twisting.',
+            sleep: 'Pain disrupts sleep quality and recovery.',
+            work: 'Work or desk duties feel restricted.',
+            sports: 'Sports or gym routines are currently on hold.',
+            fatigue: 'Muscle fatigue or weakness follows activity.'
+        };
+
+        const goalLabels = {
+            mobility: 'Improve Mobility',
+            painRelief: 'Reduce Pain',
+            performance: 'Return to Sport'
+        };
+
+        const goalDescriptions = {
+            mobility: 'Unlock range, fluid transitions, and confident daily movement.',
+            painRelief: 'Calm inflammation quickly and stabilize surrounding support.',
+            performance: 'Rebuild power, coordination, and sport readiness.'
+        };
+
+        const intensitySlider = document.getElementById('intensitySlider');
+        const intensityBadge = document.getElementById('intensityBadge');
+        const intensityDescription = document.getElementById('intensityDescription');
+        const intensityRing = document.getElementById('intensityRing');
+        const ringLabel = document.getElementById('ringLabel');
+        const impactSummaryEl = document.getElementById('impactSummary');
+        const goalSummaryEl = document.getElementById('goalSummary');
+        const goalSelect = document.getElementById('goalSelect');
+        const goalInsightEl = document.getElementById('goalInsight');
+        const insightFocusEl = document.getElementById('insightFocus');
+        const actionListEl = document.getElementById('actionList');
+        const timelineListEl = document.getElementById('timelineList');
+        const metricBadgesEl = document.getElementById('metricBadges');
+
+        let selectedIntensity = intensitySlider ? parseInt(intensitySlider.value, 10) : 5;
+        const selectedImpacts = new Set();
+        let selectedGoal = goalSelect ? goalSelect.value : 'mobility';
+
+        function getIntensityProfile(value) {
+            return intensityProfiles.find(profile => value >= profile.min && value <= profile.max) || intensityProfiles[1];
+        }
+
+        function updatePainMarker() {
+            const marker = document.getElementById('painMarker');
+            if (!marker) return;
+            const profile = getIntensityProfile(selectedIntensity);
+            marker.textContent = selectedIntensity;
+            marker.title = `Pain intensity ${selectedIntensity}/10 (${profile.label})`;
+            if (profile.label === 'High') {
+                marker.style.background = 'linear-gradient(135deg, rgba(243,112,33,0.95), rgba(255,94,58,0.9))';
+            } else if (profile.label === 'Moderate') {
+                marker.style.background = 'linear-gradient(135deg, rgba(243,112,33,0.85), rgba(67,133,245,0.7))';
+            } else {
+                marker.style.background = 'linear-gradient(135deg, rgba(243,112,33,0.7), rgba(67,133,245,0.6))';
+            }
+        }
+
+        function focusMarkerOn(partName) {
+            const marker = document.getElementById('painMarker');
+            const diagram = document.querySelector('.body-diagram');
+            if (!marker || !diagram || !partName) return;
+
+            const target = document.querySelector(`.body-part[data-part="${partName}"]`);
+            if (!target) return;
+
+            requestAnimationFrame(() => {
+                const diagramRect = diagram.getBoundingClientRect();
+                const partRect = target.getBoundingClientRect();
+                marker.style.display = 'flex';
+                marker.style.left = `${partRect.left - diagramRect.left + partRect.width / 2}px`;
+                marker.style.top = `${partRect.top - diagramRect.top + partRect.height / 2}px`;
+                updatePainMarker();
+            });
+        }
+
+        function updateIntensityUI(triggerResult = true) {
+            const profile = getIntensityProfile(selectedIntensity);
+            if (intensityBadge) intensityBadge.textContent = profile.label;
+            if (intensityDescription) intensityDescription.textContent = profile.description;
+            if (intensityRing) intensityRing.style.setProperty('--progress', (selectedIntensity / 10) * 100);
+            if (ringLabel) ringLabel.textContent = `${selectedIntensity}/10`;
+            updatePainMarker();
+            if (triggerResult) {
+                updateAssessmentResult(selectedPain ? painRecommendations[selectedPain] : null);
+            }
+        }
+
+        function getImpactNarrative() {
+            if (!selectedImpacts.size) {
+                return 'No daily limitations flagged yet.';
+            }
+            return Array.from(selectedImpacts).map(impact => impactDescriptions[impact] || impact).join(' • ');
+        }
+
+        function updateImpactSummary(triggerResult = true) {
+            if (impactSummaryEl) {
+                if (!selectedImpacts.size) {
+                    impactSummaryEl.textContent = 'Select what applies to you.';
+                } else {
+                    impactSummaryEl.textContent = `Impact logged: ${getImpactNarrative()}`;
+                }
+            }
+            if (triggerResult) {
+                updateAssessmentResult(selectedPain ? painRecommendations[selectedPain] : null);
+            }
+        }
+
+        function updateGoalMessaging(recommendation) {
+            const goalLabel = goalLabels[selectedGoal] || 'Improve Mobility';
+            if (goalSummaryEl) {
+                goalSummaryEl.textContent = `Goal set: ${goalLabel}. ${goalDescriptions[selectedGoal] || ''}`;
+            }
+
+            if (goalInsightEl) {
+                if (recommendation && recommendation.goals && recommendation.goals[selectedGoal]) {
+                    goalInsightEl.textContent = recommendation.goals[selectedGoal];
+                    goalInsightEl.classList.remove('insight-empty');
+                } else {
+                    goalInsightEl.textContent = goalDescriptions[selectedGoal] || 'Select a goal to personalize your roadmap.';
+                    goalInsightEl.classList.add('insight-empty');
+                }
+            }
+        }
+
+        function getGoalNarrative(recommendation) {
+            if (recommendation && recommendation.goals && recommendation.goals[selectedGoal]) {
+                return recommendation.goals[selectedGoal];
+            }
+            return goalDescriptions[selectedGoal] || 'Define your goal to tailor the plan.';
+        }
+
+        function updateAssessmentResult(recommendation) {
+            const resultDiv = document.getElementById('assessmentResult');
+            const resultContent = document.getElementById('resultContent');
+            if (!resultDiv || !resultContent) return;
+
+            const profile = getIntensityProfile(selectedIntensity);
+            const goalAdvice = getGoalNarrative(recommendation);
+            const impactNarrative = getImpactNarrative();
+
+            if (!recommendation) {
+                resultContent.innerHTML = `<strong>Build Your Recovery Map</strong><br><br>Current intensity: <strong>${selectedIntensity}/10 (${profile.label})</strong>. ${impactNarrative} Choose a pain category to unlock a ${goalLabels[selectedGoal] || 'personalized'} strategy aligned with your goal.`;
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            const actionsHtml = (recommendation.actions && recommendation.actions.length)
+                ? recommendation.actions.map(action => `<li>${action}</li>`).join('')
+                : `<li>${recommendation.summary}</li>`;
+
+            resultContent.innerHTML = `
+                <div class="result-intro">${recommendation.summary}</div>
+                <div class="result-highlight">${profile.plan}</div>
+                <ul class="result-list">${actionsHtml}</ul>
+                <div class="result-meta">
+                    <div><strong>Intensity:</strong> ${profile.label} (${selectedIntensity}/10)</div>
+                    <div><strong>Impact:</strong> ${impactNarrative}</div>
+                    <div><strong>Goal Focus:</strong> ${goalAdvice}</div>
+                </div>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        function renderMetrics(metrics = []) {
+            if (!metricBadgesEl) return;
+            if (!metrics.length) {
+                metricBadgesEl.innerHTML = '';
+                return;
+            }
+            metricBadgesEl.innerHTML = metrics.map(metric => `
+                <div class="metric-chip">
+                    <span class="metric-label">${metric.label}</span>
+                    <span class="metric-value">${metric.value}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderActions(actions = []) {
+            if (!actionListEl) return;
+            if (!actions.length) {
+                actionListEl.innerHTML = '<li class="insight-empty">Choose a category to view evidence-led actions.</li>';
+                return;
+            }
+            actionListEl.innerHTML = actions.map(action => `<li>${action}</li>`).join('');
+        }
+
+        function renderTimeline(timeline = []) {
+            if (!timelineListEl) return;
+            if (!timeline.length) {
+                timelineListEl.innerHTML = '<div class="timeline-item insight-empty">Timeline populates once a pain area is selected.</div>';
+                return;
+            }
+            timelineListEl.innerHTML = timeline.map(item => `
+                <div class="timeline-item">
+                    <strong>${item.phase}</strong>
+                    ${item.detail}
+                </div>
+            `).join('');
+        }
+
+        function resetInsights() {
+            if (insightFocusEl) {
+                insightFocusEl.textContent = 'Select a pain area to reveal targeted focus points.';
+                insightFocusEl.classList.add('insight-empty');
+            }
+            renderActions([]);
+            renderTimeline([]);
+            renderMetrics([]);
+        }
+
+        function updateInsights(type) {
+            const recommendation = painRecommendations[type];
+            if (!recommendation) {
+                resetInsights();
+                updateGoalMessaging(null);
+                return;
+            }
+
+            if (insightFocusEl) {
+                insightFocusEl.textContent = recommendation.focus;
+                insightFocusEl.classList.remove('insight-empty');
+            }
+            renderActions(recommendation.actions || []);
+            renderTimeline(recommendation.timeline || []);
+            renderMetrics(recommendation.metrics || []);
+            updateGoalMessaging(recommendation);
+        }
+
+        if (intensitySlider) {
+            intensitySlider.addEventListener('input', (event) => {
+                selectedIntensity = parseInt(event.target.value, 10);
+                updateIntensityUI();
+            });
+        }
+
+        document.querySelectorAll('.impact-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                const impact = tag.getAttribute('data-impact');
+                if (!impact) return;
+
+                if (selectedImpacts.has(impact)) {
+                    selectedImpacts.delete(impact);
+                    tag.classList.remove('active');
+                } else {
+                    selectedImpacts.add(impact);
+                    tag.classList.add('active');
+                }
+                updateImpactSummary();
+            });
+        });
+
+        if (goalSelect) {
+            goalSelect.addEventListener('change', (event) => {
+                selectedGoal = event.target.value;
+                updateGoalMessaging(selectedPain ? painRecommendations[selectedPain] : null);
+                updateAssessmentResult(selectedPain ? painRecommendations[selectedPain] : null);
+            });
+        }
+
+        resetInsights();
+        updateIntensityUI(false);
+        updateImpactSummary(false);
+        updateGoalMessaging(null);
+        updateAssessmentResult(null);
 
         function selectPain(element, type, primaryBodyPart) {
             document.querySelectorAll('.pain-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
             selectedPain = type;
 
-            // Update form input
             const painAreaInput = document.getElementById('painAreaInput');
             if (painAreaInput) {
-                painAreaInput.value = element.querySelector('.pain-label').textContent;
+                const label = element.querySelector('.pain-label');
+                painAreaInput.value = label ? label.textContent : '';
             }
 
-            // Highlight corresponding body parts
-            document.querySelectorAll('.body-part').forEach(part => {
-                part.classList.remove('active');
-            });
+            document.querySelectorAll('.body-part').forEach(part => part.classList.remove('active'));
 
-            // Show recommendation
             const recommendation = painRecommendations[type];
             if (recommendation) {
-                recommendation.bodyParts.forEach(part => {
-                    const bodyPart = document.querySelector(`[data-part="${part}"]`);
+                recommendation.bodyParts.forEach(partName => {
+                    const bodyPart = document.querySelector(`[data-part="${partName}"]`);
                     if (bodyPart) bodyPart.classList.add('active');
                 });
 
-                // Show assessment result
-                const resultDiv = document.getElementById('assessmentResult');
-                const resultContent = document.getElementById('resultContent');
-                resultContent.innerHTML = `<strong>${recommendation.title}</strong><br><br>${recommendation.content}`;
-                resultDiv.classList.add('show');
+                const focusTarget = primaryBodyPart || (recommendation.bodyParts ? recommendation.bodyParts[0] : null);
+                focusMarkerOn(focusTarget);
+                updateInsights(type);
+                updateAssessmentResult(recommendation);
+            } else {
+                resetInsights();
+                updateGoalMessaging(null);
+                updateAssessmentResult(null);
             }
         }
 
         // BODY PART CLICK INTERACTION
         document.querySelectorAll('.body-part').forEach(part => {
-            part.addEventListener('click', function(e) {
+            part.addEventListener('click', function() {
                 const partName = this.getAttribute('data-name');
                 const partId = this.getAttribute('data-part');
 
                 document.querySelectorAll('.body-part').forEach(p => p.classList.remove('active'));
                 this.classList.add('active');
 
-                // Show pain point marker
-                const marker = document.getElementById('painMarker');
-                const svg = document.querySelector('.body-svg');
-                const diagram = document.querySelector('.body-diagram');
+                focusMarkerOn(partId);
 
-                if (marker && svg && diagram) {
-                    const svgRect = svg.getBoundingClientRect();
-                    const diagramRect = diagram.getBoundingClientRect();
-                    const partRect = this.getBoundingClientRect();
-
-                    const markerLeft = partRect.left - diagramRect.left + (partRect.width / 2);
-                    const markerTop = partRect.top - diagramRect.top + (partRect.height / 2);
-
-                    marker.style.display = 'flex';
-                    marker.style.left = markerLeft + 'px';
-                    marker.style.top = markerTop + 'px';
-                }
-
-                // Show basic info
                 const resultDiv = document.getElementById('assessmentResult');
                 const resultContent = document.getElementById('resultContent');
-                resultContent.innerHTML = `<strong>${partName} Selected</strong><br><br>Click on a pain category above for detailed treatment recommendations, or book a free assessment for personalized care.`;
+                const profile = getIntensityProfile(selectedIntensity);
+                resultContent.innerHTML = `<strong>${partName} Selected</strong><br><br>Choose a pain category to unlock a ${goalLabels[selectedGoal] || 'personalized'} roadmap. Current intensity: <strong>${selectedIntensity}/10 (${profile.label})</strong>.`;
                 resultDiv.classList.add('show');
             });
         });
@@ -1600,151 +2939,313 @@
 
         // THREE.JS BACKGROUND - FIXED AND STABLE VERSION
         const canvas = document.getElementById('bgCanvas');
+        const prefersReducedMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
         let scene, camera, renderer, particles, animationId;
+        let positionAttribute;
+        let resizeHandler, contextLostHandler, pointerMoveHandler, pointerLeaveHandler;
+        let basePositions, swirlOffsets, swirlSpeeds, noiseSeeds, breathSpeeds, layerOffsets, driftSeeds, parallaxWeights;
+        let pointerTargetX = 0, pointerTargetY = 0, pointerCurrentX = 0, pointerCurrentY = 0;
+        let gradientTexture = null;
+        let threeInitialized = false;
+
+        function hasWebGLSupport() {
+            try {
+                const testCanvas = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && (testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl')));
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function disposeThree() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+
+            if (resizeHandler) {
+                window.removeEventListener('resize', resizeHandler);
+                resizeHandler = null;
+            }
+
+            if (renderer && renderer.domElement && contextLostHandler) {
+                renderer.domElement.removeEventListener('webglcontextlost', contextLostHandler);
+                contextLostHandler = null;
+            }
+
+            if (pointerMoveHandler) {
+                window.removeEventListener('pointermove', pointerMoveHandler);
+                pointerMoveHandler = null;
+            }
+
+            if (pointerLeaveHandler) {
+                window.removeEventListener('pointerleave', pointerLeaveHandler);
+                window.removeEventListener('pointerup', pointerLeaveHandler);
+                window.removeEventListener('blur', pointerLeaveHandler);
+                pointerLeaveHandler = null;
+            }
+
+            if (particles) {
+                if (particles.geometry) particles.geometry.dispose();
+                if (particles.material) particles.material.dispose();
+                particles = null;
+            }
+
+            if (renderer) {
+                renderer.dispose();
+                if (renderer.forceContextLoss) {
+                    renderer.forceContextLoss();
+                }
+                renderer = null;
+            }
+
+            scene = null;
+            camera = null;
+            positionAttribute = null;
+            basePositions = null;
+            swirlOffsets = null;
+            swirlSpeeds = null;
+            noiseSeeds = null;
+            breathSpeeds = null;
+            layerOffsets = null;
+            driftSeeds = null;
+            parallaxWeights = null;
+            pointerTargetX = 0;
+            pointerTargetY = 0;
+            pointerCurrentX = 0;
+            pointerCurrentY = 0;
+            threeInitialized = false;
+        }
+
+        function generateParticleTexture() {
+            if (gradientTexture) return gradientTexture;
+
+            const size = 128;
+            const canvasTexture = document.createElement('canvas');
+            canvasTexture.width = size;
+            canvasTexture.height = size;
+
+            const context = canvasTexture.getContext('2d');
+            const gradient = context.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+            gradient.addColorStop(0.42, 'rgba(255, 255, 255, 0.26)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, size, size);
+
+            gradientTexture = new THREE.CanvasTexture(canvasTexture);
+            gradientTexture.minFilter = THREE.LinearFilter;
+            gradientTexture.magFilter = THREE.LinearFilter;
+            gradientTexture.generateMipmaps = false;
+            return gradientTexture;
+        }
 
         function initThreeJS() {
-            if (!canvas || typeof THREE === 'undefined') {
-                console.log('Three.js not available, using CSS animations');
+            const reduceMotion = prefersReducedMotion.matches;
+
+            if (!canvas || typeof THREE === 'undefined' || !hasWebGLSupport() || reduceMotion) {
+                console.log('Three.js disabled — using CSS particles');
                 if (canvas) canvas.style.display = 'none';
                 createCSSParticles();
                 return false;
             }
 
             try {
-                // Setup scene
+                canvas.style.display = 'block';
                 scene = new THREE.Scene();
 
-                // Setup camera
                 camera = new THREE.PerspectiveCamera(
-                    75,
+                    68,
                     window.innerWidth / window.innerHeight,
                     0.1,
                     1000
                 );
-                camera.position.z = 30;
+                camera.position.set(0, 1.2, 36);
 
-                // Setup renderer with error handling
                 renderer = new THREE.WebGLRenderer({
-                    canvas: canvas,
+                    canvas,
                     alpha: true,
                     antialias: true,
-                    powerPreference: "high-performance"
+                    powerPreference: 'high-performance'
                 });
 
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                renderer.setClearColor(0x000000, 0);
+                if (renderer.outputEncoding !== undefined) {
+                    renderer.outputEncoding = THREE.sRGBEncoding;
+                }
 
-                // Create particle system
-                const particleCount = 150;
+                const particleCount = window.innerWidth < 768 ? 34 : 64;
                 const geometry = new THREE.BufferGeometry();
                 const positions = new Float32Array(particleCount * 3);
                 const colors = new Float32Array(particleCount * 3);
-                const velocities = new Float32Array(particleCount * 3);
+                basePositions = new Float32Array(particleCount * 3);
+                swirlOffsets = new Float32Array(particleCount);
+                swirlSpeeds = new Float32Array(particleCount);
+                noiseSeeds = new Float32Array(particleCount);
+                breathSpeeds = new Float32Array(particleCount);
+                layerOffsets = new Float32Array(particleCount);
+                driftSeeds = new Float32Array(particleCount);
+                parallaxWeights = new Float32Array(particleCount);
 
-                for(let i = 0; i < particleCount; i++) {
+                const clusters = [
+                    { center: new THREE.Vector3(-4.4, 1.6, -3.2), radius: 5.4, height: 4.8, depth: 3.4 },
+                    { center: new THREE.Vector3(0.2, -2.2, 1.2), radius: 6.2, height: 5.6, depth: 4.1 },
+                    { center: new THREE.Vector3(4.1, 2.4, 3.4), radius: 4.6, height: 5.1, depth: 3.2 }
+                ];
+                const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+
+                for (let i = 0; i < particleCount; i++) {
+                    const cluster = clusters[i % clusters.length];
+                    const angle = i * goldenAngle + Math.random() * 0.4;
+                    const radius = cluster.radius * (0.34 + Math.random() * 0.28);
+                    const yOffset = (Math.random() - 0.5) * cluster.height * 0.78;
+                    const depthOffset = (Math.random() - 0.5) * cluster.depth * 0.76;
                     const i3 = i * 3;
 
-                    // Random positions
-                    positions[i3] = (Math.random() - 0.5) * 60;
-                    positions[i3 + 1] = (Math.random() - 0.5) * 60;
-                    positions[i3 + 2] = (Math.random() - 0.5) * 40;
+                    basePositions[i3] = cluster.center.x + Math.cos(angle) * radius;
+                    basePositions[i3 + 1] = cluster.center.y + yOffset;
+                    basePositions[i3 + 2] = cluster.center.z + depthOffset;
 
-                    // Random velocities
-                    velocities[i3] = (Math.random() - 0.5) * 0.02;
-                    velocities[i3 + 1] = (Math.random() - 0.5) * 0.02;
-                    velocities[i3 + 2] = (Math.random() - 0.5) * 0.02;
+                    positions[i3] = basePositions[i3];
+                    positions[i3 + 1] = basePositions[i3 + 1];
+                    positions[i3 + 2] = basePositions[i3 + 2];
 
-                    // Colors (orange and blue theme)
-                    if (Math.random() > 0.5) {
-                        colors[i3] = 0.95;
-                        colors[i3 + 1] = 0.44;
-                        colors[i3 + 2] = 0.13;
+                    swirlOffsets[i] = 0.11 + Math.random() * 0.18;
+                    swirlSpeeds[i] = 0.06 + Math.random() * 0.1;
+                    noiseSeeds[i] = Math.random() * Math.PI * 2;
+                    breathSpeeds[i] = 0.14 + Math.random() * 0.12;
+                    layerOffsets[i] = cluster.center.y * 0.1 + Math.random() * 0.32;
+                    driftSeeds[i] = 0.06 + Math.random() * 0.1;
+                    parallaxWeights[i] = 0.12 + Math.random() * 0.18;
+
+                    if (Math.random() > 0.55) {
+                        colors[i3] = 0.92;
+                        colors[i3 + 1] = 0.56;
+                        colors[i3 + 2] = 0.34;
                     } else {
-                        colors[i3] = 0.26;
-                        colors[i3 + 1] = 0.52;
-                        colors[i3 + 2] = 0.96;
+                        colors[i3] = 0.38;
+                        colors[i3 + 1] = 0.66;
+                        colors[i3 + 2] = 0.98;
                     }
                 }
 
-                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-                geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+                positionAttribute = new THREE.BufferAttribute(positions, 3);
+                positionAttribute.setUsage(THREE.DynamicDrawUsage);
 
+                geometry.setAttribute('position', positionAttribute);
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                geometry.computeBoundingSphere();
+
+                const particleTexture = generateParticleTexture();
                 const material = new THREE.PointsMaterial({
-                    size: 2.5,
+                    size: window.innerWidth < 768 ? 0.52 : 0.88,
                     sizeAttenuation: true,
+                    map: particleTexture,
+                    alphaMap: particleTexture,
                     vertexColors: true,
                     transparent: true,
-                    opacity: 0.7,
-                    blending: THREE.AdditiveBlending
+                    opacity: 0.18,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false,
+                    depthTest: false
                 });
+                material.alphaTest = 0.02;
 
                 particles = new THREE.Points(geometry, material);
+                particles.rotation.y = 0.16;
                 scene.add(particles);
 
-                // Mouse interaction
-                let mouseXNorm = 0;
-                let mouseYNorm = 0;
-                let targetXRot = 0;
-                let targetYRot = 0;
+                const clock = new THREE.Clock();
+                pointerTargetX = 0;
+                pointerTargetY = 0;
+                pointerCurrentX = 0;
+                pointerCurrentY = 0;
 
-                document.addEventListener('mousemove', (event) => {
-                    mouseXNorm = (event.clientX / window.innerWidth) * 2 - 1;
-                    mouseYNorm = -(event.clientY / window.innerHeight) * 2 + 1;
-                });
+                pointerMoveHandler = (event) => {
+                    const point = event.touches ? event.touches[0] : event;
+                    if (!point) return;
+                    const strength = window.innerWidth < 768 ? 0.18 : 0.3;
+                    pointerTargetX = ((point.clientX / window.innerWidth) * 2 - 1) * strength;
+                    pointerTargetY = (-(point.clientY / window.innerHeight) * 2 + 1) * strength;
+                };
 
-                // Animation loop
-                function animate() {
+                pointerLeaveHandler = () => {
+                    pointerTargetX = 0;
+                    pointerTargetY = 0;
+                };
+
+                window.addEventListener('pointermove', pointerMoveHandler, { passive: true });
+                window.addEventListener('pointerleave', pointerLeaveHandler);
+                window.addEventListener('pointerup', pointerLeaveHandler);
+                window.addEventListener('blur', pointerLeaveHandler);
+
+                const baseRotation = { x: -0.028, y: 0.12, z: 0 };
+
+                const animate = () => {
                     animationId = requestAnimationFrame(animate);
 
-                    if (!particles || !particles.geometry) return;
+                    if (!particles || !positionAttribute) return;
 
-                    // Smooth rotation based on mouse
-                    targetXRot += (mouseXNorm * 0.01 - targetXRot) * 0.05;
-                    targetYRot += (mouseYNorm * 0.01 - targetYRot) * 0.05;
+                    const elapsed = clock.getElapsedTime();
 
-                    particles.rotation.y += 0.0003 + targetXRot;
-                    particles.rotation.x += 0.0002 + targetYRot;
+                    pointerCurrentX += (pointerTargetX - pointerCurrentX) * 0.018;
+                    pointerCurrentY += (pointerTargetY - pointerCurrentY) * 0.018;
 
-                    // Animate individual particles
-                    const positions = particles.geometry.attributes.position.array;
-                    const velocities = particles.geometry.attributes.velocity.array;
+                    const drift = Math.sin(elapsed * 0.064) * 0.009;
 
-                    for(let i = 0; i < particleCount; i++) {
+                    particles.rotation.y = THREE.MathUtils.lerp(particles.rotation.y, baseRotation.y + drift + pointerCurrentX * 0.08, 0.028);
+                    particles.rotation.x = THREE.MathUtils.lerp(particles.rotation.x, baseRotation.x + pointerCurrentY * 0.06, 0.028);
+                    particles.rotation.z = THREE.MathUtils.lerp(particles.rotation.z, baseRotation.z + pointerCurrentX * 0.028, 0.028);
+
+                    const posArray = positionAttribute.array;
+
+                    for (let i = 0; i < particleCount; i++) {
                         const i3 = i * 3;
 
-                        // Update positions
-                        positions[i3] += velocities[i3];
-                        positions[i3 + 1] += velocities[i3 + 1];
-                        positions[i3 + 2] += velocities[i3 + 2];
+                        const swirl = Math.sin(elapsed * swirlSpeeds[i] + noiseSeeds[i]);
+                        const sway = Math.cos(elapsed * (swirlSpeeds[i] * 0.55) + noiseSeeds[i]);
+                        const breath = Math.sin(elapsed * breathSpeeds[i] + layerOffsets[i]);
+                        const depthWave = Math.cos(elapsed * driftSeeds[i] + noiseSeeds[i]);
 
-                        // Boundary check and bounce
-                        if (Math.abs(positions[i3]) > 30) velocities[i3] *= -1;
-                        if (Math.abs(positions[i3 + 1]) > 30) velocities[i3 + 1] *= -1;
-                        if (Math.abs(positions[i3 + 2]) > 20) velocities[i3 + 2] *= -1;
+                        posArray[i3] = basePositions[i3] + swirl * (swirlOffsets[i] * 0.4) + pointerCurrentX * parallaxWeights[i] * 0.54;
+                        posArray[i3 + 1] = basePositions[i3 + 1] + sway * (swirlOffsets[i] * 0.28) + breath * 0.36 + pointerCurrentY * parallaxWeights[i] * 0.24;
+                        posArray[i3 + 2] = basePositions[i3 + 2] + depthWave * (swirlOffsets[i] * 0.34);
                     }
 
-                    particles.geometry.attributes.position.needsUpdate = true;
+                    positionAttribute.needsUpdate = true;
 
                     renderer.render(scene, camera);
-                }
+                };
 
                 animate();
 
-                // Handle resize
-                function onWindowResize() {
+                resizeHandler = () => {
                     if (!camera || !renderer) return;
                     camera.aspect = window.innerWidth / window.innerHeight;
                     camera.updateProjectionMatrix();
                     renderer.setSize(window.innerWidth, window.innerHeight);
-                }
+                };
 
-                window.addEventListener('resize', onWindowResize);
+                window.addEventListener('resize', resizeHandler);
 
+                contextLostHandler = (event) => {
+                    event.preventDefault();
+                    console.warn('WebGL context lost, switching to CSS particles');
+                    disposeThree();
+                    if (canvas) canvas.style.display = 'none';
+                    createCSSParticles();
+                };
+
+                renderer.domElement.addEventListener('webglcontextlost', contextLostHandler, false);
+
+                threeInitialized = true;
                 return true;
 
             } catch (error) {
                 console.log('Three.js initialization failed:', error.message);
+                disposeThree();
                 if (canvas) canvas.style.display = 'none';
                 createCSSParticles();
                 return false;
@@ -1766,19 +3267,21 @@
                 pointer-events: none;
             `;
 
-            for(let i = 0; i < 40; i++) {
+            for(let i = 0; i < 10; i++) {
                 const particle = document.createElement('div');
-                const size = Math.random() * 4 + 2;
+                const size = Math.random() * 1.2 + 0.6;
                 particle.style.cssText = `
                     position: absolute;
                     width: ${size}px;
                     height: ${size}px;
-                    background: ${Math.random() > 0.5 ? 'rgba(243, 112, 33, 0.6)' : 'rgba(67, 133, 245, 0.6)'};
+                    background: ${Math.random() > 0.6 ? 'rgba(243, 112, 33, 0.15)' : 'rgba(67, 133, 245, 0.14)'};
                     border-radius: 50%;
                     left: ${Math.random() * 100}%;
                     top: ${Math.random() * 100}%;
-                    animation: particleFloat ${Math.random() * 10 + 10}s linear infinite;
-                    animation-delay: ${Math.random() * -10}s;
+                    filter: blur(1px);
+                    opacity: 0.34;
+                    animation: particleFloat ${Math.random() * 16 + 24}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * -12}s;
                 `;
                 particleContainer.appendChild(particle);
             }
@@ -1793,6 +3296,22 @@
         const threeJsSuccess = initThreeJS();
         if (!threeJsSuccess) {
             console.log('Using CSS particle fallback');
+        }
+
+        const handleMotionPreference = (event) => {
+            if (event.matches) {
+                disposeThree();
+                if (canvas) canvas.style.display = 'none';
+                createCSSParticles();
+            } else if (!threeInitialized) {
+                initThreeJS();
+            }
+        };
+
+        if (prefersReducedMotion.addEventListener) {
+            prefersReducedMotion.addEventListener('change', handleMotionPreference);
+        } else if (prefersReducedMotion.addListener) {
+            prefersReducedMotion.addListener(handleMotionPreference);
         }
 
         // MODAL FUNCTIONS
@@ -1829,16 +3348,7 @@
 
         // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-            }
-            if (renderer) {
-                renderer.dispose();
-            }
-            if (particles && particles.geometry) {
-                particles.geometry.dispose();
-                particles.material.dispose();
-            }
+            disposeThree();
         });
     </script>
 </body>
