@@ -399,33 +399,51 @@
             z-index: 5;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 6rem 3% 3rem;
             contain: layout style;
         }
 
+        .assessment-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 3%;
+        }
+
         .content-wrapper {
             max-width: 1600px;
             width: 100%;
             display: grid;
-            grid-template-columns: 500px 1fr;
-            align-items: flex-start;
+            grid-template-columns: 1fr 550px;
+            align-items: center;
             gap: 6rem;
             padding-top: 2rem;
+            margin-bottom: 3rem;
+            min-height: 600px;
         }
 
         .visual-content {
             position: relative;
             animation: fadeInRight 0.8s var(--easing);
-            order: 1;
+            order: 2;
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .text-content {
             z-index: 10;
             animation: fadeInLeft 0.8s var(--easing);
             contain: layout;
-            order: 2;
+            order: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100%;
         }
 
         @keyframes fadeInLeft {
@@ -526,9 +544,7 @@
             background: linear-gradient(135deg, rgba(243, 112, 33, 0.04), rgba(67, 133, 245, 0.04));
             border: 1px solid rgba(243, 112, 33, 0.2);
             border-radius: 20px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            margin-top: 2rem;
+            padding: 2rem 2.5rem;
             animation: fadeIn 1s ease 0.5s both;
             position: relative;
             overflow: hidden;
@@ -536,7 +552,10 @@
             box-shadow:
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            max-width: 100%;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            z-index: 10;
         }
 
         .body-assessment::before {
@@ -1988,7 +2007,7 @@
 
         @media (max-width: 1200px) {
             .content-wrapper {
-                grid-template-columns: 450px 1fr;
+                grid-template-columns: 1fr 450px;
                 gap: 4rem;
             }
         }
@@ -2000,11 +2019,11 @@
             }
 
             .visual-content {
-                order: 2;
+                order: 1;
             }
 
             .text-content {
-                order: 1;
+                order: 2;
             }
 
             .spine-3d-container {
@@ -2069,7 +2088,7 @@
         <!-- HERO CONTENT -->
         <div class="hero-content">
             <div class="content-wrapper">
-                <!-- PREMIUM MEDICAL VISUALIZATION - LEFT SIDE -->
+                <!-- PREMIUM MEDICAL VISUALIZATION - RIGHT SIDE -->
                 <div class="visual-content">
                     <div class="spine-3d-container">
                         <div class="spine-visual">
@@ -2157,7 +2176,7 @@
                     </div>
                 </div>
 
-                <!-- TEXT CONTENT - NOW ON RIGHT -->
+                <!-- TEXT CONTENT - NOW ON LEFT -->
                 <div class="text-content">
                     <div class="subtitle">ADVANCED PHYSIOTHERAPY</div>
                     <h1 class="main-heading">
@@ -2169,7 +2188,41 @@
                         Experience personalized physiotherapy that combines cutting-edge techniques with compassionate care. Your journey to pain-free movement starts here.
                     </p>
 
-                    <!-- INTERACTIVE BODY ASSESSMENT - INTELLIGENT -->
+                    <!-- CTA SECTION -->
+                    <div class="cta-section">
+                        <button class="cta-button" onclick="openModal()">
+                            <span>Get Free Assessment</span>
+                            <span>→</span>
+                        </button>
+                        <button class="cta-button cta-secondary" onclick="scrollToSection('services')">
+                            View Services
+                        </button>
+                    </div>
+
+                    <!-- TRUST STATS -->
+                    <div class="trust-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">⭐</div>
+                            <div class="stat-number counting" data-target="4.9">0</div>
+                            <div class="stat-label">Google Rating</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-number counting" data-target="500">0</div>
+                            <div class="stat-label">Happy Patients</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-number counting" data-target="15">0</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ASSESSMENT SECTION - FULL WIDTH BELOW HERO -->
+            <div class="assessment-wrapper">
                     <div class="body-assessment">
                         <div class="assessment-header">
                             <div class="assessment-title">
@@ -2354,38 +2407,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- CTA SECTION -->
-                    <div class="cta-section">
-                        <button class="cta-button" onclick="openModal()">
-                            <span>Get Free Assessment</span>
-                            <span>→</span>
-                        </button>
-                        <button class="cta-button cta-secondary" onclick="scrollToSection('services')">
-                            View Services
-                        </button>
-                    </div>
-
-                    <!-- TRUST STATS -->
-                    <div class="trust-stats">
-                        <div class="stat-card">
-                            <div class="stat-icon">⭐</div>
-                            <div class="stat-number counting" data-target="4.9">0</div>
-                            <div class="stat-label">Google Rating</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">👥</div>
-                            <div class="stat-number counting" data-target="500">0</div>
-                            <div class="stat-label">Happy Patients</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">🏆</div>
-                            <div class="stat-number counting" data-target="15">0</div>
-                            <div class="stat-label">Years Experience</div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
