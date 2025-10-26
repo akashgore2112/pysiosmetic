@@ -8,6 +8,12 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* Performance Optimization */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         :root {
             --primary: #F37021;
             --primary-light: #ff9d5c;
@@ -16,6 +22,10 @@
             --success: #0f0;
             --dark: #0a1420;
             --darker: #050a14;
+            --transition-fast: 0.15s;
+            --transition-normal: 0.3s;
+            --transition-slow: 0.5s;
+            --easing: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
@@ -24,9 +34,10 @@
             color: #fff;
             overflow-x: hidden;
             scroll-behavior: smooth;
+            contain: layout style;
         }
 
-        /* LOADING SCREEN */
+        /* LOADING SCREEN - OPTIMIZED */
         .loader {
             position: fixed;
             inset: 0;
@@ -35,7 +46,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.5s var(--easing);
+            will-change: opacity;
+            contain: strict;
         }
 
         .loader.hide {
@@ -45,6 +58,7 @@
 
         .loader-content {
             text-align: center;
+            contain: layout;
         }
 
         .loader-spine {
@@ -60,7 +74,8 @@
             background: var(--primary);
             margin: 4px 0;
             border-radius: 4px;
-            animation: vertebraPulse 1.5s ease infinite;
+            animation: vertebraPulse 1.5s var(--easing) infinite;
+            will-change: transform, opacity;
         }
 
         .vertebra:nth-child(1) { animation-delay: 0s; }
@@ -77,7 +92,7 @@
             color: var(--primary);
             font-weight: 600;
             font-size: 1.1rem;
-            animation: fadeInOut 1.5s ease infinite;
+            animation: fadeInOut 1.5s var(--easing) infinite;
         }
 
         @keyframes fadeInOut {
@@ -90,9 +105,10 @@
             min-height: 100vh;
             overflow: hidden;
             background: radial-gradient(ellipse at 50% 50%, var(--dark) 0%, #000 70%);
+            contain: layout style paint;
         }
 
-        /* ANIMATED BACKGROUND - SUBTLE */
+        /* ANIMATED BACKGROUND - OPTIMIZED */
         .animated-bg {
             position: absolute;
             inset: 0;
@@ -101,7 +117,9 @@
                 radial-gradient(circle at 20% 50%, rgba(243, 112, 33, 0.05), transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(67, 133, 245, 0.05), transparent 50%),
                 radial-gradient(circle at 40% 10%, rgba(243, 112, 33, 0.03), transparent 40%);
-            animation: gradientShift 30s ease infinite;
+            animation: gradientShift 30s var(--easing) infinite;
+            will-change: auto;
+            contain: strict;
         }
 
         @keyframes gradientShift {
@@ -115,16 +133,18 @@
             z-index: 2;
             opacity: 0.6;
             pointer-events: none;
+            contain: strict;
         }
 
-        /* CSS Fallback Animation - Subtle Floating Orbs */
+        /* CSS Fallback Animation - Subtle Floating Orbs - OPTIMIZED */
         .animated-bg::before,
         .animated-bg::after {
             content: '';
             position: absolute;
             border-radius: 50%;
-            animation: floatOrb 20s ease-in-out infinite;
+            animation: floatOrb 20s var(--easing) infinite;
             filter: blur(60px);
+            will-change: transform;
         }
 
         .animated-bg::before {
@@ -157,36 +177,10 @@
             }
         }
 
-        /* Additional floating particles as CSS fallback - SUBTLE */
-        .particle {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0.2;
-            animation: particleFloat 15s linear infinite;
-            box-shadow: 0 0 2px rgba(243, 112, 33, 0.3);
-        }
+        /* Additional floating particles - REMOVED for performance */
+        /* Particles now only rendered via WebGL or CSS fallback function */
 
-        @keyframes particleFloat {
-            from {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.2;
-            }
-            90% {
-                opacity: 0.2;
-            }
-            to {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* NAVIGATION - PREMIUM */
+        /* NAVIGATION - PREMIUM & ACCESSIBLE */
         nav {
             position: fixed;
             top: 0;
@@ -200,8 +194,10 @@
             backdrop-filter: blur(20px) saturate(180%);
             background: rgba(0, 0, 0, 0.8);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal) var(--easing);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            contain: layout style;
+            will-change: transform;
         }
 
         nav.scrolled {
@@ -215,11 +211,25 @@
             align-items: center;
             gap: 0.8rem;
             cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: transform var(--transition-normal) var(--easing);
+            outline: none;
         }
 
-        .logo:hover { transform: scale(1.05); }
-        .logo img { height: 40px; filter: drop-shadow(0 0 10px rgba(243, 112, 33, 0.3)); }
+        .logo:hover,
+        .logo:focus-visible {
+            transform: scale(1.05);
+        }
+
+        .logo:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        .logo img {
+            height: 40px;
+            filter: drop-shadow(0 0 10px rgba(243, 112, 33, 0.3));
+        }
 
         .nav-links {
             display: flex;
@@ -232,28 +242,39 @@
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all var(--transition-normal) var(--easing);
             position: relative;
+            padding: 0.5rem 0.2rem;
+            outline: none;
         }
 
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 2px;
             background: var(--primary);
-            transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: width var(--transition-normal) var(--easing);
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
             color: #fff;
-            transform: translateY(-2px);
         }
 
-        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover::after,
+        .nav-links a:focus-visible::after {
+            width: 100%;
+        }
+
+        .nav-links a:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
 
         .nav-cta {
             padding: 0.7rem 1.8rem;
@@ -263,9 +284,15 @@
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all var(--transition-normal) var(--easing);
             position: relative;
             overflow: hidden;
+            outline: none;
+            min-width: 44px;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .nav-cta::before {
@@ -277,17 +304,33 @@
             height: 0;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
-            transition: all 0.5s ease;
+            transition: all var(--transition-slow) var(--easing);
             transform: translate(-50%, -50%);
+            will-change: width, height;
         }
 
-        .nav-cta:hover::before { width: 300px; height: 300px; }
-        .nav-cta:hover {
+        .nav-cta:hover::before,
+        .nav-cta:focus-visible::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .nav-cta:hover,
+        .nav-cta:focus-visible {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(243, 112, 33, 0.4);
         }
 
-        /* WHATSAPP BUTTON */
+        .nav-cta:active {
+            transform: translateY(0);
+        }
+
+        .nav-cta:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        /* WHATSAPP BUTTON - OPTIMIZED & ACCESSIBLE */
         .whatsapp-float {
             position: fixed;
             bottom: 2rem;
@@ -302,12 +345,24 @@
             z-index: 1000;
             cursor: pointer;
             box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal) var(--easing);
+            outline: none;
+            will-change: transform;
         }
 
-        .whatsapp-float:hover {
-            transform: scale(1.1) rotate(10deg);
+        .whatsapp-float:hover,
+        .whatsapp-float:focus-visible {
+            transform: scale(1.1);
             box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-float:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 4px;
+        }
+
+        .whatsapp-float:active {
+            transform: scale(1.05);
         }
 
         .whatsapp-float svg {
@@ -338,7 +393,7 @@
             opacity: 1;
         }
 
-        /* HERO CONTENT */
+        /* HERO CONTENT - OPTIMIZED */
         .hero-content {
             position: relative;
             z-index: 5;
@@ -347,6 +402,7 @@
             align-items: center;
             justify-content: center;
             padding: 6rem 3% 3rem;
+            contain: layout style;
         }
 
         .content-wrapper {
@@ -355,16 +411,17 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
-            gap: 4rem;
+            gap: 5rem;
         }
 
         .text-content {
             z-index: 10;
-            animation: fadeInLeft 1s ease;
+            animation: fadeInLeft 0.8s var(--easing);
+            contain: layout;
         }
 
         @keyframes fadeInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
+            from { opacity: 0; transform: translateX(-30px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
@@ -984,10 +1041,13 @@
             box-shadow: 0 10px 30px rgba(243, 112, 33, 0.3);
             position: relative;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all var(--transition-normal) var(--easing);
             border: none;
             cursor: pointer;
             font-size: 0.95rem;
+            outline: none;
+            min-width: 44px;
+            min-height: 44px;
         }
 
         .cta-button::before {
@@ -998,13 +1058,28 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.8s ease;
+            transition: left 0.6s var(--easing);
+            will-change: left;
         }
 
-        .cta-button:hover::before { left: 100%; }
-        .cta-button:hover {
-            transform: translateY(-3px) scale(1.02);
+        .cta-button:hover::before,
+        .cta-button:focus-visible::before {
+            left: 100%;
+        }
+
+        .cta-button:hover,
+        .cta-button:focus-visible {
+            transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(243, 112, 33, 0.5);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        .cta-button:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 4px;
         }
 
         .cta-secondary {
@@ -1014,7 +1089,8 @@
             box-shadow: none;
         }
 
-        .cta-secondary:hover {
+        .cta-secondary:hover,
+        .cta-secondary:focus-visible {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.4);
         }
@@ -1178,7 +1254,26 @@
 
         @keyframes cardFloat {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .animated-bg,
+            .animated-bg::before,
+            .animated-bg::after,
+            .particle,
+            .vertebra {
+                animation: none !important;
+            }
         }
 
         .card-1 { top: 20%; left: -20%; animation-delay: 0s; }
@@ -1979,34 +2074,54 @@
 
         counters.forEach(counter => counterObserver.observe(counter));
 
-        // INTERACTIVE SPINE
+        // INTERACTIVE SPINE - OPTIMIZED WITH THROTTLING
         const spineImg = document.getElementById('spineImg');
         let mouseX = 0, mouseY = 0;
         let currentX = 0, currentY = 0;
+        let spineLastUpdate = 0;
+        const spineUpdateInterval = 16; // ~60fps for spine animation
 
+        // Throttled mousemove handler
+        let mouseMoveTimeout;
         document.addEventListener('mousemove', (e) => {
             if (!spineImg) return;
-            const rect = spineImg.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            mouseX = (e.clientX - centerX) / rect.width * 20;
-            mouseY = (e.clientY - centerY) / rect.height * 20;
+            if (mouseMoveTimeout) return;
+
+            mouseMoveTimeout = setTimeout(() => {
+                const rect = spineImg.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                mouseX = (e.clientX - centerX) / rect.width * 15; // Reduced from 20
+                mouseY = (e.clientY - centerY) / rect.height * 15;
+                mouseMoveTimeout = null;
+            }, 50); // Throttle to every 50ms
         });
 
-        function animateSpine() {
+        function animateSpine(currentTime) {
             if (!spineImg) return;
-            currentX += (mouseX - currentX) * 0.1;
-            currentY += (mouseY - currentY) * 0.1;
+
+            // Throttle updates
+            if (currentTime - spineLastUpdate < spineUpdateInterval) {
+                requestAnimationFrame(animateSpine);
+                return;
+            }
+            spineLastUpdate = currentTime;
+
+            currentX += (mouseX - currentX) * 0.08; // Reduced from 0.1
+            currentY += (mouseY - currentY) * 0.08;
             spineImg.style.transform = `translate(-50%, -50%) rotateY(${currentX}deg) rotateX(${-currentY}deg)`;
             requestAnimationFrame(animateSpine);
         }
-        animateSpine();
+        animateSpine(0);
 
-        // THREE.JS BACKGROUND - OPTIMIZED AND STABLE VERSION
+        // THREE.JS BACKGROUND - HEAVILY OPTIMIZED VERSION
         const canvas = document.getElementById('bgCanvas');
         let scene, camera, renderer, particles, animationId;
         let particleVelocities = []; // Separate array for velocities
         let isAnimating = false;
+        let lastFrameTime = 0;
+        const targetFPS = 30; // Run at 30fps instead of 60fps for better performance
+        const frameInterval = 1000 / targetFPS;
 
         function initThreeJS() {
             if (!canvas || typeof THREE === 'undefined') {
@@ -2029,21 +2144,24 @@
                 );
                 camera.position.z = 30;
 
-                // Setup renderer with error handling
+                // Setup renderer with error handling - PERFORMANCE OPTIMIZED
                 renderer = new THREE.WebGLRenderer({
                     canvas: canvas,
                     alpha: true,
-                    antialias: window.devicePixelRatio <= 1, // Disable on high DPI for performance
+                    antialias: false, // Disable antialiasing for better performance
                     powerPreference: "high-performance",
-                    failIfMajorPerformanceCaveat: false
+                    failIfMajorPerformanceCaveat: false,
+                    precision: 'lowp', // Use low precision for better performance
+                    stencil: false,
+                    depth: false
                 });
 
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Cap pixel ratio
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1)); // Cap at 1 for performance
 
-                // Adjust particle count based on device performance - MORE PARTICLES BUT SMALLER
+                // Adjust particle count based on device performance - REDUCED FOR PERFORMANCE
                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                const particleCount = isMobile ? 80 : 150;
+                const particleCount = isMobile ? 50 : 100; // Further reduced from 80/150
 
                 const geometry = new THREE.BufferGeometry();
                 const positions = new Float32Array(particleCount * 3);
@@ -2120,12 +2238,17 @@
                     mouseYNorm = -(event.clientY / window.innerHeight) * 2 + 1;
                 });
 
-                // Animation loop with error handling
+                // Animation loop with FPS throttling and error handling
                 isAnimating = true;
-                function animate() {
+                function animate(currentTime) {
                     if (!isAnimating) return;
 
                     animationId = requestAnimationFrame(animate);
+
+                    // Throttle to target FPS for better performance
+                    const elapsed = currentTime - lastFrameTime;
+                    if (elapsed < frameInterval) return;
+                    lastFrameTime = currentTime - (elapsed % frameInterval);
 
                     // Safety checks
                     if (!particles || !particles.geometry || !particles.geometry.attributes.position) {
@@ -2142,8 +2265,9 @@
                         particles.rotation.y += 0.0001 + targetXRot;
                         particles.rotation.x += 0.00008 + targetYRot;
 
-                        // Animate individual particles - FLUID MOTION
+                        // Animate individual particles - OPTIMIZED UPDATES
                         const positions = particles.geometry.attributes.position.array;
+                        const now = currentTime * 0.0005; // Precompute time value
 
                         for(let i = 0; i < particleCount; i++) {
                             const i3 = i * 3;
@@ -2151,8 +2275,8 @@
 
                             if (!velocity) continue;
 
-                            // Add slight floating effect based on depth
-                            const floatOffset = Math.sin(Date.now() * 0.0005 + i) * 0.01 * velocity.depth;
+                            // Add slight floating effect based on depth (optimized)
+                            const floatOffset = Math.sin(now + i) * 0.01 * velocity.depth;
 
                             // Update positions with fluid motion
                             positions[i3] += velocity.x;
@@ -2169,10 +2293,12 @@
                             velocity.y *= 0.9995;
                             velocity.z *= 0.9995;
 
-                            // Re-energize if too slow
-                            if (Math.abs(velocity.x) < 0.001) velocity.x += (Math.random() - 0.5) * 0.001;
-                            if (Math.abs(velocity.y) < 0.001) velocity.y += (Math.random() - 0.5) * 0.001;
-                            if (Math.abs(velocity.z) < 0.001) velocity.z += (Math.random() - 0.5) * 0.001;
+                            // Re-energize if too slow (check less frequently)
+                            if (i % 10 === 0) {
+                                if (Math.abs(velocity.x) < 0.001) velocity.x += (Math.random() - 0.5) * 0.001;
+                                if (Math.abs(velocity.y) < 0.001) velocity.y += (Math.random() - 0.5) * 0.001;
+                                if (Math.abs(velocity.z) < 0.001) velocity.z += (Math.random() - 0.5) * 0.001;
+                            }
                         }
 
                         particles.geometry.attributes.position.needsUpdate = true;
@@ -2185,7 +2311,7 @@
                     }
                 }
 
-                animate();
+                animate(0);
 
                 // Handle resize with debouncing
                 let resizeTimeout;
