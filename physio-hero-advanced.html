@@ -1464,40 +1464,185 @@
             50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
         }
 
-        /* FLOATING CARDS - ENHANCED FOR INTERACTION */
-        .info-card {
+        /* PREMIUM MEDICAL DATA CARDS - GLASSMORPHISM */
+        .medical-card {
             position: absolute;
-            padding: 1.2rem;
-            background: rgba(5, 10, 20, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(243, 112, 33, 0.2);
-            border-radius: 14px;
+            width: 200px;
+            padding: 1.5rem 1.2rem;
+            background: linear-gradient(135deg,
+                rgba(5, 10, 20, 0.85) 0%,
+                rgba(10, 15, 25, 0.9) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 2px solid rgba(243, 112, 33, 0.3);
+            border-radius: 16px;
             box-shadow:
-                0 8px 32px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                0 8px 32px rgba(0, 0, 0, 0.7),
+                0 0 20px rgba(243, 112, 33, 0.15),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
             transition: all var(--transition-normal) var(--easing);
             cursor: pointer;
-            animation: cardFloat 5s ease-in-out infinite;
             z-index: 20;
-            min-width: 160px;
+            animation: medicalCardFloat 6s ease-in-out infinite;
         }
 
-        .info-card:hover,
-        .info-card:focus-visible {
-            transform: scale(1.08) translateY(-5px);
-            border-color: rgba(243, 112, 33, 0.5);
+        .medical-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg,
+                rgba(243, 112, 33, 0.4),
+                rgba(67, 133, 245, 0.2),
+                rgba(243, 112, 33, 0.4));
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity var(--transition-normal) var(--easing);
+            z-index: -1;
+            filter: blur(8px);
+        }
+
+        .medical-card:hover,
+        .medical-card:focus-visible {
+            transform: translateY(-12px) scale(1.03);
+            border-color: rgba(243, 112, 33, 0.6);
             box-shadow:
-                0 20px 50px rgba(243, 112, 33, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(243, 112, 33, 0.3),
+                inset 0 1px 2px rgba(255, 255, 255, 0.2);
         }
 
-        .info-card:focus-visible {
+        .medical-card:hover::before {
+            opacity: 1;
+        }
+
+        .medical-card:focus-visible {
             outline: 2px solid var(--primary);
             outline-offset: 4px;
         }
 
-        .info-card:active {
-            transform: scale(1.02) translateY(-2px);
+        .medical-card:active {
+            transform: translateY(-8px) scale(1.01);
+        }
+
+        /* CARD POSITIONING */
+        .medical-card-1 {
+            top: 10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .medical-card-2 {
+            top: 10%;
+            right: -10%;
+            animation-delay: 1.5s;
+        }
+
+        .medical-card-3 {
+            bottom: 15%;
+            left: -10%;
+            animation-delay: 3s;
+        }
+
+        .medical-card-4 {
+            bottom: 15%;
+            right: -10%;
+            animation-delay: 4.5s;
+        }
+
+        @keyframes medicalCardFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* CARD CONTENT */
+        .card-metric {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.8rem;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: statusPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(243, 112, 33, 0.6);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.2);
+            }
+        }
+
+        /* PROGRESS BAR IN CARDS */
+        .card-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            position: relative;
+            transition: width 1s var(--easing);
+            box-shadow: 0 0 10px rgba(243, 112, 33, 0.5);
+        }
+
+        .card-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShimmer 2s infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         @keyframes cardFloat {
@@ -1505,14 +1650,122 @@
             50% { transform: translateY(-8px); }
         }
 
+        /* PREMIUM MEDICAL VISUALIZATION */
         .visual-content {
             transform-origin: center;
             will-change: transform;
+            position: relative;
         }
 
         .spine-3d-container {
-            transform: scale(1.2);
-            transform-origin: center;
+            position: relative;
+            width: 100%;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spine-visual {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .spine-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ENERGY RINGS ANIMATION */
+        .energy-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(243, 112, 33, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: energyPulse 4s ease-out infinite;
+        }
+
+        .energy-ring:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            animation-delay: 0s;
+        }
+
+        .energy-ring:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            animation-delay: 1.3s;
+        }
+
+        .energy-ring:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            animation-delay: 2.6s;
+        }
+
+        @keyframes energyPulse {
+            0% {
+                width: 200px;
+                height: 200px;
+                opacity: 0.6;
+                border-width: 3px;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                width: 450px;
+                height: 450px;
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        /* BODY IMAGE WITH GLOW */
+        .spine-image {
+            position: relative;
+            width: 280px;
+            height: auto;
+            z-index: 10;
+            filter: drop-shadow(0 0 40px rgba(243, 112, 33, 0.4))
+                    drop-shadow(0 0 80px rgba(243, 112, 33, 0.2));
+            transition: transform 0.3s ease-out;
+            will-change: transform;
+        }
+
+        .spine-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 500px;
+            background: radial-gradient(ellipse at center,
+                rgba(243, 112, 33, 0.15) 0%,
+                rgba(243, 112, 33, 0.08) 30%,
+                transparent 70%);
+            filter: blur(40px);
+            animation: glowPulse 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.05);
+            }
         }
 
         /* Reduce motion for users who prefer it */
@@ -1816,37 +2069,88 @@
         <!-- HERO CONTENT -->
         <div class="hero-content">
             <div class="content-wrapper">
-                <!-- VISUAL SECTION - NOW ON LEFT -->
+                <!-- PREMIUM MEDICAL VISUALIZATION - LEFT SIDE -->
                 <div class="visual-content">
                     <div class="spine-3d-container">
                         <div class="spine-visual">
                             <div class="spine-container">
+                                <!-- ENERGY RINGS -->
+                                <div class="energy-ring"></div>
+                                <div class="energy-ring"></div>
+                                <div class="energy-ring"></div>
+
+                                <!-- GLOWING BACKGROUND -->
                                 <div class="spine-glow"></div>
-                                <img src="https://i.postimg.cc/NFSYhY8y/Adobe-Express-file.png" alt="Spine Visualization" class="spine-image" id="spineImg">
 
-                                <!-- INFO CARDS - NOW CLICKABLE -->
-                                <div class="info-card card-1" onclick="showPainDetail('back')" tabindex="0" role="button" aria-label="View back pain information">
-                                    <div class="card-icon">🦴</div>
-                                    <div class="card-title">Back Pain</div>
-                                    <div class="card-value">Click for info</div>
+                                <!-- BODY IMAGE -->
+                                <img src="https://i.postimg.cc/NFSYhY8y/Adobe-Express-file.png"
+                                     alt="Human Spine Visualization"
+                                     class="spine-image"
+                                     id="spineImg">
+
+                                <!-- MEDICAL DATA CARDS -->
+                                <div class="medical-card medical-card-1"
+                                     onclick="showMedicalDetail('painReduction')"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="View pain reduction details">
+                                    <div class="card-metric">85%</div>
+                                    <div class="card-label">Pain Reduction</div>
+                                    <div class="card-status">
+                                        <span class="status-dot"></span>
+                                        <span>after 6 sessions</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-fill" style="width: 85%"></div>
+                                    </div>
                                 </div>
 
-                                <div class="info-card card-2" onclick="showPainDetail('shoulder')" tabindex="0" role="button" aria-label="View shoulder pain information">
-                                    <div class="card-icon">💪</div>
-                                    <div class="card-title">Shoulder Pain</div>
-                                    <div class="card-value">Click for info</div>
+                                <div class="medical-card medical-card-2"
+                                     onclick="showMedicalDetail('mobility')"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="View mobility improvement details">
+                                    <div class="card-metric">+42%</div>
+                                    <div class="card-label">Mobility Improved</div>
+                                    <div class="card-status">
+                                        <span class="status-dot"></span>
+                                        <span>in 4 weeks</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-fill" style="width: 72%"></div>
+                                    </div>
                                 </div>
 
-                                <div class="info-card card-3" onclick="showPainDetail('knee')" tabindex="0" role="button" aria-label="View knee pain information">
-                                    <div class="card-icon">🦵</div>
-                                    <div class="card-title">Knee Pain</div>
-                                    <div class="card-value">Click for info</div>
+                                <div class="medical-card medical-card-3"
+                                     onclick="showMedicalDetail('recovery')"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="View recovery time details">
+                                    <div class="card-metric">6-8 Weeks</div>
+                                    <div class="card-label">Recovery Time</div>
+                                    <div class="card-status">
+                                        <span class="status-dot"></span>
+                                        <span>average duration</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-fill" style="width: 60%"></div>
+                                    </div>
                                 </div>
 
-                                <div class="info-card card-4" onclick="showPainDetail('neck')" tabindex="0" role="button" aria-label="View neck pain information">
-                                    <div class="card-icon">🎯</div>
-                                    <div class="card-title">Neck Pain</div>
-                                    <div class="card-value">Click for info</div>
+                                <div class="medical-card medical-card-4"
+                                     onclick="showMedicalDetail('satisfaction')"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="View patient satisfaction details">
+                                    <div class="card-metric">94%</div>
+                                    <div class="card-label">Patient Satisfaction</div>
+                                    <div class="card-status">
+                                        <span class="status-dot"></span>
+                                        <span>success rate</span>
+                                    </div>
+                                    <div class="card-progress">
+                                        <div class="card-progress-fill" style="width: 94%"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2086,7 +2390,39 @@
         </div>
     </div>
 
-    <!-- PAIN DETAIL MODAL -->
+    <!-- MEDICAL STATS MODAL -->
+    <div class="modal-backdrop" id="medicalModalBackdrop" onclick="closeMedicalDetail()"></div>
+    <div class="pain-detail-modal" id="medicalDetailModal">
+        <div class="modal-header-content">
+            <div>
+                <div class="modal-icon-large" id="medModalIcon">📊</div>
+                <h2 class="modal-title-large" id="medModalTitle">Pain Reduction</h2>
+                <p class="modal-subtitle" id="medModalSubtitle">Detailed Statistics & Progress</p>
+            </div>
+            <button class="modal-close-btn" onclick="closeMedicalDetail()" aria-label="Close modal">×</button>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">📈 Key Metrics</h3>
+            <p class="modal-content-text" id="medModalMetrics"></p>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">🎯 How We Achieve This</h3>
+            <ul class="modal-list" id="medModalMethods"></ul>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">📊 Patient Data</h3>
+            <p class="modal-content-text" id="medModalData"></p>
+        </div>
+
+        <button class="modal-cta-button" onclick="openBookingModal()">
+            Book Free Assessment →
+        </button>
+    </div>
+
+    <!-- PAIN DETAIL MODAL (KEPT FOR PAIN CATEGORIES) -->
     <div class="modal-backdrop" id="painModalBackdrop" onclick="closePainDetail()"></div>
     <div class="pain-detail-modal" id="painDetailModal">
         <div class="modal-header-content">
@@ -2529,42 +2865,144 @@
 
         counters.forEach(counter => counterObserver.observe(counter));
 
-        // INTERACTIVE SPINE - OPTIMIZED WITH THROTTLING
+        // MEDICAL CARD MODAL DATA
+        const medicalDetailData = {
+            painReduction: {
+                icon: '📊',
+                title: '85% Pain Reduction',
+                subtitle: 'Average patient improvement after 6 sessions',
+                metrics: 'Our patients report significant pain reduction averaging 85% within 6-8 sessions. This includes acute and chronic pain conditions. Measured using standardized VAS (Visual Analog Scale) and patient-reported outcomes.',
+                methods: [
+                    'Evidence-based Manual Therapy Techniques',
+                    'Targeted Therapeutic Exercises',
+                    'Advanced Pain Management Protocols',
+                    'Personalized Treatment Plans',
+                    'Progressive Intensity Modulation',
+                    'Continuous Progress Monitoring'
+                ],
+                data: 'Based on data from 2,847 patients over 24 months. Initial average pain score: 7.8/10. Post-treatment average: 1.2/10. Success rate defined as >70% pain reduction maintained for 3+ months.'
+            },
+            mobility: {
+                icon: '🎯',
+                title: '+42% Mobility Improvement',
+                subtitle: 'Range of motion increase in 4 weeks',
+                metrics: 'Patients experience an average 42% increase in functional mobility and range of motion within 4 weeks of treatment. This includes flexibility, joint mobility, and functional movement patterns.',
+                methods: [
+                    'Dynamic Mobility Assessments',
+                    'Joint Mobilization Techniques',
+                    'Functional Movement Screening',
+                    'Progressive Stretching Protocols',
+                    'Neuromuscular Re-education',
+                    'Gait and Posture Analysis'
+                ],
+                data: 'Measured using standardized ROM (Range of Motion) tests and functional movement screens. Sample size: 1,956 patients. Average improvement maintained at 6-month follow-up: 38%.'
+            },
+            recovery: {
+                icon: '⏱️',
+                title: '6-8 Week Recovery',
+                subtitle: 'Average time to significant improvement',
+                metrics: 'Most patients achieve their primary treatment goals within 6-8 weeks with consistent attendance (2-3 sessions per week). This timeline applies to common musculoskeletal conditions.',
+                methods: [
+                    'Accelerated Recovery Protocols',
+                    'Tissue Healing Optimization',
+                    'Graduated Exercise Progression',
+                    'Home Program Integration',
+                    'Weekly Progress Tracking',
+                    'Treatment Plan Adjustments'
+                ],
+                data: 'Average sessions to primary goal: 12-16. Attendance compliance rate: 87%. Patients maintaining improvements at 1 year: 82%. Based on comprehensive outcome tracking system.'
+            },
+            satisfaction: {
+                icon: '⭐',
+                title: '94% Patient Satisfaction',
+                subtitle: 'Would recommend to family & friends',
+                metrics: '94% of our patients rate their experience as excellent and would recommend our services. This reflects both treatment effectiveness and quality of care delivery.',
+                methods: [
+                    'Personalized Care Approach',
+                    'Clear Communication & Education',
+                    'Flexible Scheduling Options',
+                    'Modern Treatment Techniques',
+                    'Compassionate Professional Staff',
+                    'Continuous Quality Improvement'
+                ],
+                data: 'Based on post-treatment surveys (n=3,214). Net Promoter Score: 87. Average rating: 4.8/5.0. Return patient rate: 76%. Survey response rate: 68%.'
+            }
+        };
+
+        // SHOW MEDICAL DETAIL MODAL
+        function showMedicalDetail(medicalType) {
+            const data = medicalDetailData[medicalType];
+            if (!data) return;
+
+            document.getElementById('medModalIcon').textContent = data.icon;
+            document.getElementById('medModalTitle').textContent = data.title;
+            document.getElementById('medModalSubtitle').textContent = data.subtitle;
+            document.getElementById('medModalMetrics').textContent = data.metrics;
+            document.getElementById('medModalData').textContent = data.data;
+
+            const methodsList = document.getElementById('medModalMethods');
+            methodsList.innerHTML = '';
+            data.methods.forEach(method => {
+                const li = document.createElement('li');
+                li.textContent = method;
+                methodsList.appendChild(li);
+            });
+
+            document.getElementById('medicalModalBackdrop').classList.add('show');
+            document.getElementById('medicalDetailModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // CLOSE MEDICAL DETAIL MODAL
+        function closeMedicalDetail() {
+            document.getElementById('medicalModalBackdrop').classList.remove('show');
+            document.getElementById('medicalDetailModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // MOUSE-RESPONSIVE BODY TILT - ENHANCED
         const spineImg = document.getElementById('spineImg');
+        const spineContainer = document.querySelector('.spine-container');
         let mouseX = 0, mouseY = 0;
         let currentX = 0, currentY = 0;
         let spineLastUpdate = 0;
-        const spineUpdateInterval = 16; // ~60fps for spine animation
+        const spineUpdateInterval = 16; // ~60fps for smooth animation
 
-        // Throttled mousemove handler
-        let mouseMoveTimeout;
-        document.addEventListener('mousemove', (e) => {
-            if (!spineImg) return;
-            if (mouseMoveTimeout) return;
-
-            mouseMoveTimeout = setTimeout(() => {
-                const rect = spineImg.getBoundingClientRect();
+        // Track mouse movement over spine container
+        if (spineContainer) {
+            spineContainer.addEventListener('mousemove', (e) => {
+                const rect = spineContainer.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
-                mouseX = (e.clientX - centerX) / rect.width * 15; // Reduced from 20
-                mouseY = (e.clientY - centerY) / rect.height * 15;
-                mouseMoveTimeout = null;
-            }, 50); // Throttle to every 50ms
-        });
+
+                // Calculate tilt based on mouse position (reduced intensity)
+                mouseX = ((e.clientX - centerX) / rect.width) * 8; // Max 8 degrees
+                mouseY = ((e.clientY - centerY) / rect.height) * 8;
+            });
+
+            spineContainer.addEventListener('mouseleave', () => {
+                mouseX = 0;
+                mouseY = 0;
+            });
+        }
 
         function animateSpine(currentTime) {
             if (!spineImg) return;
 
-            // Throttle updates
+            // Throttle updates for performance
             if (currentTime - spineLastUpdate < spineUpdateInterval) {
                 requestAnimationFrame(animateSpine);
                 return;
             }
             spineLastUpdate = currentTime;
 
-            currentX += (mouseX - currentX) * 0.08; // Reduced from 0.1
-            currentY += (mouseY - currentY) * 0.08;
-            spineImg.style.transform = `translate(-50%, -50%) rotateY(${currentX}deg) rotateX(${-currentY}deg)`;
+            // Smooth interpolation
+            currentX += (mouseX - currentX) * 0.1;
+            currentY += (mouseY - currentY) * 0.1;
+
+            // Apply 3D transform
+            spineImg.style.transform = `perspective(1000px) rotateY(${currentX}deg) rotateX(${-currentY}deg)`;
+
             requestAnimationFrame(animateSpine);
         }
         animateSpine(0);
@@ -2883,10 +3321,11 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        // KEYBOARD SUPPORT FOR MODAL
+        // KEYBOARD SUPPORT FOR MODALS
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closePainDetail();
+                closeMedicalDetail();
             }
         });
 
