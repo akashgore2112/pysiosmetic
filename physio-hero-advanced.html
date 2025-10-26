@@ -121,10 +121,13 @@
             50% { background-position: 100% 50%, 0% 0%, 60% 90%; }
         }
 
-        #bgCanvas {
-            position: absolute;
+        #hero-bg {
+            position: fixed;
             inset: 0;
-            z-index: 2;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
             filter: saturate(92%) blur(0.2px);
         }
 
@@ -1939,6 +1942,10 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
+            #hero-bg {
+                display: none;
+            }
+
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
@@ -1977,7 +1984,7 @@
 
     <div class="hero">
         <div class="animated-bg"></div>
-        <canvas id="bgCanvas"></canvas>
+        <canvas id="hero-bg"></canvas>
 
         <!-- NAVIGATION -->
         <nav id="navbar">
@@ -2938,11 +2945,14 @@
         animateSpine();
 
         // THREE.JS BACKGROUND - FIXED AND STABLE VERSION
-        const canvas = document.getElementById('bgCanvas');
+        const canvas = document.getElementById('hero-bg');
         const prefersReducedMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
         let scene, camera, renderer, particles, animationId;
         let positionAttribute;
         let resizeHandler, contextLostHandler, pointerMoveHandler, pointerLeaveHandler;
+        let clock = null;
+        let animateLoop = null;
+        let visibilityChangeHandler = null;
         let basePositions, swirlOffsets, swirlSpeeds, noiseSeeds, breathSpeeds, layerOffsets, driftSeeds, parallaxWeights;
         let pointerTargetX = 0, pointerTargetY = 0, pointerCurrentX = 0, pointerCurrentY = 0;
         let gradientTexture = null;
@@ -2984,6 +2994,18 @@
                 window.removeEventListener('blur', pointerLeaveHandler);
                 pointerLeaveHandler = null;
             }
+
+            if (visibilityChangeHandler) {
+                document.removeEventListener('visibilitychange', visibilityChangeHandler);
+                visibilityChangeHandler = null;
+            }
+
+            if (clock) {
+                clock.stop();
+                clock = null;
+            }
+
+            animateLoop = null;
 
             if (particles) {
                 if (particles.geometry) particles.geometry.dispose();
@@ -3051,6 +3073,9 @@
             }
 
             try {
+                const fallback = document.querySelector('.particle-container');
+                if (fallback) fallback.remove();
+
                 canvas.style.display = 'block';
                 scene = new THREE.Scene();
 
@@ -3157,7 +3182,7 @@
                 particles.rotation.y = 0.16;
                 scene.add(particles);
 
-                const clock = new THREE.Clock();
+                clock = new THREE.Clock();
                 pointerTargetX = 0;
                 pointerTargetY = 0;
                 pointerCurrentX = 0;
@@ -3181,10 +3206,25 @@
                 window.addEventListener('pointerup', pointerLeaveHandler);
                 window.addEventListener('blur', pointerLeaveHandler);
 
+                visibilityChangeHandler = () => {
+                    if (document.hidden) {
+                        if (clock) clock.stop();
+                        if (animationId) {
+                            cancelAnimationFrame(animationId);
+                            animationId = null;
+                        }
+                    } else if (threeInitialized && animateLoop && !animationId) {
+                        if (clock) clock.start();
+                        animateLoop();
+                    }
+                };
+
+                document.addEventListener('visibilitychange', visibilityChangeHandler);
+
                 const baseRotation = { x: -0.028, y: 0.12, z: 0 };
 
-                const animate = () => {
-                    animationId = requestAnimationFrame(animate);
+                animateLoop = () => {
+                    animationId = requestAnimationFrame(animateLoop);
 
                     if (!particles || !positionAttribute) return;
 
@@ -3219,7 +3259,7 @@
                     renderer.render(scene, camera);
                 };
 
-                animate();
+                animateLoop();
 
                 resizeHandler = () => {
                     if (!camera || !renderer) return;
@@ -3260,10 +3300,12 @@
             const particleContainer = document.createElement('div');
             particleContainer.className = 'particle-container';
             particleContainer.style.cssText = `
-                position: absolute;
+                position: fixed;
                 inset: 0;
+                width: 100vw;
+                height: 100vh;
                 overflow: hidden;
-                z-index: 2;
+                z-index: -1;
                 pointer-events: none;
             `;
 
@@ -3286,10 +3328,7 @@
                 particleContainer.appendChild(particle);
             }
 
-            const hero = document.querySelector('.hero');
-            if (hero) {
-                hero.insertBefore(particleContainer, hero.firstChild);
-            }
+            document.body.prepend(particleContainer);
         }
 
         // Initialize Three.js or fallback
