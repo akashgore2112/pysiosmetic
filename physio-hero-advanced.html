@@ -406,22 +406,35 @@
         }
 
         .content-wrapper {
-            max-width: 1400px;
+            max-width: 1600px;
             width: 100%;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 5rem;
+            grid-template-columns: 500px 1fr;
+            align-items: flex-start;
+            gap: 6rem;
+            padding-top: 2rem;
+        }
+
+        .visual-content {
+            position: relative;
+            animation: fadeInRight 0.8s var(--easing);
+            order: 1;
         }
 
         .text-content {
             z-index: 10;
             animation: fadeInLeft 0.8s var(--easing);
             contain: layout;
+            order: 2;
         }
 
         @keyframes fadeInLeft {
             from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
@@ -508,13 +521,14 @@
             to { opacity: 1; }
         }
 
-        /* INTERACTIVE BODY ASSESSMENT - PREMIUM */
+        /* INTERACTIVE BODY ASSESSMENT - INTELLIGENT & DATA-DRIVEN */
         .body-assessment {
             background: linear-gradient(135deg, rgba(243, 112, 33, 0.04), rgba(67, 133, 245, 0.04));
             border: 1px solid rgba(243, 112, 33, 0.2);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             margin-bottom: 2rem;
+            margin-top: 2rem;
             animation: fadeIn 1s ease 0.5s both;
             position: relative;
             overflow: hidden;
@@ -522,6 +536,7 @@
             box-shadow:
                 0 8px 32px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            max-width: 100%;
         }
 
         .body-assessment::before {
@@ -573,13 +588,235 @@
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 700;
-            animation: pulse 2s ease infinite;
             border: 1px solid rgba(243, 112, 33, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
+        .assessment-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse 2s ease infinite;
+        }
+
+        /* ASSESSMENT PROGRESS BAR */
+        .assessment-progress {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+        }
+
+        .progress-percentage {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.6s var(--easing);
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmerProgress 2s infinite;
+        }
+
+        @keyframes shimmerProgress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* PAIN DETAIL MODAL */
+        .pain-detail-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            background: linear-gradient(135deg, rgba(5, 10, 20, 0.98), rgba(10, 20, 40, 0.98));
+            border: 2px solid rgba(243, 112, 33, 0.4);
+            border-radius: 24px;
+            padding: 2.5rem;
+            z-index: 10001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal) var(--easing);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            overflow-y: auto;
+        }
+
+        .pain-detail-modal.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal) var(--easing);
+        }
+
+        .modal-backdrop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-icon-large {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-title-large {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .modal-close-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast) var(--easing);
+            color: #fff;
+            font-size: 1.5rem;
+            outline: none;
+        }
+
+        .modal-close-btn:hover,
+        .modal-close-btn:focus-visible {
+            background: rgba(243, 112, 33, 0.2);
+            border-color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .modal-section {
+            margin-bottom: 2rem;
+        }
+
+        .modal-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-content-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .modal-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .modal-list li {
+            padding: 0.8rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .modal-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .modal-cta-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal) var(--easing);
+            margin-top: 1.5rem;
+        }
+
+        .modal-cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 112, 33, 0.4);
         }
 
         /* PAIN INTENSITY SLIDER - PREMIUM */
@@ -1227,34 +1464,55 @@
             50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
         }
 
-        /* FLOATING CARDS - PREMIUM */
+        /* FLOATING CARDS - ENHANCED FOR INTERACTION */
         .info-card {
             position: absolute;
-            padding: 1rem;
+            padding: 1.2rem;
             background: rgba(5, 10, 20, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(243, 112, 33, 0.2);
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow:
                 0 8px 32px rgba(0, 0, 0, 0.6),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all var(--transition-normal) var(--easing);
             cursor: pointer;
             animation: cardFloat 5s ease-in-out infinite;
             z-index: 20;
+            min-width: 160px;
         }
 
-        .info-card:hover {
-            transform: scale(1.05);
-            border-color: rgba(243, 112, 33, 0.4);
+        .info-card:hover,
+        .info-card:focus-visible {
+            transform: scale(1.08) translateY(-5px);
+            border-color: rgba(243, 112, 33, 0.5);
             box-shadow:
-                0 15px 40px rgba(243, 112, 33, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                0 20px 50px rgba(243, 112, 33, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .info-card:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 4px;
+        }
+
+        .info-card:active {
+            transform: scale(1.02) translateY(-2px);
         }
 
         @keyframes cardFloat {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
+        }
+
+        .visual-content {
+            transform-origin: center;
+            will-change: transform;
+        }
+
+        .spine-3d-container {
+            transform: scale(1.2);
+            transform-origin: center;
         }
 
         /* Reduce motion for users who prefer it */
@@ -1475,6 +1733,32 @@
             }
         }
 
+        @media (max-width: 1200px) {
+            .content-wrapper {
+                grid-template-columns: 450px 1fr;
+                gap: 4rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .visual-content {
+                order: 2;
+            }
+
+            .text-content {
+                order: 1;
+            }
+
+            .spine-3d-container {
+                transform: scale(1);
+            }
+        }
+
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .main-heading { font-size: 2.5rem; }
@@ -1487,6 +1771,7 @@
             .duration-options { grid-template-columns: repeat(2, 1fr); }
             .activity-options { grid-template-columns: 1fr; }
             .body-assessment { padding: 1.5rem; }
+            .pain-detail-modal { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -1531,6 +1816,44 @@
         <!-- HERO CONTENT -->
         <div class="hero-content">
             <div class="content-wrapper">
+                <!-- VISUAL SECTION - NOW ON LEFT -->
+                <div class="visual-content">
+                    <div class="spine-3d-container">
+                        <div class="spine-visual">
+                            <div class="spine-container">
+                                <div class="spine-glow"></div>
+                                <img src="https://i.postimg.cc/NFSYhY8y/Adobe-Express-file.png" alt="Spine Visualization" class="spine-image" id="spineImg">
+
+                                <!-- INFO CARDS - NOW CLICKABLE -->
+                                <div class="info-card card-1" onclick="showPainDetail('back')" tabindex="0" role="button" aria-label="View back pain information">
+                                    <div class="card-icon">🦴</div>
+                                    <div class="card-title">Back Pain</div>
+                                    <div class="card-value">Click for info</div>
+                                </div>
+
+                                <div class="info-card card-2" onclick="showPainDetail('shoulder')" tabindex="0" role="button" aria-label="View shoulder pain information">
+                                    <div class="card-icon">💪</div>
+                                    <div class="card-title">Shoulder Pain</div>
+                                    <div class="card-value">Click for info</div>
+                                </div>
+
+                                <div class="info-card card-3" onclick="showPainDetail('knee')" tabindex="0" role="button" aria-label="View knee pain information">
+                                    <div class="card-icon">🦵</div>
+                                    <div class="card-title">Knee Pain</div>
+                                    <div class="card-value">Click for info</div>
+                                </div>
+
+                                <div class="info-card card-4" onclick="showPainDetail('neck')" tabindex="0" role="button" aria-label="View neck pain information">
+                                    <div class="card-icon">🎯</div>
+                                    <div class="card-title">Neck Pain</div>
+                                    <div class="card-value">Click for info</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TEXT CONTENT - NOW ON RIGHT -->
                 <div class="text-content">
                     <div class="subtitle">ADVANCED PHYSIOTHERAPY</div>
                     <h1 class="main-heading">
@@ -1542,13 +1865,24 @@
                         Experience personalized physiotherapy that combines cutting-edge techniques with compassionate care. Your journey to pain-free movement starts here.
                     </p>
 
-                    <!-- INTERACTIVE BODY ASSESSMENT - ADVANCED -->
+                    <!-- INTERACTIVE BODY ASSESSMENT - INTELLIGENT -->
                     <div class="body-assessment">
                         <div class="assessment-header">
                             <div class="assessment-title">
                                 🎯 Advanced Pain Assessment
                             </div>
                             <div class="assessment-badge">AI-Powered Analysis</div>
+                        </div>
+
+                        <!-- ASSESSMENT PROGRESS -->
+                        <div class="assessment-progress">
+                            <div class="progress-header">
+                                <span class="progress-label">Assessment Completion</span>
+                                <span class="progress-percentage" id="assessmentProgress">0%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="progressBarFill"></div>
+                            </div>
                         </div>
 
                         <!-- PAIN INTENSITY SLIDER -->
@@ -1748,42 +2082,40 @@
                     </div>
                 </div>
 
-                <!-- VISUAL SECTION -->
-                <div class="visual-content">
-                    <div class="spine-visual">
-                        <div class="spine-container">
-                            <div class="spine-glow"></div>
-                            <img src="https://i.postimg.cc/NFSYhY8y/Adobe-Express-file.png" alt="Spine Visualization" class="spine-image" id="spineImg">
-
-                            <!-- INFO CARDS -->
-                            <div class="info-card card-1">
-                                <div class="card-icon">📊</div>
-                                <div class="card-title">Success Rate</div>
-                                <div class="card-value">94%</div>
-                            </div>
-
-                            <div class="info-card card-2">
-                                <div class="card-icon">⏱️</div>
-                                <div class="card-title">Recovery Time</div>
-                                <div class="card-value">6-8 Weeks</div>
-                            </div>
-
-                            <div class="info-card card-3">
-                                <div class="card-icon">🎯</div>
-                                <div class="card-title">Pain Reduction</div>
-                                <div class="card-value">85%</div>
-                            </div>
-
-                            <div class="info-card card-4">
-                                <div class="card-icon">💪</div>
-                                <div class="card-title">Strength Gain</div>
-                                <div class="card-value">+40%</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
+    </div>
+
+    <!-- PAIN DETAIL MODAL -->
+    <div class="modal-backdrop" id="painModalBackdrop" onclick="closePainDetail()"></div>
+    <div class="pain-detail-modal" id="painDetailModal">
+        <div class="modal-header-content">
+            <div>
+                <div class="modal-icon-large" id="modalIcon">🦴</div>
+                <h2 class="modal-title-large" id="modalTitle">Back Pain</h2>
+                <p class="modal-subtitle" id="modalSubtitle">Comprehensive Information & Treatment</p>
+            </div>
+            <button class="modal-close-btn" onclick="closePainDetail()" aria-label="Close modal">×</button>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">📋 Common Causes</h3>
+            <p class="modal-content-text" id="modalCauses"></p>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">💊 Treatment Approach</h3>
+            <ul class="modal-list" id="modalTreatments"></ul>
+        </div>
+
+        <div class="modal-section">
+            <h3 class="modal-section-title">📊 Expected Outcomes</h3>
+            <p class="modal-content-text" id="modalOutcomes"></p>
+        </div>
+
+        <button class="modal-cta-button" onclick="openBookingModal()">
+            Book Free Assessment →
+        </button>
     </div>
 
     <!-- QUICK BOOKING MODAL -->
@@ -1843,6 +2175,125 @@
             bodyPart: null
         };
 
+        // PAIN DETAIL MODAL DATA
+        const painDetailData = {
+            back: {
+                icon: '🦴',
+                title: 'Back Pain',
+                subtitle: 'Lower, Middle & Upper Back Treatment',
+                causes: 'Back pain can result from poor posture, muscle strain, disc herniation, arthritis, or prolonged sitting. It affects 80% of adults at some point in their lives.',
+                treatments: [
+                    'Manual Therapy & Spinal Mobilization',
+                    'Core Strengthening Exercises',
+                    'Postural Assessment & Correction',
+                    'Ergonomic Workplace Optimization',
+                    'Muscle Release Techniques',
+                    'Home Exercise Program'
+                ],
+                outcomes: 'Most patients experience 50-70% pain reduction within 4-6 weeks. Full recovery typically achieved in 8-12 weeks with consistent treatment. 85% success rate.'
+            },
+            shoulder: {
+                icon: '💪',
+                title: 'Shoulder Pain',
+                subtitle: 'Rotator Cuff & Shoulder Injuries',
+                causes: 'Common causes include rotator cuff injuries, frozen shoulder, impingement syndrome, arthritis, or sports-related trauma. Often related to overhead activities.',
+                treatments: [
+                    'Rotator Cuff Strengthening',
+                    'Range of Motion Exercises',
+                    'Joint Mobilization Techniques',
+                    'Scapular Stabilization',
+                    'Functional Movement Training',
+                    'Progressive Resistance Training'
+                ],
+                outcomes: '70-80% improvement in pain and function within 6-8 weeks. Complete recovery varies from 8-16 weeks depending on severity. 90% avoid surgery with proper rehabilitation.'
+            },
+            knee: {
+                icon: '🦵',
+                title: 'Knee Pain',
+                subtitle: 'Joint, Ligament & Cartilage Issues',
+                causes: 'Knee pain arises from osteoarthritis, meniscus tears, ligament sprains, patellofemoral syndrome, or overuse injuries. Common in active individuals and those over 40.',
+                treatments: [
+                    'Joint Mobilization & Manipulation',
+                    'Quadriceps & Hamstring Strengthening',
+                    'Gait Analysis & Correction',
+                    'Balance & Proprioception Training',
+                    'Patellar Taping Techniques',
+                    'Activity Modification Strategies'
+                ],
+                outcomes: '60-75% pain reduction within 6 weeks. Most patients return to normal activities in 8-12 weeks. 92% success rate in avoiding surgical intervention.'
+            },
+            neck: {
+                icon: '🎯',
+                title: 'Neck Pain',
+                subtitle: 'Cervical Spine & Muscle Tension',
+                causes: 'Neck pain stems from poor posture, whiplash, muscle strain, disc degeneration, or tech neck from prolonged screen time. Affects 30% of adults annually.',
+                treatments: [
+                    'Cervical Spine Mobilization',
+                    'Deep Neck Flexor Strengthening',
+                    'Postural Re-education',
+                    'Soft Tissue Release',
+                    'Ergonomic Assessment',
+                    'Stretching & Mobility Exercises'
+                ],
+                outcomes: 'Significant relief within 2-4 weeks for most patients. Full resolution typically in 6-8 weeks. 88% experience complete or near-complete recovery.'
+            }
+        };
+
+        // SHOW PAIN DETAIL MODAL
+        function showPainDetail(painType) {
+            const data = painDetailData[painType];
+            if (!data) return;
+
+            document.getElementById('modalIcon').textContent = data.icon;
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            document.getElementById('modalCauses').textContent = data.causes;
+            document.getElementById('modalOutcomes').textContent = data.outcomes;
+
+            const treatmentsList = document.getElementById('modalTreatments');
+            treatmentsList.innerHTML = '';
+            data.treatments.forEach(treatment => {
+                const li = document.createElement('li');
+                li.textContent = treatment;
+                treatmentsList.appendChild(li);
+            });
+
+            document.getElementById('painModalBackdrop').classList.add('show');
+            document.getElementById('painDetailModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // CLOSE PAIN DETAIL MODAL
+        function closePainDetail() {
+            document.getElementById('painModalBackdrop').classList.remove('show');
+            document.getElementById('painDetailModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // OPEN BOOKING MODAL FROM PAIN DETAIL
+        function openBookingModal() {
+            closePainDetail();
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'flex';
+                document.getElementById('modal').style.display = 'block';
+            }, 300);
+        }
+
+        // UPDATE ASSESSMENT PROGRESS
+        function updateAssessmentProgress() {
+            let completed = 0;
+            const total = 4;
+
+            if (assessmentData.painIntensity !== null) completed++;
+            if (assessmentData.duration) completed++;
+            if (assessmentData.activityLevel) completed++;
+            if (assessmentData.selectedPain) completed++;
+
+            const percentage = Math.round((completed / total) * 100);
+            document.getElementById('assessmentProgress').textContent = percentage + '%';
+            document.getElementById('progressBarFill').style.width = percentage + '%';
+        }
+
         // UPDATE PAIN INTENSITY
         function updateIntensity(value) {
             assessmentData.painIntensity = parseInt(value);
@@ -1858,6 +2309,7 @@
                 intensityValue.style.color = '#f44336';
             }
 
+            updateAssessmentProgress();
             updateRecommendation();
         }
 
@@ -1866,6 +2318,7 @@
             document.querySelectorAll('.duration-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
             assessmentData.duration = duration;
+            updateAssessmentProgress();
             updateRecommendation();
         }
 
@@ -1874,6 +2327,7 @@
             document.querySelectorAll('.activity-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
             assessmentData.activityLevel = activity;
+            updateAssessmentProgress();
             updateRecommendation();
         }
 
@@ -1916,6 +2370,7 @@
             element.classList.add('selected');
             assessmentData.selectedPain = type;
             assessmentData.bodyPart = primaryBodyPart;
+            updateAssessmentProgress();
 
             // Update form input
             const painAreaInput = document.getElementById('painAreaInput');
@@ -2426,6 +2881,18 @@
         // Close modal on ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
+        });
+
+        // KEYBOARD SUPPORT FOR MODAL
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePainDetail();
+            }
+        });
+
+        // INITIALIZE PROGRESS ON LOAD
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAssessmentProgress();
         });
 
         // Cleanup on page unload
