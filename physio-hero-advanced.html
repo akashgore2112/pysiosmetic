@@ -445,7 +445,7 @@
             to { opacity: 1; }
         }
 
-        /* INTERACTIVE BODY ASSESSMENT - ENHANCED */
+        /* INTERACTIVE BODY ASSESSMENT - ADVANCED */
         .body-assessment {
             background: linear-gradient(135deg, rgba(243, 112, 33, 0.08), rgba(67, 133, 245, 0.08));
             border: 1px solid rgba(243, 112, 33, 0.3);
@@ -515,10 +515,200 @@
             50% { transform: scale(1.05); opacity: 0.9; }
         }
 
+        /* PAIN INTENSITY SLIDER */
+        .pain-intensity-section {
+            margin: 1.5rem 0;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .intensity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .intensity-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .intensity-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .intensity-slider-container {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .intensity-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            background: linear-gradient(to right,
+                #4caf50 0%,
+                #8bc34a 20%,
+                #ffeb3b 40%,
+                #ff9800 60%,
+                #f44336 80%,
+                #c62828 100%);
+            outline: none;
+            -webkit-appearance: none;
+            position: relative;
+        }
+
+        .intensity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 0 3px var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .intensity-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(243, 112, 33, 0.5), 0 0 0 4px var(--primary);
+        }
+
+        .intensity-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 0 3px var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .intensity-slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(243, 112, 33, 0.5), 0 0 0 4px var(--primary);
+        }
+
+        .intensity-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* SYMPTOM DURATION */
+        .symptom-duration {
+            margin: 1.5rem 0;
+        }
+
+        .duration-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .duration-option {
+            padding: 0.8rem 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .duration-option:hover {
+            background: rgba(243, 112, 33, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .duration-option.selected {
+            background: rgba(243, 112, 33, 0.2);
+            border-color: var(--primary);
+            border-width: 2px;
+            color: #fff;
+        }
+
+        .duration-icon {
+            font-size: 1.3rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .duration-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* ACTIVITY LEVEL */
+        .activity-level {
+            margin: 1.5rem 0;
+        }
+
+        .activity-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .activity-option {
+            padding: 1rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .activity-option:hover {
+            background: rgba(67, 133, 245, 0.1);
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .activity-option.selected {
+            background: rgba(67, 133, 245, 0.2);
+            border-color: var(--secondary);
+            border-width: 2px;
+        }
+
+        .activity-icon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-desc {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
         /* ADVANCED BODY MAP */
         .body-map-container {
             display: grid;
-            grid-template-columns: 200px 1fr;
+            grid-template-columns: 220px 1fr;
             gap: 2rem;
             margin-top: 1.5rem;
         }
@@ -529,7 +719,7 @@
 
         .body-diagram {
             position: relative;
-            height: 380px;
+            height: 420px;
             background: linear-gradient(135deg, rgba(243, 112, 33, 0.05), rgba(67, 133, 245, 0.05));
             border-radius: 16px;
             display: flex;
@@ -541,14 +731,29 @@
         }
 
         .body-svg {
-            width: 160px;
-            height: 360px;
+            width: 180px;
+            height: 400px;
             filter: drop-shadow(0 5px 20px rgba(243, 112, 33, 0.3));
             transition: transform 0.3s ease;
         }
 
         .body-diagram:hover .body-svg {
             transform: scale(1.03);
+        }
+
+        .body-scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: bodyScan 3s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes bodyScan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { top: 100%; opacity: 0; }
         }
 
         .body-part {
@@ -1155,8 +1360,11 @@
             .cta-section { flex-direction: column; width: 100%; }
             .cta-button { width: 100%; justify-content: center; }
             .modal { width: 95%; padding: 1.5rem; }
-            .body-diagram { height: 320px; }
-            .body-svg { width: 120px; height: 300px; }
+            .body-diagram { height: 350px; }
+            .body-svg { width: 140px; height: 320px; }
+            .duration-options { grid-template-columns: repeat(2, 1fr); }
+            .activity-options { grid-template-columns: 1fr; }
+            .body-assessment { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -1212,19 +1420,83 @@
                         Experience personalized physiotherapy that combines cutting-edge techniques with compassionate care. Your journey to pain-free movement starts here.
                     </p>
 
-                    <!-- INTERACTIVE BODY ASSESSMENT - ENHANCED -->
+                    <!-- INTERACTIVE BODY ASSESSMENT - ADVANCED -->
                     <div class="body-assessment">
                         <div class="assessment-header">
                             <div class="assessment-title">
-                                🎯 Interactive Pain Assessment
+                                🎯 Advanced Pain Assessment
                             </div>
-                            <div class="assessment-badge">AI-Powered</div>
+                            <div class="assessment-badge">AI-Powered Analysis</div>
+                        </div>
+
+                        <!-- PAIN INTENSITY SLIDER -->
+                        <div class="pain-intensity-section">
+                            <div class="intensity-header">
+                                <span class="intensity-label">📊 Pain Intensity Level</span>
+                                <span class="intensity-value" id="intensityValue">5/10</span>
+                            </div>
+                            <div class="intensity-slider-container">
+                                <input type="range" min="0" max="10" value="5" class="intensity-slider" id="painIntensity" oninput="updateIntensity(this.value)">
+                            </div>
+                            <div class="intensity-labels">
+                                <span>No Pain</span>
+                                <span>Mild</span>
+                                <span>Moderate</span>
+                                <span>Severe</span>
+                                <span>Worst</span>
+                            </div>
+                        </div>
+
+                        <!-- SYMPTOM DURATION -->
+                        <div class="symptom-duration">
+                            <div class="intensity-label">⏰ How long have you had this pain?</div>
+                            <div class="duration-options">
+                                <div class="duration-option" onclick="selectDuration(this, 'hours')">
+                                    <span class="duration-icon">⚡</span>
+                                    <div class="duration-text">Few Hours</div>
+                                </div>
+                                <div class="duration-option" onclick="selectDuration(this, 'days')">
+                                    <span class="duration-icon">📅</span>
+                                    <div class="duration-text">Few Days</div>
+                                </div>
+                                <div class="duration-option" onclick="selectDuration(this, 'weeks')">
+                                    <span class="duration-icon">📆</span>
+                                    <div class="duration-text">Few Weeks</div>
+                                </div>
+                                <div class="duration-option" onclick="selectDuration(this, 'months')">
+                                    <span class="duration-icon">🗓️</span>
+                                    <div class="duration-text">Months+</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACTIVITY LEVEL -->
+                        <div class="activity-level">
+                            <div class="intensity-label">🏃 Current Activity Level</div>
+                            <div class="activity-options">
+                                <div class="activity-option" onclick="selectActivity(this, 'sedentary')">
+                                    <span class="activity-icon">🪑</span>
+                                    <div class="activity-label">Sedentary</div>
+                                    <div class="activity-desc">Mostly sitting</div>
+                                </div>
+                                <div class="activity-option" onclick="selectActivity(this, 'moderate')">
+                                    <span class="activity-icon">🚶</span>
+                                    <div class="activity-label">Moderate</div>
+                                    <div class="activity-desc">Light exercise</div>
+                                </div>
+                                <div class="activity-option" onclick="selectActivity(this, 'active')">
+                                    <span class="activity-icon">🏃</span>
+                                    <div class="activity-label">Very Active</div>
+                                    <div class="activity-desc">Regular training</div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="body-map-container">
                             <!-- ADVANCED BODY DIAGRAM -->
                             <div class="body-diagram-wrapper">
                                 <div class="body-diagram">
+                                    <div class="body-scan-line"></div>
                                     <svg class="body-svg" viewBox="0 0 100 180">
                                         <defs>
                                             <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1440,8 +1712,50 @@
             }
         });
 
-        // ENHANCED PAIN SELECTOR WITH RECOMMENDATIONS
-        let selectedPain = null;
+        // ASSESSMENT STATE
+        let assessmentData = {
+            painIntensity: 5,
+            duration: null,
+            activityLevel: null,
+            selectedPain: null,
+            bodyPart: null
+        };
+
+        // UPDATE PAIN INTENSITY
+        function updateIntensity(value) {
+            assessmentData.painIntensity = parseInt(value);
+            document.getElementById('intensityValue').textContent = value + '/10';
+
+            // Update color based on intensity
+            const intensityValue = document.getElementById('intensityValue');
+            if (value <= 3) {
+                intensityValue.style.color = '#4caf50';
+            } else if (value <= 6) {
+                intensityValue.style.color = '#ff9800';
+            } else {
+                intensityValue.style.color = '#f44336';
+            }
+
+            updateRecommendation();
+        }
+
+        // SELECT DURATION
+        function selectDuration(element, duration) {
+            document.querySelectorAll('.duration-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            assessmentData.duration = duration;
+            updateRecommendation();
+        }
+
+        // SELECT ACTIVITY LEVEL
+        function selectActivity(element, activity) {
+            document.querySelectorAll('.activity-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            assessmentData.activityLevel = activity;
+            updateRecommendation();
+        }
+
+        // ENHANCED PAIN SELECTOR WITH ADVANCED RECOMMENDATIONS
         const painRecommendations = {
             'back': {
                 title: 'Back Pain Treatment',
@@ -1478,7 +1792,8 @@
         function selectPain(element, type, primaryBodyPart) {
             document.querySelectorAll('.pain-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
-            selectedPain = type;
+            assessmentData.selectedPain = type;
+            assessmentData.bodyPart = primaryBodyPart;
 
             // Update form input
             const painAreaInput = document.getElementById('painAreaInput');
@@ -1498,13 +1813,75 @@
                     const bodyPart = document.querySelector(`[data-part="${part}"]`);
                     if (bodyPart) bodyPart.classList.add('active');
                 });
-
-                // Show assessment result
-                const resultDiv = document.getElementById('assessmentResult');
-                const resultContent = document.getElementById('resultContent');
-                resultContent.innerHTML = `<strong>${recommendation.title}</strong><br><br>${recommendation.content}`;
-                resultDiv.classList.add('show');
             }
+
+            updateRecommendation();
+        }
+
+        // ADVANCED RECOMMENDATION ENGINE
+        function updateRecommendation() {
+            if (!assessmentData.selectedPain) return;
+
+            const recommendation = painRecommendations[assessmentData.selectedPain];
+            if (!recommendation) return;
+
+            let severity = 'moderate';
+            let urgency = 'routine';
+            let timeline = '4-8 weeks';
+
+            // Determine severity based on intensity and duration
+            if (assessmentData.painIntensity >= 8) {
+                severity = 'severe';
+                urgency = 'urgent';
+                timeline = '6-12 weeks';
+            } else if (assessmentData.painIntensity >= 5) {
+                severity = 'moderate';
+                urgency = 'important';
+                timeline = '4-8 weeks';
+            } else {
+                severity = 'mild';
+                urgency = 'routine';
+                timeline = '2-4 weeks';
+            }
+
+            // Adjust based on duration
+            if (assessmentData.duration === 'months') {
+                urgency = 'important';
+                timeline = '8-12 weeks';
+            } else if (assessmentData.duration === 'hours' && assessmentData.painIntensity >= 7) {
+                urgency = 'urgent';
+            }
+
+            // Generate personalized recommendation
+            let recommendationText = `<strong>${recommendation.title} (${severity.toUpperCase()})</strong><br><br>`;
+            recommendationText += `<strong>Priority:</strong> ${urgency.toUpperCase()}<br>`;
+            recommendationText += `<strong>Estimated Recovery:</strong> ${timeline}<br><br>`;
+            recommendationText += `<strong>Recommended Treatment:</strong><br>${recommendation.content}<br><br>`;
+
+            // Activity-specific advice
+            if (assessmentData.activityLevel === 'active') {
+                recommendationText += `<strong>For Active Individuals:</strong> Modified training schedule recommended. Focus on maintaining cardiovascular fitness while addressing the injury.<br>`;
+            } else if (assessmentData.activityLevel === 'sedentary') {
+                recommendationText += `<strong>For Sedentary Lifestyle:</strong> Gradual increase in activity levels. Ergonomic assessment and postural correction are essential.<br>`;
+            }
+
+            // Intensity-specific advice
+            if (assessmentData.painIntensity >= 7) {
+                recommendationText += `<br><strong>⚠️ High Pain Alert:</strong> Consider immediate consultation. Pain management strategies may be needed alongside treatment.`;
+            }
+
+            // Duration-specific advice
+            if (assessmentData.duration === 'months') {
+                recommendationText += `<br><strong>📅 Chronic Condition:</strong> Comprehensive evaluation recommended. May require multidisciplinary approach including manual therapy, exercise, and lifestyle modifications.`;
+            } else if (assessmentData.duration === 'hours') {
+                recommendationText += `<br><strong>⚡ Acute Injury:</strong> Early intervention can significantly improve outcomes. Ice/heat therapy and gentle movement recommended.`;
+            }
+
+            // Show assessment result
+            const resultDiv = document.getElementById('assessmentResult');
+            const resultContent = document.getElementById('resultContent');
+            resultContent.innerHTML = recommendationText;
+            resultDiv.classList.add('show');
         }
 
         // BODY PART CLICK INTERACTION
@@ -1598,9 +1975,11 @@
         }
         animateSpine();
 
-        // THREE.JS BACKGROUND - FIXED AND STABLE VERSION
+        // THREE.JS BACKGROUND - OPTIMIZED AND STABLE VERSION
         const canvas = document.getElementById('bgCanvas');
         let scene, camera, renderer, particles, animationId;
+        let particleVelocities = []; // Separate array for velocities
+        let isAnimating = false;
 
         function initThreeJS() {
             if (!canvas || typeof THREE === 'undefined') {
@@ -1627,19 +2006,21 @@
                 renderer = new THREE.WebGLRenderer({
                     canvas: canvas,
                     alpha: true,
-                    antialias: true,
-                    powerPreference: "high-performance"
+                    antialias: window.devicePixelRatio <= 1, // Disable on high DPI for performance
+                    powerPreference: "high-performance",
+                    failIfMajorPerformanceCaveat: false
                 });
 
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Cap pixel ratio
 
-                // Create particle system
-                const particleCount = 150;
+                // Adjust particle count based on device performance
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const particleCount = isMobile ? 60 : 120; // Reduced from 150
+
                 const geometry = new THREE.BufferGeometry();
                 const positions = new Float32Array(particleCount * 3);
                 const colors = new Float32Array(particleCount * 3);
-                const velocities = new Float32Array(particleCount * 3);
 
                 for(let i = 0; i < particleCount; i++) {
                     const i3 = i * 3;
@@ -1649,10 +2030,12 @@
                     positions[i3 + 1] = (Math.random() - 0.5) * 60;
                     positions[i3 + 2] = (Math.random() - 0.5) * 40;
 
-                    // Random velocities
-                    velocities[i3] = (Math.random() - 0.5) * 0.02;
-                    velocities[i3 + 1] = (Math.random() - 0.5) * 0.02;
-                    velocities[i3 + 2] = (Math.random() - 0.5) * 0.02;
+                    // Store velocities in separate array
+                    particleVelocities.push({
+                        x: (Math.random() - 0.5) * 0.02,
+                        y: (Math.random() - 0.5) * 0.02,
+                        z: (Math.random() - 0.5) * 0.02
+                    });
 
                     // Colors (orange and blue theme)
                     if (Math.random() > 0.5) {
@@ -1668,7 +2051,6 @@
 
                 geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
                 geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-                geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
 
                 const material = new THREE.PointsMaterial({
                     size: 2.5,
@@ -1676,7 +2058,8 @@
                     vertexColors: true,
                     transparent: true,
                     opacity: 0.7,
-                    blending: THREE.AdditiveBlending
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
                 });
 
                 particles = new THREE.Points(geometry, material);
@@ -1693,50 +2076,70 @@
                     mouseYNorm = -(event.clientY / window.innerHeight) * 2 + 1;
                 });
 
-                // Animation loop
+                // Animation loop with error handling
+                isAnimating = true;
                 function animate() {
+                    if (!isAnimating) return;
+
                     animationId = requestAnimationFrame(animate);
 
-                    if (!particles || !particles.geometry) return;
-
-                    // Smooth rotation based on mouse
-                    targetXRot += (mouseXNorm * 0.01 - targetXRot) * 0.05;
-                    targetYRot += (mouseYNorm * 0.01 - targetYRot) * 0.05;
-
-                    particles.rotation.y += 0.0003 + targetXRot;
-                    particles.rotation.x += 0.0002 + targetYRot;
-
-                    // Animate individual particles
-                    const positions = particles.geometry.attributes.position.array;
-                    const velocities = particles.geometry.attributes.velocity.array;
-
-                    for(let i = 0; i < particleCount; i++) {
-                        const i3 = i * 3;
-
-                        // Update positions
-                        positions[i3] += velocities[i3];
-                        positions[i3 + 1] += velocities[i3 + 1];
-                        positions[i3 + 2] += velocities[i3 + 2];
-
-                        // Boundary check and bounce
-                        if (Math.abs(positions[i3]) > 30) velocities[i3] *= -1;
-                        if (Math.abs(positions[i3 + 1]) > 30) velocities[i3 + 1] *= -1;
-                        if (Math.abs(positions[i3 + 2]) > 20) velocities[i3 + 2] *= -1;
+                    // Safety checks
+                    if (!particles || !particles.geometry || !particles.geometry.attributes.position) {
+                        console.warn('Particle system corrupted, stopping animation');
+                        isAnimating = false;
+                        return;
                     }
 
-                    particles.geometry.attributes.position.needsUpdate = true;
+                    try {
+                        // Smooth rotation based on mouse
+                        targetXRot += (mouseXNorm * 0.01 - targetXRot) * 0.05;
+                        targetYRot += (mouseYNorm * 0.01 - targetYRot) * 0.05;
 
-                    renderer.render(scene, camera);
+                        particles.rotation.y += 0.0003 + targetXRot;
+                        particles.rotation.x += 0.0002 + targetYRot;
+
+                        // Animate individual particles
+                        const positions = particles.geometry.attributes.position.array;
+
+                        for(let i = 0; i < particleCount; i++) {
+                            const i3 = i * 3;
+                            const velocity = particleVelocities[i];
+
+                            if (!velocity) continue;
+
+                            // Update positions
+                            positions[i3] += velocity.x;
+                            positions[i3 + 1] += velocity.y;
+                            positions[i3 + 2] += velocity.z;
+
+                            // Boundary check and bounce
+                            if (Math.abs(positions[i3]) > 30) velocity.x *= -1;
+                            if (Math.abs(positions[i3 + 1]) > 30) velocity.y *= -1;
+                            if (Math.abs(positions[i3 + 2]) > 20) velocity.z *= -1;
+                        }
+
+                        particles.geometry.attributes.position.needsUpdate = true;
+
+                        renderer.render(scene, camera);
+                    } catch (error) {
+                        console.error('Animation error:', error);
+                        isAnimating = false;
+                        createCSSParticles();
+                    }
                 }
 
                 animate();
 
-                // Handle resize
+                // Handle resize with debouncing
+                let resizeTimeout;
                 function onWindowResize() {
-                    if (!camera || !renderer) return;
-                    camera.aspect = window.innerWidth / window.innerHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        if (!camera || !renderer) return;
+                        camera.aspect = window.innerWidth / window.innerHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    }, 250);
                 }
 
                 window.addEventListener('resize', onWindowResize);
@@ -1744,7 +2147,7 @@
                 return true;
 
             } catch (error) {
-                console.log('Three.js initialization failed:', error.message);
+                console.error('Three.js initialization failed:', error);
                 if (canvas) canvas.style.display = 'none';
                 createCSSParticles();
                 return false;
@@ -1829,15 +2232,44 @@
 
         // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
+            isAnimating = false;
             if (animationId) {
                 cancelAnimationFrame(animationId);
             }
             if (renderer) {
                 renderer.dispose();
+                renderer.forceContextLoss();
+                renderer.domElement = null;
             }
             if (particles && particles.geometry) {
                 particles.geometry.dispose();
                 particles.material.dispose();
+            }
+            particleVelocities = [];
+        });
+
+        // Handle visibility change to pause animation when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                isAnimating = false;
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+            } else if (renderer && particles) {
+                isAnimating = true;
+                // Restart animation when tab becomes visible
+                function restartAnimate() {
+                    if (!isAnimating) return;
+                    animationId = requestAnimationFrame(restartAnimate);
+                    if (particles && particles.geometry && particles.geometry.attributes.position) {
+                        try {
+                            renderer.render(scene, camera);
+                        } catch(e) {
+                            isAnimating = false;
+                        }
+                    }
+                }
+                restartAnimate();
             }
         });
     </script>
