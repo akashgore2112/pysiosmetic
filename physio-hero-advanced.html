@@ -1439,21 +1439,23 @@
             --core-width: clamp(260px, 28vw, 340px);
             --core-height: clamp(420px, 55vw, 520px);
             --card-width: clamp(180px, 22vw, 220px);
-            --card-gap: clamp(4px, 0.8vw, 14px);
+            --card-gap: clamp(12px, 1.5vw, 22px);
             position: relative;
             display: grid;
-            grid-template-columns: var(--card-width) minmax(var(--core-width), 1fr) var(--card-width);
-            grid-template-rows: max-content minmax(var(--core-height), 1fr) max-content;
+            grid-template-columns: max-content minmax(var(--core-width), var(--core-width)) max-content;
+            grid-template-rows: max-content minmax(var(--core-height), var(--core-height)) max-content;
             grid-template-areas:
-                "card1 spine card2"
+                "card1 . card2"
                 ". spine ."
-                "card3 spine card4";
+                "card3 . card4";
             align-items: center;
             justify-items: center;
-            gap: var(--card-gap);
-            width: min(100%, calc(var(--card-width) * 2 + var(--core-width) + var(--card-gap) * 2));
+            justify-content: center;
+            row-gap: var(--card-gap);
+            column-gap: var(--card-gap);
+            width: min(100%, calc(var(--core-width) + (var(--card-width) + var(--card-gap)) * 2));
             margin: 0 auto;
-            padding: calc(var(--card-gap) * 0.5) 0;
+            padding: var(--card-gap) 0;
         }
 
         .spine-core {
@@ -1721,15 +1723,6 @@
             position: relative;
             width: 100%;
             height: 100%;
-        }
-
-        .spine-container {
-            position: relative;
-            width: min(100%, calc(var(--card-width) * 2 + var(--core-width) + var(--card-gap) * 2));
-            height: auto;
-            display: grid;
-            align-items: center;
-            justify-items: center;
         }
 
         /* ENERGY RINGS ANIMATION */
