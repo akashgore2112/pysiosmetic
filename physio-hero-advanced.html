@@ -2094,6 +2094,747 @@
                 --translate-y: calc(-50% + var(--card-offset-y));
             }
         }
+
+        /* ADVANCED PAIN ASSESSMENT MODULE */
+        .pain-assessment-section {
+            position: relative;
+            padding: clamp(4rem, 8vw, 6.5rem) 6% clamp(4rem, 9vw, 6.5rem);
+            display: flex;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .pain-assessment-module {
+            position: relative;
+            width: 100%;
+            max-width: 1380px;
+            background: linear-gradient(135deg, rgba(10, 20, 32, 0.92), rgba(6, 12, 24, 0.96));
+            border-radius: 32px;
+            padding: clamp(2.6rem, 5vw, 3.6rem);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+        }
+
+        .pain-assessment-module__aura {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(243, 112, 33, 0.25), transparent 55%),
+                        radial-gradient(circle at 80% 80%, rgba(67, 133, 245, 0.25), transparent 60%),
+                        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
+            filter: blur(60px);
+            opacity: 0.35;
+            pointer-events: none;
+            transform: scale(1.15);
+        }
+
+        .pain-assessment-header {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: clamp(1.5rem, 3vw, 3rem);
+            margin-bottom: clamp(2.4rem, 4vw, 3.2rem);
+            z-index: 1;
+        }
+
+        .pain-assessment-title-group {
+            max-width: min(640px, 60%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .pain-assessment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.55rem 1.4rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: rgba(243, 112, 33, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(243, 112, 33, 0.4);
+            box-shadow: 0 10px 30px rgba(243, 112, 33, 0.22);
+        }
+
+        .pain-assessment-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.1rem, 3.2vw, 3.2rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .pain-assessment-subtitle {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            max-width: 520px;
+        }
+
+        .pain-assessment-language {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+        }
+
+        .language-btn {
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            padding: 0.45rem 1.05rem;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.3s var(--easing);
+            font-size: 0.85rem;
+        }
+
+        .language-btn:hover,
+        .language-btn:focus {
+            color: #fff;
+        }
+
+        .language-btn.active {
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.9), rgba(67, 133, 245, 0.9));
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(243, 112, 33, 0.35);
+        }
+
+        .pain-assessment-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+            gap: clamp(2rem, 4vw, 3rem);
+            align-items: stretch;
+        }
+
+        .assessment-left,
+        .assessment-right {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.6rem, 3vw, 2.2rem);
+        }
+
+        .card-surface {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 22px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .progress-card {
+            display: flex;
+            align-items: center;
+            gap: clamp(1.4rem, 3vw, 2.4rem);
+            padding: clamp(1.6rem, 3vw, 2.4rem);
+        }
+
+        .progress-ring {
+            position: relative;
+            width: clamp(120px, 10vw, 150px);
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) var(--progress), rgba(255, 255, 255, 0.08) var(--progress));
+            display: grid;
+            place-items: center;
+            transition: background 0.6s var(--easing);
+        }
+
+        .progress-ring::before {
+            content: '';
+            position: absolute;
+            inset: clamp(10px, 1.2vw, 14px);
+            border-radius: 50%;
+            background: rgba(8, 15, 28, 0.92);
+            box-shadow: inset 0 0 25px rgba(67, 133, 245, 0.25);
+        }
+
+        .progress-ring__value {
+            position: relative;
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .progress-ring__label {
+            position: relative;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .progress-card-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .progress-card-copy h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .progress-card-copy p {
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.7;
+        }
+
+        .progress-footnote {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .stepper {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.2rem, 2.5vw, 1.8rem);
+        }
+
+        .step-card {
+            display: none;
+            flex-direction: column;
+            gap: 1.1rem;
+            padding: clamp(1.6rem, 3vw, 2.2rem);
+            border-radius: 20px;
+            background: rgba(12, 20, 34, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+        }
+
+        .step-card.active {
+            display: flex;
+            animation: fadeIn 0.45s ease;
+        }
+
+        .step-card.completed {
+            border-color: rgba(243, 112, 33, 0.28);
+            box-shadow: 0 20px 40px rgba(243, 112, 33, 0.2);
+        }
+
+        .step-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .step-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .step-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .step-title {
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .step-desc {
+            color: rgba(255, 255, 255, 0.66);
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+
+        .slider-wrapper {
+            position: relative;
+            padding: 1.4rem 0;
+        }
+
+        .step-slider {
+            width: 100%;
+            height: 10px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(67, 133, 245, 0.4), rgba(243, 112, 33, 0.85));
+            outline: none;
+            -webkit-appearance: none;
+            position: relative;
+        }
+
+        .step-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid rgba(243, 112, 33, 0.85);
+            box-shadow: 0 8px 20px rgba(243, 112, 33, 0.35);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .step-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.08);
+        }
+
+        .step-slider::-moz-range-thumb {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid rgba(243, 112, 33, 0.85);
+            box-shadow: 0 8px 20px rgba(243, 112, 33, 0.35);
+            cursor: pointer;
+        }
+
+        .slider-glow {
+            position: absolute;
+            inset: 0;
+            filter: blur(30px);
+            background: linear-gradient(90deg, rgba(67, 133, 245, 0.25), rgba(243, 112, 33, 0.35));
+            pointer-events: none;
+        }
+
+        .slider-value {
+            position: absolute;
+            top: -12px;
+            right: 0;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .slider-scale {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.45);
+            letter-spacing: 0.12em;
+        }
+
+        .step-feedback {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 0.9rem;
+        }
+
+        .option-grid--impact {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+
+        .option-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.95rem 1.1rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.78);
+            font-weight: 600;
+            transition: all 0.3s var(--easing);
+            cursor: pointer;
+        }
+
+        .option-pill .option-icon {
+            font-size: 1.2rem;
+        }
+
+        .option-pill:hover,
+        .option-pill:focus {
+            border-color: rgba(243, 112, 33, 0.5);
+            background: rgba(243, 112, 33, 0.15);
+            color: #fff;
+        }
+
+        .option-pill.selected {
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.65), rgba(67, 133, 245, 0.65));
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 18px 40px rgba(243, 112, 33, 0.28);
+        }
+
+        .heatmap-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+            padding: clamp(1.4rem, 3vw, 2.2rem);
+            background: rgba(10, 18, 32, 0.82);
+            border-radius: 20px;
+            border: 1px solid rgba(67, 133, 245, 0.18);
+            box-shadow: inset 0 0 30px rgba(67, 133, 245, 0.15);
+        }
+
+        .heatmap-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .heatmap-status {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .heatmap-hint {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .heatmap-body {
+            position: relative;
+            display: grid;
+            place-items: center;
+            padding: 1rem 0;
+        }
+
+        .heatmap-figure {
+            width: min(260px, 90%);
+            height: auto;
+        }
+
+        .heatmap-silhouette {
+            fill: url(#heatmapGradient);
+        }
+
+        .pain-region {
+            fill: rgba(67, 133, 245, 0.24);
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 1.5;
+            cursor: pointer;
+            transition: fill 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+        }
+
+        .pain-region:hover,
+        .pain-region:focus {
+            fill: rgba(243, 112, 33, 0.32);
+            filter: drop-shadow(0 0 18px rgba(243, 112, 33, 0.45));
+        }
+
+        .pain-region.selected {
+            fill: rgba(243, 112, 33, 0.55);
+            filter: drop-shadow(0 0 22px rgba(243, 112, 33, 0.6));
+        }
+
+        .heatmap-glow {
+            position: absolute;
+            inset: 10% 20%;
+            background: radial-gradient(circle, rgba(243, 112, 33, 0.15), transparent 70%);
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+        .note-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .note-textarea {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.9rem 1rem;
+            color: #fff;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .note-textarea:focus {
+            outline: none;
+            border-color: rgba(243, 112, 33, 0.5);
+            box-shadow: 0 0 0 2px rgba(243, 112, 33, 0.35);
+        }
+
+        .step-note {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .step-navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .step-btn {
+            flex: 1;
+            padding: 0.95rem 1.4rem;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step-btn--ghost {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .step-btn--primary {
+            border: none;
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.95), rgba(67, 133, 245, 0.95));
+            color: #fff;
+            box-shadow: 0 18px 40px rgba(243, 112, 33, 0.35);
+        }
+
+        .step-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .step-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .ai-card {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: clamp(1.4rem, 3vw, 2rem);
+        }
+
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(67, 133, 245, 0.4), rgba(243, 112, 33, 0.45));
+            display: grid;
+            place-items: center;
+            font-size: 1.6rem;
+        }
+
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .insight-card {
+            padding: 1.4rem;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .insight-icon {
+            font-size: 1.4rem;
+        }
+
+        .insight-title {
+            font-weight: 700;
+        }
+
+        .insight-text {
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+
+        .metrics-grid {
+            display: grid;
+            gap: 1rem;
+            padding: clamp(1.4rem, 3vw, 2rem);
+        }
+
+        .metric-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .metric-bar {
+            position: relative;
+            width: 100%;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .metric-bar-fill {
+            position: absolute;
+            inset: 0;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, rgba(67, 133, 245, 0.8), rgba(243, 112, 33, 0.8));
+            transition: width 0.4s ease;
+        }
+
+        .metric-caption {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .metric-tag {
+            padding: 0.65rem 0.9rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .summary-card {
+            padding: clamp(1.6rem, 3vw, 2.2rem);
+        }
+
+        .summary-breakdown ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .summary-breakdown li {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .summary-breakdown span {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.58);
+        }
+
+        .summary-breakdown strong {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .summary-placeholder {
+            color: rgba(255, 255, 255, 0.58);
+            font-size: 0.95rem;
+        }
+
+        .summary-actions {
+            margin-top: 1.6rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+        }
+
+        .summary-btn {
+            padding: 0.9rem 1.4rem;
+            border-radius: 14px;
+            border: 1px solid transparent;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .summary-btn--primary {
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.95), rgba(67, 133, 245, 0.95));
+            color: #fff;
+            box-shadow: 0 18px 40px rgba(243, 112, 33, 0.32);
+        }
+
+        .summary-btn--ghost {
+            background: transparent;
+            border-color: rgba(255, 255, 255, 0.14);
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .summary-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        @media (max-width: 1200px) {
+            .pain-assessment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .assessment-right {
+                order: -1;
+            }
+
+            .pain-assessment-title-group {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .pain-assessment-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .pain-assessment-language {
+                align-self: flex-start;
+            }
+
+            .pain-assessment-section {
+                padding-inline: clamp(1.4rem, 6vw, 2.4rem);
+            }
+
+            .option-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .pain-assessment-module {
+                padding: clamp(2rem, 6vw, 2.6rem);
+            }
+
+            .progress-card,
+            .ai-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .step-navigation {
+                flex-direction: column;
+            }
+
+            .summary-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2274,193 +3015,10 @@
 
             </div>
 
-            <!-- ASSESSMENT SECTION - FULL WIDTH BELOW HERO -->
-            <div class="assessment-wrapper">
-                    <div class="body-assessment">
-                        <div class="assessment-header">
-                            <div class="assessment-title">
-                                🎯 Advanced Pain Assessment
-                            </div>
-                            <div class="assessment-badge">AI-Powered Analysis</div>
-                        </div>
-
-                        <!-- ASSESSMENT PROGRESS -->
-                        <div class="assessment-progress">
-                            <div class="progress-header">
-                                <span class="progress-label">Assessment Completion</span>
-                                <span class="progress-percentage" id="assessmentProgress">0%</span>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar-fill" id="progressBarFill"></div>
-                            </div>
-                        </div>
-
-                        <!-- PAIN INTENSITY SLIDER -->
-                        <div class="pain-intensity-section">
-                            <div class="intensity-header">
-                                <span class="intensity-label">📊 Pain Intensity Level</span>
-                                <span class="intensity-value" id="intensityValue">5/10</span>
-                            </div>
-                            <div class="intensity-slider-container">
-                                <input type="range" min="0" max="10" value="5" class="intensity-slider" id="painIntensity" oninput="updateIntensity(this.value)">
-                            </div>
-                            <div class="intensity-labels">
-                                <span>No Pain</span>
-                                <span>Mild</span>
-                                <span>Moderate</span>
-                                <span>Severe</span>
-                                <span>Worst</span>
-                            </div>
-                        </div>
-
-                        <!-- SYMPTOM DURATION -->
-                        <div class="symptom-duration">
-                            <div class="intensity-label">⏰ How long have you had this pain?</div>
-                            <div class="duration-options">
-                                <div class="duration-option" onclick="selectDuration(this, 'hours')">
-                                    <span class="duration-icon">⚡</span>
-                                    <div class="duration-text">Few Hours</div>
-                                </div>
-                                <div class="duration-option" onclick="selectDuration(this, 'days')">
-                                    <span class="duration-icon">📅</span>
-                                    <div class="duration-text">Few Days</div>
-                                </div>
-                                <div class="duration-option" onclick="selectDuration(this, 'weeks')">
-                                    <span class="duration-icon">📆</span>
-                                    <div class="duration-text">Few Weeks</div>
-                                </div>
-                                <div class="duration-option" onclick="selectDuration(this, 'months')">
-                                    <span class="duration-icon">🗓️</span>
-                                    <div class="duration-text">Months+</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ACTIVITY LEVEL -->
-                        <div class="activity-level">
-                            <div class="intensity-label">🏃 Current Activity Level</div>
-                            <div class="activity-options">
-                                <div class="activity-option" onclick="selectActivity(this, 'sedentary')">
-                                    <span class="activity-icon">🪑</span>
-                                    <div class="activity-label">Sedentary</div>
-                                    <div class="activity-desc">Mostly sitting</div>
-                                </div>
-                                <div class="activity-option" onclick="selectActivity(this, 'moderate')">
-                                    <span class="activity-icon">🚶</span>
-                                    <div class="activity-label">Moderate</div>
-                                    <div class="activity-desc">Light exercise</div>
-                                </div>
-                                <div class="activity-option" onclick="selectActivity(this, 'active')">
-                                    <span class="activity-icon">🏃</span>
-                                    <div class="activity-label">Very Active</div>
-                                    <div class="activity-desc">Regular training</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="body-map-container">
-                            <!-- ADVANCED BODY DIAGRAM -->
-                            <div class="body-diagram-wrapper">
-                                <div class="body-diagram">
-                                    <div class="body-scan-line"></div>
-                                    <svg class="body-svg" viewBox="0 0 100 180">
-                                        <defs>
-                                            <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" style="stop-color:rgba(243, 112, 33, 0.2);stop-opacity:1" />
-                                                <stop offset="100%" style="stop-color:rgba(67, 133, 245, 0.2);stop-opacity:1" />
-                                            </linearGradient>
-                                        </defs>
-                                        <g>
-                                            <!-- Head -->
-                                            <circle class="body-part" data-part="head" data-name="Head & Face" cx="50" cy="18" r="14"/>
-                                            <!-- Neck -->
-                                            <rect class="body-part" data-part="neck" data-name="Neck" x="44" y="32" width="12" height="10" rx="2"/>
-                                            <!-- Shoulders -->
-                                            <ellipse class="body-part" data-part="shoulders" data-name="Shoulders" cx="50" cy="47" rx="28" ry="10"/>
-                                            <circle class="body-part" data-part="left-shoulder" data-name="Left Shoulder" cx="25" cy="47" r="8"/>
-                                            <circle class="body-part" data-part="right-shoulder" data-name="Right Shoulder" cx="75" cy="47" r="8"/>
-                                            <!-- Upper Arms -->
-                                            <rect class="body-part" data-part="left-arm" data-name="Left Arm" x="14" y="52" width="10" height="35" rx="5"/>
-                                            <rect class="body-part" data-part="right-arm" data-name="Right Arm" x="76" y="52" width="10" height="35" rx="5"/>
-                                            <!-- Elbows -->
-                                            <circle class="body-part" data-part="left-elbow" data-name="Left Elbow" cx="19" cy="87" r="5"/>
-                                            <circle class="body-part" data-part="right-elbow" data-name="Right Elbow" cx="81" cy="87" r="5"/>
-                                            <!-- Upper Back/Spine -->
-                                            <rect class="body-part" data-part="upper-back" data-name="Upper Back" x="38" y="50" width="24" height="20" rx="4"/>
-                                            <!-- Mid Back -->
-                                            <rect class="body-part" data-part="mid-back" data-name="Mid Back" x="36" y="70" width="28" height="18" rx="5"/>
-                                            <!-- Lower Back -->
-                                            <rect class="body-part" data-part="lower-back" data-name="Lower Back" x="36" y="88" width="28" height="16" rx="5"/>
-                                            <!-- Hips -->
-                                            <ellipse class="body-part" data-part="hips" data-name="Hips" cx="50" cy="108" rx="22" ry="12"/>
-                                            <!-- Left Leg -->
-                                            <rect class="body-part" data-part="left-thigh" data-name="Left Thigh" x="34" y="115" width="12" height="28" rx="6"/>
-                                            <!-- Right Leg -->
-                                            <rect class="body-part" data-part="right-thigh" data-name="Right Thigh" x="54" y="115" width="12" height="28" rx="6"/>
-                                            <!-- Knees -->
-                                            <circle class="body-part" data-part="left-knee" data-name="Left Knee" cx="40" cy="145" r="7"/>
-                                            <circle class="body-part" data-part="right-knee" data-name="Right Knee" cx="60" cy="145" r="7"/>
-                                            <!-- Lower Legs -->
-                                            <rect class="body-part" data-part="left-calf" data-name="Left Calf" x="35" y="150" width="10" height="20" rx="5"/>
-                                            <rect class="body-part" data-part="right-calf" data-name="Right Calf" x="55" y="150" width="10" height="20" rx="5"/>
-                                            <!-- Feet -->
-                                            <ellipse class="body-part" data-part="left-foot" data-name="Left Foot" cx="40" cy="173" rx="8" ry="5"/>
-                                            <ellipse class="body-part" data-part="right-foot" data-name="Right Foot" cx="60" cy="173" rx="8" ry="5"/>
-                                        </g>
-                                    </svg>
-                                    <div class="pain-point-marker" id="painMarker">!</div>
-                                </div>
-                            </div>
-
-                            <!-- ENHANCED PAIN CATEGORIES -->
-                            <div class="pain-categories">
-                                <div class="pain-option" onclick="selectPain(this, 'back', 'lower-back')">
-                                    <div class="pain-icon">🦴</div>
-                                    <div class="pain-label">Back Pain</div>
-                                    <div class="pain-desc">Chronic or acute</div>
-                                </div>
-                                <div class="pain-option" onclick="selectPain(this, 'neck', 'neck')">
-                                    <div class="pain-icon">😣</div>
-                                    <div class="pain-label">Neck Pain</div>
-                                    <div class="pain-desc">Stiffness & tension</div>
-                                </div>
-                                <div class="pain-option" onclick="selectPain(this, 'sports', 'left-arm')">
-                                    <div class="pain-icon">⚽</div>
-                                    <div class="pain-label">Sports Injury</div>
-                                    <div class="pain-desc">Athletic injuries</div>
-                                </div>
-                                <div class="pain-option" onclick="selectPain(this, 'knee', 'left-knee')">
-                                    <div class="pain-icon">🦵</div>
-                                    <div class="pain-label">Knee Pain</div>
-                                    <div class="pain-desc">Joint issues</div>
-                                </div>
-                                <div class="pain-option" onclick="selectPain(this, 'shoulder', 'shoulders')">
-                                    <div class="pain-icon">💪</div>
-                                    <div class="pain-label">Shoulder Pain</div>
-                                    <div class="pain-desc">Mobility issues</div>
-                                </div>
-                                <div class="pain-option" onclick="selectPain(this, 'posture', 'upper-back')">
-                                    <div class="pain-icon">🧘</div>
-                                    <div class="pain-label">Posture Issues</div>
-                                    <div class="pain-desc">Alignment problems</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ASSESSMENT RESULT -->
-                        <div class="assessment-result" id="assessmentResult">
-                            <div class="result-title">
-                                💡 Recommended Treatment
-                            </div>
-                            <div class="result-content" id="resultContent">
-                                Select a pain area to see recommended treatments.
-                            </div>
-                            <div class="result-actions">
-                                <button class="result-btn" onclick="openModal()">Book Assessment</button>
-                            </div>
-                        </div>
-                    </div>
-            </div>
+            <!-- ADVANCED PAIN ASSESSMENT MODULE -->
+            <section class="pain-assessment-section">
+                <div id="pain-assessment"></div>
+            </section>
         </div>
     </div>
 
@@ -2741,205 +3299,1408 @@
             updateRecommendation();
         }
 
-        // ENHANCED PAIN SELECTOR WITH ADVANCED RECOMMENDATIONS
-        const painRecommendations = {
-            'back': {
-                title: 'Back Pain Treatment',
-                content: 'Manual therapy, core strengthening exercises, postural correction, and spinal mobilization. Typical recovery: 4-8 weeks with consistent treatment.',
-                bodyParts: ['lower-back', 'mid-back', 'upper-back']
-            },
-            'neck': {
-                title: 'Neck Pain Treatment',
-                content: 'Cervical mobilization, muscle release techniques, postural assessment, and stretching exercises. Relief often seen within 2-4 weeks.',
-                bodyParts: ['neck', 'head', 'shoulders']
-            },
-            'sports': {
-                title: 'Sports Injury Rehabilitation',
-                content: 'Sport-specific rehabilitation, functional movement training, strength conditioning, and injury prevention strategies. Timeline varies by injury severity.',
-                bodyParts: ['left-arm', 'right-arm', 'left-knee', 'right-knee', 'left-shoulder', 'right-shoulder']
-            },
-            'knee': {
-                title: 'Knee Pain Management',
-                content: 'Joint mobilization, strengthening of supporting muscles, gait analysis, and biomechanical correction. Most patients improve within 6-8 weeks.',
-                bodyParts: ['left-knee', 'right-knee', 'left-thigh', 'right-thigh']
-            },
-            'shoulder': {
-                title: 'Shoulder Pain Treatment',
-                content: 'Rotator cuff strengthening, range of motion exercises, manual therapy, and functional movement training. Recovery typically 4-12 weeks.',
-                bodyParts: ['shoulders', 'left-shoulder', 'right-shoulder', 'left-arm', 'right-arm']
-            },
-            'posture': {
-                title: 'Posture Correction Program',
-                content: 'Ergonomic assessment, postural re-education, core stability training, and muscle balance restoration. Visible improvements in 3-6 weeks.',
-                bodyParts: ['upper-back', 'mid-back', 'lower-back', 'neck', 'shoulders']
-            }
+        // ADVANCED PAIN ASSESSMENT MODULE
+        const painAssessmentTranslations = {
+                    "en": {
+                                "static": {
+                                            "badge": "AI Physiotherapist",
+                                            "title": "Advanced Pain Assessment",
+                                            "subtitle": "Answer a few smart questions and let our virtual physio decode your pain.",
+                                            "progressLabel": "Completed",
+                                            "progressTitle": "Assessment Journey",
+                                            "progressDesc": "Each answer teaches our assistant more about your body.",
+                                            "stepLabel": "Step",
+                                            "stepOf": "of",
+                                            "nav": {
+                                                        "next": "Next Step",
+                                                        "finish": "View Insights",
+                                                        "back": "Back"
+                                            },
+                                            "step1": {
+                                                        "tag": "Pain Level",
+                                                        "title": "How intense is your pain right now?",
+                                                        "desc": "Move the slider to describe how strong the pain feels.",
+                                                        "scale": {
+                                                                    "zero": "No pain",
+                                                                    "mild": "Mild",
+                                                                    "moderate": "Moderate",
+                                                                    "severe": "Severe",
+                                                                    "worst": "Worst imaginable"
+                                                        },
+                                                        "feedbackLabel": "Current intensity"
+                                            },
+                                            "step2": {
+                                                        "tag": "Pain Quality",
+                                                        "title": "How would you describe the pain?",
+                                                        "desc": "Choose the sensation that matches best.",
+                                                        "note": "You can change this anytime."
+                                            },
+                                            "step3": {
+                                                        "tag": "Pain Location",
+                                                        "title": "Where do you feel the pain most?",
+                                                        "desc": "Tap on the body diagram to highlight the area.",
+                                                        "placeholder": "Select an area",
+                                                        "note": "Need the finer points? Rotate or pinch to zoom the figure."
+                                            },
+                                            "step4": {
+                                                        "tag": "Duration",
+                                                        "title": "How long has this pain been present?",
+                                                        "desc": "Select the duration that matches your experience."
+                                            },
+                                            "step5": {
+                                                        "tag": "Impact",
+                                                        "title": "How is this pain affecting your day?",
+                                                        "desc": "Pick all areas of life that are being interrupted.",
+                                                        "note": "Add any notes for your therapist below."
+                                            },
+                                            "options": {
+                                                        "quality": {
+                                                                    "sharp": "Sharp & shooting",
+                                                                    "dull": "Dull ache",
+                                                                    "stiff": "Stiff & tight",
+                                                                    "burning": "Burning sensation",
+                                                                    "throbbing": "Throbbing / pulsating"
+                                                        },
+                                                        "duration": {
+                                                                    "hours": "A few hours",
+                                                                    "days": "A few days",
+                                                                    "weeks": "A few weeks",
+                                                                    "months": "Several months"
+                                                        },
+                                                        "impact": {
+                                                                    "sleep": "Sleep quality",
+                                                                    "work": "Work / productivity",
+                                                                    "sports": "Exercise & sport",
+                                                                    "mood": "Mood & focus"
+                                                        },
+                                                        "region": {
+                                                                    "neck": "Neck",
+                                                                    "shoulder": "Shoulder",
+                                                                    "upperBack": "Upper back",
+                                                                    "lowerBack": "Lower back",
+                                                                    "hip": "Hip / pelvis",
+                                                                    "knee": "Knee",
+                                                                    "ankle": "Ankle / foot"
+                                                        }
+                                            },
+                                            "ai": {
+                                                        "title": "PhysioSense AI Summary",
+                                                        "desc": "Our assistant reviews every input in real time to coach your next steps."
+                                            },
+                                            "insights": {
+                                                        "causeTitle": "Likely Cause",
+                                                        "planTitle": "Recommended Focus",
+                                                        "recoveryTitle": "Recovery Outlook",
+                                                        "placeholders": {
+                                                                    "cause": "Share more details to reveal likely causes.",
+                                                                    "plan": "Complete each step to tailor your care plan.",
+                                                                    "recovery": "Answer the remaining questions to estimate recovery time."
+                                                        }
+                                            },
+                                            "metrics": {
+                                                        "intensity": "Current intensity",
+                                                        "quality": "Pain quality",
+                                                        "duration": "Pain duration"
+                                            },
+                                            "summary": {
+                                                        "title": "Personal Snapshot",
+                                                        "placeholder": "Complete the assessment to generate your tailored summary.",
+                                                        "ctaPrimary": "Book a Specialist Call",
+                                                        "ctaSecondary": "Download Report",
+                                                        "noteLabel": "Additional notes",
+                                                        "notePlaceholder": "Add personal notes (optional)"
+                                            },
+                                            "regionStatusDefault": "Select an area",
+                                            "intensityNarrative": {
+                                                        "prefix": "Current intensity:",
+                                                        "suffix": "/10"
+                                            },
+                                            "completionNote": "You are on track — keep going!"
+                                },
+                                "descriptors": {
+                                            "intensitySentences": {
+                                                        "low": "Pain intensity appears mild and manageable.",
+                                                        "moderate": "Pain intensity is moderate with noticeable discomfort.",
+                                                        "high": "Pain intensity is high with significant guarding.",
+                                                        "extreme": "Pain intensity is critical and needs urgent evaluation."
+                                            },
+                                            "intensityWords": {
+                                                        "low": "Mild",
+                                                        "moderate": "Moderate",
+                                                        "high": "High",
+                                                        "extreme": "Severe"
+                                            },
+                                            "intensityMetric": {
+                                                        "low": "Mild discomfort",
+                                                        "moderate": "Active flare",
+                                                        "high": "Severe flare",
+                                                        "extreme": "Critical flare"
+                                            },
+                                            "regionSentences": {
+                                                        "neck": "Patterns suggest cervical posture tension.",
+                                                        "shoulder": "Shoulder complex shows signs of overload.",
+                                                        "upperBack": "Thoracic mobility and posture may be restricted.",
+                                                        "lowerBack": "Lumbar stability and core support need attention.",
+                                                        "hip": "Pelvic alignment and hip stabilisers appear stressed.",
+                                                        "knee": "Knee joint tracking is likely under excess load.",
+                                                        "ankle": "Ankle and foot stability may be compromised.",
+                                                        "generic": "Select a region to refine the analysis."
+                                            },
+                                            "qualitySentences": {
+                                                        "sharp": "Sharp or shooting pain hints at nerve irritation.",
+                                                        "dull": "A dull ache suggests muscular fatigue or posture strain.",
+                                                        "stiff": "Stiffness points to joint restriction and fascial tightness.",
+                                                        "burning": "Burning pain reflects nerve sensitivity or inflammation.",
+                                                        "throbbing": "Throbbing sensations align with inflammatory flare-ups.",
+                                                        "generic": "Describing the sensation personalises the advice."
+                                            },
+                                            "durationSentences": {
+                                                        "hours": "This looks like an acute episode — begin with calming strategies.",
+                                                        "days": "Pain lasting a few days benefits from guided mobility and taping.",
+                                                        "weeks": "Persistent pain over weeks calls for progressive strengthening.",
+                                                        "months": "Long-term pain needs a comprehensive physiotherapy roadmap.",
+                                                        "default": "Select a duration to tailor the plan."
+                                            },
+                                            "impactSentences": {
+                                                        "sleep": "Add evening relaxation and breathwork to restore sleep.",
+                                                        "work": "Audit your ergonomics and schedule restorative micro-breaks.",
+                                                        "sports": "Create a graded return-to-sport progression.",
+                                                        "mood": "Layer in stress management and mindful movement."
+                                            },
+                                            "recoverySentences": {
+                                                        "hours": "Expected recovery in 24-48 hours with active rest.",
+                                                        "days": "Expect 1-2 weeks of focused care for relief.",
+                                                        "weeks": "Plan for 4-6 weeks of structured rehabilitation.",
+                                                        "months": "Allow 8-12 weeks with regular professional support.",
+                                                        "default": "Recovery timing will adapt once duration is known."
+                                            },
+                                            "recoveryIntensitySentences": {
+                                                        "low": "Pain is settling; monitor progress daily.",
+                                                        "moderate": "Continue moderate care and avoid sudden overloads.",
+                                                        "high": "Prioritise supervised therapy sessions this week.",
+                                                        "extreme": "Seek urgent review to rule out red flags."
+                                            },
+                                            "summaryLabels": {
+                                                        "intensity": "Intensity",
+                                                        "region": "Location",
+                                                        "quality": "Quality",
+                                                        "duration": "Duration",
+                                                        "impact": "Impact",
+                                                        "note": "Notes"
+                                            },
+                                            "summaryEmpty": "—",
+                                            "summaryNotePlaceholder": "No notes added yet."
+                                }
+                    },
+                    "hi": {
+                                "static": {
+                                            "badge": "एआई फिजियोथेरेपिस्ट",
+                                            "title": "उन्नत दर्द मूल्यांकन",
+                                            "subtitle": "कुछ स्मार्ट प्रश्नों का उत्तर दें और हमारा वर्चुअल फिजियो आपके दर्द का विश्लेषण करे.",
+                                            "progressLabel": "पूरा हुआ",
+                                            "progressTitle": "मूल्यांकन यात्रा",
+                                            "progressDesc": "हर उत्तर से हमारा सहायक आपके शरीर को बेहतर समझता है.",
+                                            "stepLabel": "चरण",
+                                            "stepOf": "में से",
+                                            "nav": {
+                                                        "next": "अगला चरण",
+                                                        "finish": "इनसाइट देखें",
+                                                        "back": "वापस"
+                                            },
+                                            "step1": {
+                                                        "tag": "दर्द का स्तर",
+                                                        "title": "अभी दर्द कितनी तीव्रता का है?",
+                                                        "desc": "दर्द की तीव्रता बताने के लिए स्लाइडर को हिलाएँ.",
+                                                        "scale": {
+                                                                    "zero": "दर्द नहीं",
+                                                                    "mild": "हल्का",
+                                                                    "moderate": "मध्यम",
+                                                                    "severe": "तेज",
+                                                                    "worst": "सबसे अधिक"
+                                                        },
+                                                        "feedbackLabel": "वर्तमान तीव्रता"
+                                            },
+                                            "step2": {
+                                                        "tag": "दर्द की प्रकृति",
+                                                        "title": "दर्द को कैसे वर्णन करेंगे?",
+                                                        "desc": "जो अनुभूति सबसे सटीक लगे उसे चुनें.",
+                                                        "note": "आप कभी भी विकल्प बदल सकते हैं."
+                                            },
+                                            "step3": {
+                                                        "tag": "दर्द का स्थान",
+                                                        "title": "दर्द सबसे अधिक कहाँ महसूस होता है?",
+                                                        "desc": "शरीर के चित्र पर टैप करके क्षेत्र को हाइलाइट करें.",
+                                                        "placeholder": "क्षेत्र चुनें",
+                                                        "note": "सूक्ष्म क्षेत्रों के लिए चित्र को स्क्रॉल करें."
+                                            },
+                                            "step4": {
+                                                        "tag": "अवधि",
+                                                        "title": "दर्द कब से है?",
+                                                        "desc": "अपने अनुभव से मेल खाती अवधि चुनें."
+                                            },
+                                            "step5": {
+                                                        "tag": "दैनिक प्रभाव",
+                                                        "title": "यह दर्द आपके दिन को कैसे प्रभावित कर रहा है?",
+                                                        "desc": "जीवन के वे हिस्से चुनें जिन पर प्रभाव पड़ रहा है.",
+                                                        "note": "थेरेपिस्ट के लिए यहाँ कोई अतिरिक्त टिप्पणी लिखें."
+                                            },
+                                            "options": {
+                                                        "quality": {
+                                                                    "sharp": "तीखा और चुभन",
+                                                                    "dull": "भारी सुस्त",
+                                                                    "stiff": "जकड़न और खिंचाव",
+                                                                    "burning": "जलन जैसा",
+                                                                    "throbbing": "धड़कन / स्पंदन"
+                                                        },
+                                                        "duration": {
+                                                                    "hours": "कुछ घंटे",
+                                                                    "days": "कुछ दिन",
+                                                                    "weeks": "कुछ सप्ताह",
+                                                                    "months": "कई महीने"
+                                                        },
+                                                        "impact": {
+                                                                    "sleep": "नींद की गुणवत्ता",
+                                                                    "work": "काम / उत्पादकता",
+                                                                    "sports": "व्यायाम और खेल",
+                                                                    "mood": "मूड और ध्यान"
+                                                        },
+                                                        "region": {
+                                                                    "neck": "गर्दन",
+                                                                    "shoulder": "कंधा",
+                                                                    "upperBack": "ऊपरी पीठ",
+                                                                    "lowerBack": "निचली पीठ",
+                                                                    "hip": "कूल्हा / श्रोणि",
+                                                                    "knee": "घुटना",
+                                                                    "ankle": "टखना / पैर"
+                                                        }
+                                            },
+                                            "ai": {
+                                                        "title": "PhysioSense एआई सारांश",
+                                                        "desc": "हमारा सहायक हर इनपुट को तुरंत पढ़कर अगले कदम सुझाता है."
+                                            },
+                                            "insights": {
+                                                        "causeTitle": "संभावित कारण",
+                                                        "planTitle": "अनुशंसित फोकस",
+                                                        "recoveryTitle": "रिकवरी अनुमान",
+                                                        "placeholders": {
+                                                                    "cause": "कारण देखने के लिए और जानकारी साझा करें.",
+                                                                    "plan": "देखभाल योजना को अनुकूलित करने के लिए चरण पूरे करें.",
+                                                                    "recovery": "रिकवरी अनुमान के लिए शेष प्रश्न पूरा करें."
+                                                        }
+                                            },
+                                            "metrics": {
+                                                        "intensity": "वर्तमान तीव्रता",
+                                                        "quality": "दर्द की प्रकृति",
+                                                        "duration": "दर्द की अवधि"
+                                            },
+                                            "summary": {
+                                                        "title": "आपकी व्यक्तिगत झलक",
+                                                        "placeholder": "व्यक्तिगत सारांश बनाने के लिए मूल्यांकन पूरा करें.",
+                                                        "ctaPrimary": "विशेषज्ञ कॉल बुक करें",
+                                                        "ctaSecondary": "रिपोर्ट डाउनलोड करें",
+                                                        "noteLabel": "अतिरिक्त नोट्स",
+                                                        "notePlaceholder": "कोई व्यक्तिगत नोट जोड़ें (वैकल्पिक)"
+                                            },
+                                            "regionStatusDefault": "क्षेत्र चुनें",
+                                            "intensityNarrative": {
+                                                        "prefix": "वर्तमान तीव्रता:",
+                                                        "suffix": "/10"
+                                            },
+                                            "completionNote": "आप सही दिशा में हैं — जारी रखें!"
+                                },
+                                "descriptors": {
+                                            "intensitySentences": {
+                                                        "low": "दर्द की तीव्रता हल्की है और आसानी से संभाली जा सकती है.",
+                                                        "moderate": "दर्द मध्यम है और नियमित गतिविधि पर असर डाल रहा है.",
+                                                        "high": "दर्द तेज है और शरीर में तनाव बढ़ा रहा है.",
+                                                        "extreme": "दर्द बहुत अधिक है, तुरंत चिकित्सीय जांच जरूरी है."
+                                            },
+                                            "intensityWords": {
+                                                        "low": "हल्का",
+                                                        "moderate": "मध्यम",
+                                                        "high": "तेज",
+                                                        "extreme": "अत्यधिक"
+                                            },
+                                            "intensityMetric": {
+                                                        "low": "हल्का असहज",
+                                                        "moderate": "सक्रिय दर्द",
+                                                        "high": "गंभीर दर्द",
+                                                        "extreme": "गंभीर चेतावनी"
+                                            },
+                                            "regionSentences": {
+                                                        "neck": "पैटर्न सर्वाइकल क्षेत्र की जकड़न दर्शाता है.",
+                                                        "shoulder": "कंधे और रोटेटर कफ में तनाव दिखाई देता है.",
+                                                        "upperBack": "ऊपरी पीठ और थोरैसिक गतिशीलता पर दबाव है.",
+                                                        "lowerBack": "कमर और कोर स्थिरता पर ध्यान देने की जरूरत है.",
+                                                        "hip": "कूल्हे और श्रोणि संतुलन पर तनाव महसूस हो रहा है.",
+                                                        "knee": "घुटने के जोड़ के आसपास अधिक लोडिंग दिख रही है.",
+                                                        "ankle": "टखने और पैर की स्थिरता प्रभावित हो रही है.",
+                                                        "generic": "स्थान चुनने से विश्लेषण और सटीक होगा."
+                                            },
+                                            "qualitySentences": {
+                                                        "sharp": "तीखा दर्द नसों की चिड़चिड़ाहट का संकेत देता है.",
+                                                        "dull": "भारी सुस्त दर्द मांसपेशी थकान या पोस्टर तनाव दर्शाता है.",
+                                                        "stiff": "जकड़न जोड़ और फैशिया में कसाव दर्शाती है.",
+                                                        "burning": "जलन जैसा दर्द तंत्रिका संवेदनशीलता की तरफ इशारा करता है.",
+                                                        "throbbing": "धड़कता दर्द सूजन प्रक्रिया से जुड़ा हो सकता है.",
+                                                        "generic": "अनुभूति चुनने से परामर्श अधिक व्यक्तिगत होगा."
+                                            },
+                                            "durationSentences": {
+                                                        "hours": "यह तीव्र चरण है — शांत करने वाली तकनीकों से शुरुआत करें.",
+                                                        "days": "कुछ दिनों से दर्द है, हल्की गतिशीलता और टेपिंग उपयोगी होगी.",
+                                                        "weeks": "कई सप्ताह से दर्द है, क्रमिक सुदृढ़ीकरण योजना बनाएं.",
+                                                        "months": "कई महीनों से दर्द है, व्यापक फिजियो कार्यक्रम की जरूरत है.",
+                                                        "default": "अवधि चुनने से सही योजना बन सकेगी."
+                                            },
+                                            "impactSentences": {
+                                                        "sleep": "नींद सुधारने के लिए शाम को श्वास और रिलैक्सेशन जोड़ें.",
+                                                        "work": "डेस्क एर्गोनॉमिक्स और माइक्रो-ब्रेक का मूल्यांकन करें.",
+                                                        "sports": "खेल में लौटने के लिए क्रमिक प्रशिक्षण कार्यक्रम बनाएं.",
+                                                        "mood": "तनाव प्रबंधन और माइंडफुल मूवमेंट शामिल करें."
+                                            },
+                                            "recoverySentences": {
+                                                        "hours": "24-48 घंटों में सुधार की संभावना, सक्रिय विश्राम रखें.",
+                                                        "days": "1-2 सप्ताह में लक्ष्यित थेरेपी से सुधार की उम्मीद.",
+                                                        "weeks": "4-6 सप्ताह की संरचित पुनर्वास योजना आवश्यक है.",
+                                                        "months": "8-12 सप्ताह के निरंतर पेशेवर सहयोग की जरूरत.",
+                                                        "default": "रिकवरी समय अवधि और तीव्रता पर निर्भर करेगा."
+                                            },
+                                            "recoveryIntensitySentences": {
+                                                        "low": "दर्द कम हो रहा है, प्रतिदिन प्रगति देखें.",
+                                                        "moderate": "मध्यम देखभाल जारी रखें और अचानक लोडिंग से बचें.",
+                                                        "high": "इस सप्ताह पर्यवेक्षित सत्रों को प्राथमिकता दें.",
+                                                        "extreme": "किसी गंभीर समस्या को बाहर करने के लिए तुरंत सलाह लें."
+                                            },
+                                            "summaryLabels": {
+                                                        "intensity": "तीव्रता",
+                                                        "region": "स्थान",
+                                                        "quality": "प्रकृति",
+                                                        "duration": "अवधि",
+                                                        "impact": "प्रभाव",
+                                                        "note": "नोट्स"
+                                            },
+                                            "summaryEmpty": "—",
+                                            "summaryNotePlaceholder": "अभी कोई नोट नहीं जोड़ा गया."
+                                }
+                    },
+                    "mr": {
+                                "static": {
+                                            "badge": "एआय फिजिओथेरपिस्ट",
+                                            "title": "प्रगत वेदना मूल्यांकन",
+                                            "subtitle": "काही स्मार्ट प्रश्नांची उत्तरे द्या आणि आमचा व्हर्चुअल फिजिओ तुमचा वेदना डेटा वाचेल.",
+                                            "progressLabel": "पूर्ण",
+                                            "progressTitle": "मूल्यांकन प्रवास",
+                                            "progressDesc": "प्रत्येक उत्तरामुळे सहायक तुमच्या शरीराला ओळखतो.",
+                                            "stepLabel": "टप्पा",
+                                            "stepOf": "पैकी",
+                                            "nav": {
+                                                        "next": "पुढचा टप्पा",
+                                                        "finish": "इनसाइट पाहा",
+                                                        "back": "मागे"
+                                            },
+                                            "step1": {
+                                                        "tag": "वेदनेची पातळी",
+                                                        "title": "सध्या वेदना किती तीव्र आहे?",
+                                                        "desc": "वेदनेची तीव्रता सांगण्यासाठी स्लायडर हलवा.",
+                                                        "scale": {
+                                                                    "zero": "वेदना नाही",
+                                                                    "mild": "हलकी",
+                                                                    "moderate": "मध्यम",
+                                                                    "severe": "जास्त",
+                                                                    "worst": "अत्यंत तीव्र"
+                                                        },
+                                                        "feedbackLabel": "सद्य तीव्रता"
+                                            },
+                                            "step2": {
+                                                        "tag": "वेदनेची प्रकृती",
+                                                        "title": "वेदना कशी वाटते?",
+                                                        "desc": "जुळणारी अनुभूती निवडा.",
+                                                        "note": "कधीही पर्याय बदलू शकता."
+                                            },
+                                            "step3": {
+                                                        "tag": "वेदनेचे स्थान",
+                                                        "title": "वेदना नेमकी कुठे जाणवते?",
+                                                        "desc": "शरीर आकृतीवर टॅप करून भाग निवडा.",
+                                                        "placeholder": "भाग निवडा",
+                                                        "note": "सूक्ष्म भागांसाठी आकृतीवर स्लाइड करा."
+                                            },
+                                            "step4": {
+                                                        "tag": "कालावधी",
+                                                        "title": "ही वेदना किती काळ आहे?",
+                                                        "desc": "आपल्या अनुभवाशी जुळणारा कालावधी निवडा."
+                                            },
+                                            "step5": {
+                                                        "tag": "दैनंदिन परिणाम",
+                                                        "title": "ही वेदना दैनंदिन जीवनावर कशी परिणाम करत आहे?",
+                                                        "desc": "ज्यावर परिणाम होत आहे ते क्षेत्र निवडा.",
+                                                        "note": "थेरपिस्टसाठी अतिरिक्त टिपणी लिहा."
+                                            },
+                                            "options": {
+                                                        "quality": {
+                                                                    "sharp": "चुभणारी / टोचणारी",
+                                                                    "dull": "बोथट दुखणे",
+                                                                    "stiff": "कडक आणि ताण",
+                                                                    "burning": "जळजळणारी भावना",
+                                                                    "throbbing": "धडधड / ठोके"
+                                                        },
+                                                        "duration": {
+                                                                    "hours": "काही तास",
+                                                                    "days": "काही दिवस",
+                                                                    "weeks": "काही आठवडे",
+                                                                    "months": "काही महिने"
+                                                        },
+                                                        "impact": {
+                                                                    "sleep": "झोपेची गुणवत्ता",
+                                                                    "work": "काम / उत्पादकता",
+                                                                    "sports": "व्यायाम व क्रीडा",
+                                                                    "mood": "मूड व लक्ष"
+                                                        },
+                                                        "region": {
+                                                                    "neck": "मान",
+                                                                    "shoulder": "खांदा",
+                                                                    "upperBack": "वरील पाठ",
+                                                                    "lowerBack": "खालची पाठ",
+                                                                    "hip": "कमर / श्रोणी",
+                                                                    "knee": "गुडघा",
+                                                                    "ankle": "घोटा / पाऊल"
+                                                        }
+                                            },
+                                            "ai": {
+                                                        "title": "PhysioSense एआय सारांश",
+                                                        "desc": "प्रत्येक इनपुट त्वरित वाचून पुढील पायरीसाठी मार्गदर्शन करते."
+                                            },
+                                            "insights": {
+                                                        "causeTitle": "संभाव्य कारण",
+                                                        "planTitle": "शिफारसीत लक्ष",
+                                                        "recoveryTitle": "रिकव्हरी आढावा",
+                                                        "placeholders": {
+                                                                    "cause": "कारण पाहण्यासाठी अधिक माहिती भरा.",
+                                                                    "plan": "देखभाल योजना वैयक्तिक करण्यासाठी सर्व टप्पे पूर्ण करा.",
+                                                                    "recovery": "उर्वरित प्रश्न पूर्ण करा आणि रिकव्हरी अंदाज मिळवा."
+                                                        }
+                                            },
+                                            "metrics": {
+                                                        "intensity": "सद्य तीव्रता",
+                                                        "quality": "वेदनेची प्रकृती",
+                                                        "duration": "वेदनेचा कालावधी"
+                                            },
+                                            "summary": {
+                                                        "title": "वैयक्तिक झलक",
+                                                        "placeholder": "पूर्ण मूल्यांकन केल्यावर तुमचा वैयक्तिक सारांश तयार होईल.",
+                                                        "ctaPrimary": "तज्ञाशी कॉल बुक करा",
+                                                        "ctaSecondary": "अहवाल डाउनलोड करा",
+                                                        "noteLabel": "अतिरिक्त नोंदी",
+                                                        "notePlaceholder": "वैयक्तिक नोंदी लिहा (पर्यायी)"
+                                            },
+                                            "regionStatusDefault": "भाग निवडा",
+                                            "intensityNarrative": {
+                                                        "prefix": "सद्य तीव्रता:",
+                                                        "suffix": "/10"
+                                            },
+                                            "completionNote": "आपण योग्य मार्गावर आहात — पुढे चालू ठेवा!"
+                                },
+                                "descriptors": {
+                                            "intensitySentences": {
+                                                        "low": "वेदनेची तीव्रता हलकी असून सहज व्यवस्थापनीय आहे.",
+                                                        "moderate": "वेदना मध्यम असून दैनंदिन हालचालींवर परिणाम करते.",
+                                                        "high": "वेदना जास्त असून शरीर सतत ताणलेले राहते.",
+                                                        "extreme": "वेदना अत्यंत तीव्र असून त्वरित वैद्यकीय तपासणी आवश्यक आहे."
+                                            },
+                                            "intensityWords": {
+                                                        "low": "हलकी",
+                                                        "moderate": "मध्यम",
+                                                        "high": "जास्त",
+                                                        "extreme": "अत्यंत"
+                                            },
+                                            "intensityMetric": {
+                                                        "low": "हलकी अस्वस्थता",
+                                                        "moderate": "सक्रिय वेदना",
+                                                        "high": "गंभीर वेदना",
+                                                        "extreme": "तत्काळ लक्ष"
+                                            },
+                                            "regionSentences": {
+                                                        "neck": "मान आणि सर्व्हायकल स्नायूंमध्ये ताण जाणवतो.",
+                                                        "shoulder": "खांदा व रोटेटर कफ भागावर ताण दिसतो.",
+                                                        "upperBack": "वरील पाठीतील हालचाली मर्यादित दिसतात.",
+                                                        "lowerBack": "खालच्या पाठी व कोर स्थैर्यावर लक्ष देण्याची गरज आहे.",
+                                                        "hip": "कमर व श्रोणी संरेखनात अस्थिरता जाणवते.",
+                                                        "knee": "गुडघा सांध्यावर जास्त भार पडत आहे.",
+                                                        "ankle": "घोटा व पावलाची स्थिरता कमी झाली आहे.",
+                                                        "generic": "भाग निवडल्यास विश्लेषण अधिक अचूक होईल."
+                                            },
+                                            "qualitySentences": {
+                                                        "sharp": "चुभणारी वेदना नसांवरील ताण दर्शवते.",
+                                                        "dull": "बोथट वेदना स्नायू थकवा किंवा पोश्चर त्रुटी दर्शवते.",
+                                                        "stiff": "कडकपणा जोड व फॅशिया मध्ये ताण दाखवतो.",
+                                                        "burning": "जळजळणारी वेदना तंत्रिका संवेदनशीलता दाखवते.",
+                                                        "throbbing": "धडधडणारी वेदना सूज प्रक्रियेशी जोडलेली असू शकते.",
+                                                        "generic": "अनुभूती निवडल्यास मार्गदर्शन अधिक वैयक्तिक होईल."
+                                            },
+                                            "durationSentences": {
+                                                        "hours": "हा तीव्र टप्पा आहे — शांत करणाऱ्या तंत्रांनी सुरुवात करा.",
+                                                        "days": "काही दिवसांची वेदना असल्यास सौम्य हालचाली व टेपिंग करा.",
+                                                        "weeks": "काही आठवड्यांची वेदना असल्यास प्रगतीशील बळकटीकरणाची योजना करा.",
+                                                        "months": "काही महिन्यांची वेदना असल्यास व्यापक पुनर्वसन गरजेचे आहे.",
+                                                        "default": "कालावधी निवडल्यास योग्य योजना ठरवता येईल."
+                                            },
+                                            "impactSentences": {
+                                                        "sleep": "झोप सुधारण्यासाठी संध्याकाळी श्वसन व रिलॅक्सेशन जोडा.",
+                                                        "work": "कामाचे पोश्चर व छोट्या विश्रांतीचे वेळापत्रक तपासा.",
+                                                        "sports": "क्रीडा पुनरागमनासाठी क्रमशः प्रशिक्षण ठरवा.",
+                                                        "mood": "तणाव व्यवस्थापन व माइंडफुल हालचालींचा समावेश करा."
+                                            },
+                                            "recoverySentences": {
+                                                        "hours": "सक्रिय विश्रांतीसह 24-48 तासांत सुधारणा अपेक्षित.",
+                                                        "days": "लक्ष्यित थेरपीने 1-2 आठवड्यात सुधारणा अपेक्षित.",
+                                                        "weeks": "4-6 आठवड्यांची संरचित पुनर्वसन गरजेचे.",
+                                                        "months": "8-12 आठवडे नियमित तज्ञ मार्गदर्शन आवश्यक.",
+                                                        "default": "रिकव्हरी वेळ तीव्रता व कालावधीवर अवलंबून राहील."
+                                            },
+                                            "recoveryIntensitySentences": {
+                                                        "low": "वेदना कमी होते आहे, दररोज प्रगती तपासा.",
+                                                        "moderate": "मध्यम काळजी चालू ठेवा व अचानक भार टाळा.",
+                                                        "high": "या आठवड्यात पर्यवेक्षित सत्रांना प्राधान्य द्या.",
+                                                        "extreme": "गंभीर चिन्हे वगळण्यासाठी त्वरित सल्ला घ्या."
+                                            },
+                                            "summaryLabels": {
+                                                        "intensity": "तीव्रता",
+                                                        "region": "स्थान",
+                                                        "quality": "प्रकृती",
+                                                        "duration": "कालावधी",
+                                                        "impact": "प्रभाव",
+                                                        "note": "नोंदी"
+                                            },
+                                            "summaryEmpty": "—",
+                                            "summaryNotePlaceholder": "अजून नोंद केलेली नाही."
+                                }
+                    }
         };
 
-        function selectPain(element, type, primaryBodyPart) {
-            document.querySelectorAll('.pain-option').forEach(el => el.classList.remove('selected'));
-            element.classList.add('selected');
-            assessmentData.selectedPain = type;
-            assessmentData.bodyPart = primaryBodyPart;
-            updateAssessmentProgress();
+        const painAssessmentTemplate = `<div class="pain-assessment-module">
+                    <div class="pain-assessment-module__aura"></div>
+                    <div class="pain-assessment-header">
+                        <div class="pain-assessment-title-group">
+                            <span class="pain-assessment-badge" data-i18n="badge"></span>
+                            <h2 class="pain-assessment-title" data-i18n="title"></h2>
+                            <p class="pain-assessment-subtitle" data-i18n="subtitle"></p>
+                        </div>
+                        <div class="pain-assessment-language" role="group" aria-label="Language selector">
+                            <button type="button" class="language-btn active" data-lang="en">English</button>
+                            <button type="button" class="language-btn" data-lang="hi">हिन्दी</button>
+                            <button type="button" class="language-btn" data-lang="mr">मराठी</button>
+                        </div>
+                    </div>
+                    <div class="pain-assessment-grid">
+                        <div class="assessment-left">
+                            <div class="progress-card card-surface">
+                                <div class="progress-ring" id="paProgressRing" style="--progress:0deg">
+                                    <div class="progress-ring__value" id="paProgressValue">0%</div>
+                                    <span class="progress-ring__label" data-i18n="progressLabel"></span>
+                                </div>
+                                <div class="progress-card-copy">
+                                    <h3 data-i18n="progressTitle"></h3>
+                                    <p data-i18n="progressDesc"></p>
+                                    <div class="progress-footnote" data-i18n="completionNote"></div>
+                                </div>
+                            </div>
+                            <div class="stepper">
+                                <div class="step-card active" data-step="1">
+                                    <div class="step-meta">
+                                        <div class="step-counter">
+                                            <span data-i18n="stepLabel"></span>
+                                            <span class="step-current">1</span>
+                                            <span data-i18n="stepOf"></span>
+                                            <span class="step-total">5</span>
+                                        </div>
+                                        <span class="step-tag" data-i18n="step1.tag"></span>
+                                    </div>
+                                    <h3 class="step-title" data-i18n="step1.title"></h3>
+                                    <p class="step-desc" data-i18n="step1.desc"></p>
+                                    <div class="step-content">
+                                        <div class="slider-wrapper">
+                                            <input type="range" min="0" max="10" value="5" class="step-slider" id="paIntensity" aria-labelledby="paIntensityFeedback">
+                                            <div class="slider-glow"></div>
+                                            <output class="slider-value" id="paIntensityOutput">5</output>
+                                        </div>
+                                        <div class="slider-scale">
+                                            <span data-i18n="step1.scale.zero"></span>
+                                            <span data-i18n="step1.scale.mild"></span>
+                                            <span data-i18n="step1.scale.moderate"></span>
+                                            <span data-i18n="step1.scale.severe"></span>
+                                            <span data-i18n="step1.scale.worst"></span>
+                                        </div>
+                                        <div class="step-feedback" id="paIntensityFeedback"></div>
+                                    </div>
+                                </div>
+                                <div class="step-card" data-step="2">
+                                    <div class="step-meta">
+                                        <div class="step-counter">
+                                            <span data-i18n="stepLabel"></span>
+                                            <span class="step-current">2</span>
+                                            <span data-i18n="stepOf"></span>
+                                            <span class="step-total">5</span>
+                                        </div>
+                                        <span class="step-tag" data-i18n="step2.tag"></span>
+                                    </div>
+                                    <h3 class="step-title" data-i18n="step2.title"></h3>
+                                    <p class="step-desc" data-i18n="step2.desc"></p>
+                                    <div class="step-options option-grid">
+                                        <button type="button" class="option-pill" data-group="quality" data-value="sharp" aria-pressed="false">
+                                            <span class="option-icon">⚡</span>
+                                            <span class="option-label" data-i18n="options.quality.sharp"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="quality" data-value="dull" aria-pressed="false">
+                                            <span class="option-icon">🌫️</span>
+                                            <span class="option-label" data-i18n="options.quality.dull"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="quality" data-value="stiff" aria-pressed="false">
+                                            <span class="option-icon">🧱</span>
+                                            <span class="option-label" data-i18n="options.quality.stiff"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="quality" data-value="burning" aria-pressed="false">
+                                            <span class="option-icon">🔥</span>
+                                            <span class="option-label" data-i18n="options.quality.burning"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="quality" data-value="throbbing" aria-pressed="false">
+                                            <span class="option-icon">💓</span>
+                                            <span class="option-label" data-i18n="options.quality.throbbing"></span>
+                                        </button>
+                                    </div>
+                                    <div class="step-note" data-i18n="step2.note"></div>
+                                </div>
+                                <div class="step-card" data-step="3">
+                                    <div class="step-meta">
+                                        <div class="step-counter">
+                                            <span data-i18n="stepLabel"></span>
+                                            <span class="step-current">3</span>
+                                            <span data-i18n="stepOf"></span>
+                                            <span class="step-total">5</span>
+                                        </div>
+                                        <span class="step-tag" data-i18n="step3.tag"></span>
+                                    </div>
+                                    <h3 class="step-title" data-i18n="step3.title"></h3>
+                                    <div class="heatmap-card card-surface">
+                                        <div class="heatmap-header">
+                                            <div class="heatmap-status" id="paRegionLabel" data-i18n="regionStatusDefault"></div>
+                                            <div class="heatmap-hint" data-i18n="step3.desc"></div>
+                                        </div>
+                                        <div class="heatmap-stage">
+                                            <div class="heatmap-body">
+                                                <svg class="heatmap-figure" viewBox="0 0 160 420" role="img" aria-label="Body heatmap">
+                                                    <defs>
+                                                        <linearGradient id="heatmapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                            <stop offset="0%" stop-color="rgba(243,112,33,0.45)"/>
+                                                            <stop offset="100%" stop-color="rgba(67,133,245,0.35)"/>
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <path class="heatmap-silhouette" d="M80 18c-17 0-30 13-30 30v36c0 8-6 14-14 14v30c8 0 14 6 14 14v60c0 11-6 21-16 28v34c10-6 26-4 32 10l14 36 14-36c6-14 22-16 32-10v-34c-10-7-16-17-16-28v-60c0-8 6-14 14-14v-30c-8 0-14-6-14-14V48c0-17-13-30-30-30z" fill="url(#heatmapGradient)" opacity="0.24"/>
+                                                    <circle class="heatmap-head" cx="80" cy="36" r="22" fill="rgba(255,255,255,0.06)"/>
+                                                    <rect x="68" y="60" width="24" height="36" rx="12" class="pain-region" data-region="neck" tabindex="0" role="button" aria-pressed="false"></rect>
+                                                    <rect x="44" y="96" width="72" height="48" rx="24" class="pain-region" data-region="shoulder" tabindex="0" role="button" aria-pressed="false"></rect>
+                                                    <rect x="50" y="150" width="60" height="48" rx="24" class="pain-region" data-region="upperBack" tabindex="0" role="button" aria-pressed="false"></rect>
+                                                    <rect x="52" y="202" width="56" height="54" rx="24" class="pain-region" data-region="lowerBack" tabindex="0" role="button" aria-pressed="false"></rect>
+                                                    <ellipse cx="80" cy="270" rx="34" ry="26" class="pain-region" data-region="hip" tabindex="0" role="button" aria-pressed="false"></ellipse>
+                                                    <rect x="58" y="310" width="44" height="64" rx="22" class="pain-region" data-region="knee" tabindex="0" role="button" aria-pressed="false"></rect>
+                                                    <rect x="60" y="380" width="40" height="34" rx="16" class="pain-region" data-region="ankle" tabindex="0" role="button" aria-pressed="false"></rect>
+                                                </svg>
+                                                <div class="heatmap-glow"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="step-card" data-step="4">
+                                    <div class="step-meta">
+                                        <div class="step-counter">
+                                            <span data-i18n="stepLabel"></span>
+                                            <span class="step-current">4</span>
+                                            <span data-i18n="stepOf"></span>
+                                            <span class="step-total">5</span>
+                                        </div>
+                                        <span class="step-tag" data-i18n="step4.tag"></span>
+                                    </div>
+                                    <h3 class="step-title" data-i18n="step4.title"></h3>
+                                    <p class="step-desc" data-i18n="step4.desc"></p>
+                                    <div class="step-options option-grid">
+                                        <button type="button" class="option-pill" data-group="duration" data-value="hours" aria-pressed="false">
+                                            <span class="option-icon">⏱️</span>
+                                            <span class="option-label" data-i18n="options.duration.hours"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="duration" data-value="days" aria-pressed="false">
+                                            <span class="option-icon">📆</span>
+                                            <span class="option-label" data-i18n="options.duration.days"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="duration" data-value="weeks" aria-pressed="false">
+                                            <span class="option-icon">🗓️</span>
+                                            <span class="option-label" data-i18n="options.duration.weeks"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="duration" data-value="months" aria-pressed="false">
+                                            <span class="option-icon">🩺</span>
+                                            <span class="option-label" data-i18n="options.duration.months"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="step-card" data-step="5">
+                                    <div class="step-meta">
+                                        <div class="step-counter">
+                                            <span data-i18n="stepLabel"></span>
+                                            <span class="step-current">5</span>
+                                            <span data-i18n="stepOf"></span>
+                                            <span class="step-total">5</span>
+                                        </div>
+                                        <span class="step-tag" data-i18n="step5.tag"></span>
+                                    </div>
+                                    <h3 class="step-title" data-i18n="step5.title"></h3>
+                                    <p class="step-desc" data-i18n="step5.desc"></p>
+                                    <div class="step-options option-grid option-grid--impact">
+                                        <button type="button" class="option-pill" data-group="impact" data-value="sleep" aria-pressed="false">
+                                            <span class="option-icon">🌙</span>
+                                            <span class="option-label" data-i18n="options.impact.sleep"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="impact" data-value="work" aria-pressed="false">
+                                            <span class="option-icon">💼</span>
+                                            <span class="option-label" data-i18n="options.impact.work"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="impact" data-value="sports" aria-pressed="false">
+                                            <span class="option-icon">🏃</span>
+                                            <span class="option-label" data-i18n="options.impact.sports"></span>
+                                        </button>
+                                        <button type="button" class="option-pill" data-group="impact" data-value="mood" aria-pressed="false">
+                                            <span class="option-icon">🧠</span>
+                                            <span class="option-label" data-i18n="options.impact.mood"></span>
+                                        </button>
+                                    </div>
+                                    <div class="note-field">
+                                        <label for="paNoteInput" data-i18n="summary.noteLabel"></label>
+                                        <textarea id="paNoteInput" rows="3" class="note-textarea" data-i18n-placeholder="summary.notePlaceholder"></textarea>
+                                    </div>
+                                    <div class="step-note" data-i18n="step5.note"></div>
+                                </div>
+                            </div>
+                            <div class="step-navigation">
+                                <button type="button" class="step-btn step-btn--ghost" data-action="back" disabled>
+                                    <span data-i18n="nav.back"></span>
+                                </button>
+                                <button type="button" class="step-btn step-btn--primary" data-action="next">
+                                    <span data-i18n="nav.next"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="assessment-right">
+                            <div class="ai-card card-surface">
+                                <div class="ai-avatar">🤖</div>
+                                <div>
+                                    <h3 data-i18n="ai.title"></h3>
+                                    <p data-i18n="ai.desc"></p>
+                                </div>
+                            </div>
+                            <div class="insight-grid">
+                                <div class="insight-card">
+                                    <div class="insight-icon">🧠</div>
+                                    <div class="insight-title" data-i18n="insights.causeTitle"></div>
+                                    <p class="insight-text" data-insight-text="cause"></p>
+                                </div>
+                                <div class="insight-card">
+                                    <div class="insight-icon">🎯</div>
+                                    <div class="insight-title" data-i18n="insights.planTitle"></div>
+                                    <p class="insight-text" data-insight-text="plan"></p>
+                                </div>
+                                <div class="insight-card">
+                                    <div class="insight-icon">⏳</div>
+                                    <div class="insight-title" data-i18n="insights.recoveryTitle"></div>
+                                    <p class="insight-text" data-insight-text="recovery"></p>
+                                </div>
+                            </div>
+                            <div class="metrics-grid card-surface">
+                                <div class="metric-block">
+                                    <div class="metric-header">
+                                        <span data-i18n="metrics.intensity"></span>
+                                        <strong id="paMetricIntensity">5/10</strong>
+                                    </div>
+                                    <div class="metric-bar">
+                                        <div class="metric-bar-fill" id="paMetricIntensityFill"></div>
+                                    </div>
+                                    <span class="metric-caption" id="paMetricIntensityLabel"></span>
+                                </div>
+                                <div class="metric-block metric-block--tag">
+                                    <div class="metric-header">
+                                        <span data-i18n="metrics.quality"></span>
+                                    </div>
+                                    <div class="metric-tag" id="paMetricQuality">—</div>
+                                </div>
+                                <div class="metric-block metric-block--tag">
+                                    <div class="metric-header">
+                                        <span data-i18n="metrics.duration"></span>
+                                    </div>
+                                    <div class="metric-tag" id="paMetricDuration">—</div>
+                                </div>
+                            </div>
+                            <div class="summary-card card-surface">
+                                <h4 data-i18n="summary.title"></h4>
+                                <div class="summary-breakdown" id="paSummaryBreakdown">
+                                    <p class="summary-placeholder" data-i18n="summary.placeholder"></p>
+                                </div>
+                                <div class="summary-actions">
+                                    <button type="button" class="summary-btn summary-btn--primary" data-action="book">
+                                        <span data-i18n="summary.ctaPrimary"></span>
+                                    </button>
+                                    <button type="button" class="summary-btn summary-btn--ghost" data-action="download" disabled>
+                                        <span data-i18n="summary.ctaSecondary"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
 
-            // Update form input
-            const painAreaInput = document.getElementById('painAreaInput');
-            if (painAreaInput) {
-                painAreaInput.value = element.querySelector('.pain-label').textContent;
+
+        function initPainAssessmentModule() {
+            const host = document.getElementById('pain-assessment');
+            if (!host) {
+                return;
             }
 
-            // Highlight corresponding body parts
-            document.querySelectorAll('.body-part').forEach(part => {
-                part.classList.remove('active');
-            });
+            host.innerHTML = painAssessmentTemplate.trim();
+            const module = host.querySelector('.pain-assessment-module');
+            if (!module) {
+                return;
+            }
 
-            // Show recommendation
-            const recommendation = painRecommendations[type];
-            if (recommendation) {
-                recommendation.bodyParts.forEach(part => {
-                    const bodyPart = document.querySelector(`[data-part="${part}"]`);
-                    if (bodyPart) bodyPart.classList.add('active');
+            const state = {
+                intensity: 5,
+                quality: null,
+                region: null,
+                duration: null,
+                impacts: new Set(),
+                note: ''
+            };
+
+            let currentLang = 'en';
+            const stepCards = Array.from(module.querySelectorAll('.step-card'));
+            const totalSteps = stepCards.length;
+            let currentStep = 0;
+
+            const refs = {
+                progressRing: module.querySelector('#paProgressRing'),
+                progressValue: module.querySelector('#paProgressValue'),
+                intensityInput: module.querySelector('#paIntensity'),
+                intensityOutput: module.querySelector('#paIntensityOutput'),
+                intensityFeedback: module.querySelector('#paIntensityFeedback'),
+                regionLabel: module.querySelector('#paRegionLabel'),
+                qualityOptions: Array.from(module.querySelectorAll('[data-group="quality"]')),
+                durationOptions: Array.from(module.querySelectorAll('[data-group="duration"]')),
+                impactOptions: Array.from(module.querySelectorAll('[data-group="impact"]')),
+                regions: Array.from(module.querySelectorAll('.pain-region')),
+                nextBtn: module.querySelector('[data-action="next"]'),
+                backBtn: module.querySelector('[data-action="back"]'),
+                languageButtons: Array.from(module.querySelectorAll('.language-btn')),
+                insightElements: {
+                    cause: module.querySelector('[data-insight-text="cause"]'),
+                    plan: module.querySelector('[data-insight-text="plan"]'),
+                    recovery: module.querySelector('[data-insight-text="recovery"]')
+                },
+                metricIntensity: module.querySelector('#paMetricIntensity'),
+                metricIntensityFill: module.querySelector('#paMetricIntensityFill'),
+                metricIntensityLabel: module.querySelector('#paMetricIntensityLabel'),
+                metricQuality: module.querySelector('#paMetricQuality'),
+                metricDuration: module.querySelector('#paMetricDuration'),
+                summaryBreakdown: module.querySelector('#paSummaryBreakdown'),
+                downloadBtn: module.querySelector('[data-action="download"]'),
+                bookBtn: module.querySelector('[data-action="book"]'),
+                noteInput: module.querySelector('#paNoteInput')
+            };
+
+            function getTranslation(lang, path) {
+                const dictionary = painAssessmentTranslations[lang]?.static;
+                if (!dictionary) {
+                    return undefined;
+                }
+                return path.split('.').reduce((acc, key) => {
+                    if (acc && Object.prototype.hasOwnProperty.call(acc, key)) {
+                        return acc[key];
+                    }
+                    return undefined;
+                }, dictionary);
+            }
+
+            function applyTranslations(lang) {
+                const dictionary = painAssessmentTranslations[lang]?.static;
+                if (!dictionary) {
+                    return;
+                }
+
+                module.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    const value = getTranslation(lang, key);
+                    if (typeof value === 'string') {
+                        element.textContent = value;
+                    }
+                });
+
+                module.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    const value = getTranslation(lang, key);
+                    if (typeof value === 'string') {
+                        element.setAttribute('placeholder', value);
+                    }
+                });
+
+                refs.regions.forEach(regionEl => {
+                    const regionKey = regionEl.dataset.region;
+                    const label = getTranslation(lang, `options.region.${regionKey}`);
+                    if (label) {
+                        regionEl.setAttribute('aria-label', label);
+                    }
                 });
             }
 
-            updateRecommendation();
-        }
-
-        // ADVANCED RECOMMENDATION ENGINE
-        function updateRecommendation() {
-            if (!assessmentData.selectedPain) return;
-
-            const recommendation = painRecommendations[assessmentData.selectedPain];
-            if (!recommendation) return;
-
-            let severity = 'moderate';
-            let urgency = 'routine';
-            let timeline = '4-8 weeks';
-
-            // Determine severity based on intensity and duration
-            if (assessmentData.painIntensity >= 8) {
-                severity = 'severe';
-                urgency = 'urgent';
-                timeline = '6-12 weeks';
-            } else if (assessmentData.painIntensity >= 5) {
-                severity = 'moderate';
-                urgency = 'important';
-                timeline = '4-8 weeks';
-            } else {
-                severity = 'mild';
-                urgency = 'routine';
-                timeline = '2-4 weeks';
+            function getIntensityLevel(value) {
+                if (value <= 3) {
+                    return 'low';
+                }
+                if (value <= 6) {
+                    return 'moderate';
+                }
+                if (value <= 8) {
+                    return 'high';
+                }
+                return 'extreme';
             }
 
-            // Adjust based on duration
-            if (assessmentData.duration === 'months') {
-                urgency = 'important';
-                timeline = '8-12 weeks';
-            } else if (assessmentData.duration === 'hours' && assessmentData.painIntensity >= 7) {
-                urgency = 'urgent';
+            function updateProgress() {
+                const completed = 1 +
+                    (state.quality ? 1 : 0) +
+                    (state.region ? 1 : 0) +
+                    (state.duration ? 1 : 0) +
+                    (state.impacts.size ? 1 : 0);
+                const percentage = Math.round((completed / totalSteps) * 100);
+                if (refs.progressValue) {
+                    refs.progressValue.textContent = `${percentage}%`;
+                }
+                if (refs.progressRing) {
+                    refs.progressRing.style.setProperty('--progress', `${(percentage / 100) * 360}deg`);
+                }
             }
 
-            // Generate personalized recommendation
-            let recommendationText = `<strong>${recommendation.title} (${severity.toUpperCase()})</strong><br><br>`;
-            recommendationText += `<strong>Priority:</strong> ${urgency.toUpperCase()}<br>`;
-            recommendationText += `<strong>Estimated Recovery:</strong> ${timeline}<br><br>`;
-            recommendationText += `<strong>Recommended Treatment:</strong><br>${recommendation.content}<br><br>`;
+            function updateIntensityUI() {
+                const level = getIntensityLevel(state.intensity);
+                const descriptors = painAssessmentTranslations[currentLang].descriptors;
+                const prefix = getTranslation(currentLang, 'intensityNarrative.prefix') || '';
+                const suffix = getTranslation(currentLang, 'intensityNarrative.suffix') || '';
 
-            // Activity-specific advice
-            if (assessmentData.activityLevel === 'active') {
-                recommendationText += `<strong>For Active Individuals:</strong> Modified training schedule recommended. Focus on maintaining cardiovascular fitness while addressing the injury.<br>`;
-            } else if (assessmentData.activityLevel === 'sedentary') {
-                recommendationText += `<strong>For Sedentary Lifestyle:</strong> Gradual increase in activity levels. Ergonomic assessment and postural correction are essential.<br>`;
+                if (refs.intensityOutput) {
+                    refs.intensityOutput.textContent = state.intensity;
+                }
+                if (refs.metricIntensity) {
+                    refs.metricIntensity.textContent = `${state.intensity}/10`;
+                }
+                if (refs.metricIntensityFill) {
+                    refs.metricIntensityFill.style.width = `${Math.min(state.intensity * 10, 100)}%`;
+                }
+                if (refs.intensityFeedback) {
+                    refs.intensityFeedback.textContent = `${prefix} ${state.intensity}${suffix} · ${descriptors.intensityWords[level]}`.trim();
+                }
+                if (refs.metricIntensityLabel) {
+                    refs.metricIntensityLabel.textContent = descriptors.intensityMetric[level];
+                }
             }
 
-            // Intensity-specific advice
-            if (assessmentData.painIntensity >= 7) {
-                recommendationText += `<br><strong>⚠️ High Pain Alert:</strong> Consider immediate consultation. Pain management strategies may be needed alongside treatment.`;
+            function updateMetrics() {
+                const descriptors = painAssessmentTranslations[currentLang].descriptors;
+                const qualityLabel = state.quality ? getTranslation(currentLang, `options.quality.${state.quality}`) : descriptors.summaryEmpty;
+                const durationLabel = state.duration ? getTranslation(currentLang, `options.duration.${state.duration}`) : descriptors.summaryEmpty;
+                if (refs.metricQuality) {
+                    refs.metricQuality.textContent = qualityLabel;
+                }
+                if (refs.metricDuration) {
+                    refs.metricDuration.textContent = durationLabel;
+                }
             }
 
-            // Duration-specific advice
-            if (assessmentData.duration === 'months') {
-                recommendationText += `<br><strong>📅 Chronic Condition:</strong> Comprehensive evaluation recommended. May require multidisciplinary approach including manual therapy, exercise, and lifestyle modifications.`;
-            } else if (assessmentData.duration === 'hours') {
-                recommendationText += `<br><strong>⚡ Acute Injury:</strong> Early intervention can significantly improve outcomes. Ice/heat therapy and gentle movement recommended.`;
+            function updateRegionLabel() {
+                if (!refs.regionLabel) {
+                    return;
+                }
+                const key = state.region ? `options.region.${state.region}` : 'regionStatusDefault';
+                const label = getTranslation(currentLang, key);
+                if (label) {
+                    refs.regionLabel.textContent = label;
+                }
             }
 
-            // Show assessment result
-            const resultDiv = document.getElementById('assessmentResult');
-            const resultContent = document.getElementById('resultContent');
-            resultContent.innerHTML = recommendationText;
-            resultDiv.classList.add('show');
-        }
+            function updateInsights() {
+                const langData = painAssessmentTranslations[currentLang];
+                const descriptors = langData.descriptors;
+                const placeholders = langData.static.insights.placeholders;
+                const intensityLevel = getIntensityLevel(state.intensity);
 
-        // BODY PART CLICK INTERACTION
-        document.querySelectorAll('.body-part').forEach(part => {
-            part.addEventListener('click', function(e) {
-                const partName = this.getAttribute('data-name');
-                const partId = this.getAttribute('data-part');
-
-                document.querySelectorAll('.body-part').forEach(p => p.classList.remove('active'));
-                this.classList.add('active');
-
-                // Show pain point marker
-                const marker = document.getElementById('painMarker');
-                const svg = document.querySelector('.body-svg');
-                const diagram = document.querySelector('.body-diagram');
-
-                if (marker && svg && diagram) {
-                    const svgRect = svg.getBoundingClientRect();
-                    const diagramRect = diagram.getBoundingClientRect();
-                    const partRect = this.getBoundingClientRect();
-
-                    const markerLeft = partRect.left - diagramRect.left + (partRect.width / 2);
-                    const markerTop = partRect.top - diagramRect.top + (partRect.height / 2);
-
-                    marker.style.display = 'flex';
-                    marker.style.left = markerLeft + 'px';
-                    marker.style.top = markerTop + 'px';
+                let causeText = placeholders.cause;
+                if (state.region || state.quality) {
+                    const parts = [];
+                    if (state.region) {
+                        parts.push(descriptors.regionSentences[state.region] || descriptors.regionSentences.generic);
+                    }
+                    if (state.quality) {
+                        parts.push(descriptors.qualitySentences[state.quality] || descriptors.qualitySentences.generic);
+                    }
+                    parts.push(descriptors.intensitySentences[intensityLevel]);
+                    causeText = parts.join(' ');
                 }
 
-                // Show basic info
-                const resultDiv = document.getElementById('assessmentResult');
-                const resultContent = document.getElementById('resultContent');
-                resultContent.innerHTML = `<strong>${partName} Selected</strong><br><br>Click on a pain category above for detailed treatment recommendations, or book a free assessment for personalized care.`;
-                resultDiv.classList.add('show');
+                let planText = placeholders.plan;
+                if (state.duration || state.impacts.size) {
+                    const segments = [];
+                    if (state.duration) {
+                        segments.push(descriptors.durationSentences[state.duration] || descriptors.durationSentences.default);
+                    }
+                    if (state.impacts.size) {
+                        state.impacts.forEach(value => {
+                            const sentence = descriptors.impactSentences[value];
+                            if (sentence) {
+                                segments.push(sentence);
+                            }
+                        });
+                    }
+                    planText = segments.join(' ');
+                }
+
+                let recoveryText = placeholders.recovery;
+                if (state.duration || state.quality) {
+                    const durationKey = state.duration || 'default';
+                    const durationSentence = descriptors.recoverySentences[durationKey] || descriptors.recoverySentences.default;
+                    const intensitySentence = descriptors.recoveryIntensitySentences[intensityLevel];
+                    recoveryText = `${durationSentence} ${intensitySentence}`.trim();
+                }
+
+                if (refs.insightElements.cause) {
+                    refs.insightElements.cause.textContent = causeText;
+                }
+                if (refs.insightElements.plan) {
+                    refs.insightElements.plan.textContent = planText;
+                }
+                if (refs.insightElements.recovery) {
+                    refs.insightElements.recovery.textContent = recoveryText;
+                }
+            }
+
+            function updateSummary() {
+                const langData = painAssessmentTranslations[currentLang];
+                const descriptors = langData.descriptors;
+                const container = refs.summaryBreakdown;
+                if (!container) {
+                    return;
+                }
+
+                const hasDetails = Boolean(state.quality || state.region || state.duration || state.impacts.size || state.note.trim());
+                container.innerHTML = '';
+
+                if (!hasDetails) {
+                    const placeholder = document.createElement('p');
+                    placeholder.className = 'summary-placeholder';
+                    placeholder.textContent = langData.static.summary.placeholder;
+                    container.appendChild(placeholder);
+                    if (refs.downloadBtn) {
+                        refs.downloadBtn.disabled = true;
+                    }
+                    return;
+                }
+
+                const list = document.createElement('ul');
+                const intensityLevel = getIntensityLevel(state.intensity);
+                const intensityLabel = `${state.intensity}/10 · ${descriptors.intensityWords[intensityLevel]}`;
+                const regionLabel = state.region ? getTranslation(currentLang, `options.region.${state.region}`) : descriptors.summaryEmpty;
+                const qualityLabel = state.quality ? getTranslation(currentLang, `options.quality.${state.quality}`) : descriptors.summaryEmpty;
+                const durationLabel = state.duration ? getTranslation(currentLang, `options.duration.${state.duration}`) : descriptors.summaryEmpty;
+                const impactsValue = state.impacts.size ? Array.from(state.impacts).map(value => getTranslation(currentLang, `options.impact.${value}`)).join(', ') : descriptors.summaryEmpty;
+                const noteValue = state.note.trim() ? state.note.trim() : descriptors.summaryNotePlaceholder;
+
+                const entries = [
+                    { label: descriptors.summaryLabels.intensity, value: intensityLabel },
+                    { label: descriptors.summaryLabels.region, value: regionLabel },
+                    { label: descriptors.summaryLabels.quality, value: qualityLabel },
+                    { label: descriptors.summaryLabels.duration, value: durationLabel },
+                    { label: descriptors.summaryLabels.impact, value: impactsValue },
+                    { label: descriptors.summaryLabels.note, value: noteValue }
+                ];
+
+                entries.forEach(entry => {
+                    const item = document.createElement('li');
+                    const labelSpan = document.createElement('span');
+                    labelSpan.textContent = entry.label;
+                    const valueStrong = document.createElement('strong');
+                    valueStrong.textContent = entry.value;
+                    item.appendChild(labelSpan);
+                    item.appendChild(valueStrong);
+                    list.appendChild(item);
+                });
+
+                container.appendChild(list);
+                if (refs.downloadBtn) {
+                    refs.downloadBtn.disabled = false;
+                }
+            }
+
+            function isStepValid(index) {
+                switch (index) {
+                    case 0:
+                        return true;
+                    case 1:
+                        return Boolean(state.quality);
+                    case 2:
+                        return Boolean(state.region);
+                    case 3:
+                        return Boolean(state.duration);
+                    case 4:
+                        return state.impacts.size > 0 || state.note.trim().length > 0;
+                    default:
+                        return false;
+                }
+            }
+
+            function updateNavigation() {
+                if (refs.backBtn) {
+                    refs.backBtn.disabled = currentStep === 0;
+                }
+                if (refs.nextBtn) {
+                    const labelKey = currentStep === totalSteps - 1 ? 'nav.finish' : 'nav.next';
+                    const label = getTranslation(currentLang, labelKey);
+                    const labelSpan = refs.nextBtn.querySelector('span');
+                    if (labelSpan && label) {
+                        labelSpan.textContent = label;
+                    }
+                    refs.nextBtn.disabled = !isStepValid(currentStep);
+                }
+            }
+
+            function updateStepDisplay() {
+                stepCards.forEach((card, index) => {
+                    card.classList.toggle('active', index === currentStep);
+                    card.classList.toggle('completed', index < currentStep && isStepValid(index));
+                    const currentSpan = card.querySelector('.step-current');
+                    const totalSpan = card.querySelector('.step-total');
+                    if (currentSpan) {
+                        currentSpan.textContent = index + 1;
+                    }
+                    if (totalSpan) {
+                        totalSpan.textContent = totalSteps;
+                    }
+                });
+                updateNavigation();
+            }
+
+            function goToStep(step) {
+                if (step < 0 || step >= totalSteps) {
+                    return;
+                }
+                currentStep = step;
+                updateStepDisplay();
+            }
+
+            function selectRegion(region) {
+                state.region = region;
+                refs.regions.forEach(regionEl => {
+                    const isActive = regionEl.dataset.region === region;
+                    regionEl.classList.toggle('selected', isActive);
+                    regionEl.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                });
+                updateRegionLabel();
+                updateProgress();
+                updateInsights();
+                updateSummary();
+                updateNavigation();
+            }
+
+            function toggleImpact(button) {
+                const value = button.dataset.value;
+                if (state.impacts.has(value)) {
+                    state.impacts.delete(value);
+                    button.classList.remove('selected');
+                    button.setAttribute('aria-pressed', 'false');
+                } else {
+                    state.impacts.add(value);
+                    button.classList.add('selected');
+                    button.setAttribute('aria-pressed', 'true');
+                }
+                updateProgress();
+                updateInsights();
+                updateSummary();
+                updateNavigation();
+            }
+
+            function buildDownloadSummary() {
+                const langData = painAssessmentTranslations[currentLang];
+                const descriptors = langData.descriptors;
+                const intensityLevel = getIntensityLevel(state.intensity);
+                const lines = [];
+                lines.push(langData.static.title);
+                lines.push('');
+                lines.push(`${langData.static.step1.tag}: ${state.intensity}/10 (${descriptors.intensityWords[intensityLevel]})`);
+                const regionLabel = state.region ? getTranslation(currentLang, `options.region.${state.region}`) : descriptors.summaryEmpty;
+                const qualityLabel = state.quality ? getTranslation(currentLang, `options.quality.${state.quality}`) : descriptors.summaryEmpty;
+                const durationLabel = state.duration ? getTranslation(currentLang, `options.duration.${state.duration}`) : descriptors.summaryEmpty;
+                const impactsLabel = state.impacts.size ? Array.from(state.impacts).map(value => getTranslation(currentLang, `options.impact.${value}`)).join(', ') : descriptors.summaryEmpty;
+                lines.push(`${descriptors.summaryLabels.region}: ${regionLabel}`);
+                lines.push(`${descriptors.summaryLabels.quality}: ${qualityLabel}`);
+                lines.push(`${descriptors.summaryLabels.duration}: ${durationLabel}`);
+                lines.push(`${descriptors.summaryLabels.impact}: ${impactsLabel}`);
+                if (state.note.trim()) {
+                    lines.push(`${descriptors.summaryLabels.note}: ${state.note.trim()}`);
+                }
+                return lines.join('
+');
+            }
+
+            if (refs.intensityInput) {
+                refs.intensityInput.addEventListener('input', event => {
+                    state.intensity = Number(event.target.value);
+                    updateIntensityUI();
+                    updateProgress();
+                    updateInsights();
+                    updateSummary();
+                    updateNavigation();
+                });
+            }
+
+            refs.qualityOptions.forEach(button => {
+                button.addEventListener('click', () => {
+                    state.quality = button.dataset.value;
+                    refs.qualityOptions.forEach(option => {
+                        const isActive = option === button;
+                        option.classList.toggle('selected', isActive);
+                        option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                    });
+                    updateProgress();
+                    updateMetrics();
+                    updateInsights();
+                    updateSummary();
+                    updateNavigation();
+                });
             });
-        });
 
-        // ANIMATED COUNTER
-        const counters = document.querySelectorAll('.counting');
-        const observerOptions = {
-            threshold: 0.5
-        };
+            refs.durationOptions.forEach(button => {
+                button.addEventListener('click', () => {
+                    state.duration = button.dataset.value;
+                    refs.durationOptions.forEach(option => {
+                        const isActive = option === button;
+                        option.classList.toggle('selected', isActive);
+                        option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                    });
+                    updateProgress();
+                    updateMetrics();
+                    updateInsights();
+                    updateSummary();
+                    updateNavigation();
+                });
+            });
 
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const counter = entry.target;
-                    const target = parseFloat(counter.getAttribute('data-target'));
-                    const duration = 2000;
-                    const increment = target / (duration / 16);
-                    let current = 0;
+            refs.impactOptions.forEach(button => {
+                button.addEventListener('click', () => {
+                    toggleImpact(button);
+                });
+            });
 
-                    const updateCounter = () => {
-                        current += increment;
-                        if (current < target) {
-                            counter.textContent = target % 1 === 0 ? Math.floor(current) : current.toFixed(1);
-                            requestAnimationFrame(updateCounter);
-                        } else {
-                            counter.textContent = target % 1 === 0 ? Math.floor(target) : target.toFixed(1);
+            refs.regions.forEach(regionEl => {
+                regionEl.addEventListener('click', () => {
+                    selectRegion(regionEl.dataset.region);
+                });
+                regionEl.addEventListener('keydown', event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        selectRegion(regionEl.dataset.region);
+                    }
+                });
+            });
+
+            refs.languageButtons.forEach(button => {
+                button.setAttribute('aria-pressed', button.dataset.lang === currentLang ? 'true' : 'false');
+                button.addEventListener('click', () => {
+                    const lang = button.dataset.lang;
+                    if (!painAssessmentTranslations[lang] || lang === currentLang) {
+                        return;
+                    }
+                    currentLang = lang;
+                    refs.languageButtons.forEach(item => {
+                        const isActive = item === button;
+                        item.classList.toggle('active', isActive);
+                        item.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                    });
+                    applyTranslations(currentLang);
+                    updateRegionLabel();
+                    updateIntensityUI();
+                    updateMetrics();
+                    updateInsights();
+                    updateSummary();
+                    updateNavigation();
+                });
+            });
+
+            if (refs.nextBtn) {
+                refs.nextBtn.addEventListener('click', () => {
+                    if (!isStepValid(currentStep)) {
+                        return;
+                    }
+                    if (currentStep < totalSteps - 1) {
+                        goToStep(currentStep + 1);
+                    } else {
+                        const target = module.querySelector('.assessment-right');
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
-                    };
+                    }
+                });
+            }
 
-                    updateCounter();
-                    counterObserver.unobserve(counter);
-                }
-            });
-        }, observerOptions);
+            if (refs.backBtn) {
+                refs.backBtn.addEventListener('click', () => {
+                    goToStep(currentStep - 1);
+                });
+            }
 
-        counters.forEach(counter => counterObserver.observe(counter));
+            if (refs.noteInput) {
+                refs.noteInput.addEventListener('input', event => {
+                    state.note = event.target.value;
+                    updateSummary();
+                    updateNavigation();
+                });
+            }
 
-        // MEDICAL CARD MODAL DATA
+            if (refs.downloadBtn) {
+                refs.downloadBtn.addEventListener('click', () => {
+                    const summaryText = buildDownloadSummary();
+                    const blob = new Blob([summaryText], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'pain-assessment-summary.txt';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                });
+            }
+
+            if (refs.bookBtn) {
+                refs.bookBtn.addEventListener('click', () => {
+                    if (typeof window.openModal === 'function') {
+                        window.openModal();
+                    }
+                });
+            }
+
+            applyTranslations(currentLang);
+            updateRegionLabel();
+            updateIntensityUI();
+            updateMetrics();
+            updateProgress();
+            updateInsights();
+            updateSummary();
+            updateStepDisplay();
+        }
+
+        if (document.readyState !== 'loading') {
+            initPainAssessmentModule();
+        } else {
+            document.addEventListener('DOMContentLoaded', initPainAssessmentModule);
+        }
         const medicalDetailData = {
             painReduction: {
                 icon: '📊',
