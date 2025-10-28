@@ -317,11 +317,47 @@
 
         .progress-line-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--primary));
+            background-size: 200% 100%;
             width: 0%;
             transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 15px rgba(243, 112, 33, 0.6);
+            box-shadow: 0 0 20px rgba(243, 112, 33, 0.8), 0 0 40px rgba(243, 112, 33, 0.4);
             border-radius: 2px;
+            animation: shimmer 2s linear infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-line-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: slideShimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes slideShimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
         }
 
         .progress-step {
@@ -1141,11 +1177,45 @@
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: #fff;
             box-shadow: 0 4px 16px rgba(243, 112, 33, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(243, 112, 33, 0.5);
+        }
+
+        .btn-primary.pulse {
+            animation: buttonPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% {
+                box-shadow: 0 4px 16px rgba(243, 112, 33, 0.3);
+            }
+            50% {
+                box-shadow: 0 6px 32px rgba(243, 112, 33, 0.8), 0 0 48px rgba(243, 112, 33, 0.4);
+                transform: scale(1.02);
+            }
         }
 
         .btn-secondary {
@@ -1325,6 +1395,216 @@
             text-decoration: underline;
         }
 
+        /* ENHANCED INPUT FIELDS */
+        .enhanced-inputs {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .input-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .input-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .input-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .input-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .radio-label:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--primary);
+        }
+
+        .radio-label input[type="radio"] {
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+
+        .radio-label input[type="radio"]:checked + span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-label:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--primary);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .slider-container {
+            position: relative;
+        }
+
+        .input-slider {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .input-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .input-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .slider-value {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(67, 133, 245, 0.2);
+            border-radius: 6px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .input-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* VOICE WAVE ANIMATION */
         .voice-wave {
             display: inline-flex;
@@ -1407,7 +1687,12 @@
     <!-- API Configuration Modal -->
     <div class="config-modal" id="configModal">
         <div class="config-card">
-            <h2>⚙️ API Configuration</h2>
+            <h2>
+                <svg class="icon-svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 8px;">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>
+                API Configuration
+            </h2>
 
             <div class="config-input-group">
                 <label for="openaiKey">OpenAI API Key</label>
@@ -1418,8 +1703,21 @@
                 <label for="ttsProvider">TTS Provider</label>
                 <select id="ttsProvider" class="config-select">
                     <option value="browser">Browser Speech Synthesis (Free)</option>
+                    <option value="openai">OpenAI TTS (Premium)</option>
                     <option value="elevenlabs">ElevenLabs (Premium)</option>
                     <option value="google">Google Cloud TTS (Premium)</option>
+                </select>
+            </div>
+
+            <div class="config-input-group" id="openaiVoiceGroup" style="display:none;">
+                <label for="openaiVoice">OpenAI Voice Style</label>
+                <select id="openaiVoice" class="config-select">
+                    <option value="alloy">Alloy (Neutral)</option>
+                    <option value="echo">Echo (Male)</option>
+                    <option value="fable">Fable (British Male)</option>
+                    <option value="onyx">Onyx (Deep Male)</option>
+                    <option value="nova">Nova (Female)</option>
+                    <option value="shimmer">Shimmer (Soft Female)</option>
                 </select>
             </div>
 
@@ -1654,7 +1952,90 @@
             <!-- STEP 3: IMPACT -->
             <div class="step-content" id="step3">
                 <h2 class="step-title" id="step3Title">How does it affect your daily life?</h2>
-                <p class="step-description" id="step3Description">Select all activities that are difficult</p>
+                <p class="step-description" id="step3Description">Provide detailed information about your pain</p>
+
+                <!-- ENHANCED INPUT FIELDS -->
+                <div class="enhanced-inputs">
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label class="input-label">Pain Frequency</label>
+                            <select id="painFrequency" class="input-select">
+                                <option value="">Select frequency</option>
+                                <option value="occasional">Occasional (1-2 times/week)</option>
+                                <option value="frequent">Frequent (3-5 times/week)</option>
+                                <option value="constant">Constant (Daily/All day)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Pain Type</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="painType" value="dull">
+                                    <span>Dull/Aching</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="painType" value="sharp">
+                                    <span>Sharp/Stabbing</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="painType" value="throbbing">
+                                    <span>Throbbing</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="painType" value="burning">
+                                    <span>Burning/Tingling</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Duration in Months</label>
+                        <div class="slider-container">
+                            <input type="range" id="durationMonths" min="1" max="12" value="3" class="input-slider">
+                            <div class="slider-value" id="durationValue">3 months</div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Activity Triggers (Check all that apply)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="activityTrigger" value="walking">
+                                <span>Walking</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="activityTrigger" value="sitting">
+                                <span>Sitting</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="activityTrigger" value="sleeping">
+                                <span>Sleeping/Lying down</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="activityTrigger" value="exercise">
+                                <span>Exercise/Physical activity</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="activityTrigger" value="standing">
+                                <span>Standing</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="activityTrigger" value="bending">
+                                <span>Bending/Lifting</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Additional Notes (Optional)</label>
+                        <textarea id="additionalNotes" class="input-textarea" rows="3" placeholder="Any other symptoms, medications, or relevant information..."></textarea>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title" style="margin-top: 2rem;">How does it affect you?</h3>
+                <p class="step-description">Select all activities that are difficult</p>
                 <div class="options-grid">
                     <div class="option-card" data-activity="work" onclick="toggleActivity('work')">
                         <div class="option-icon">
@@ -1832,6 +2213,11 @@
             intensityLabel: 'moderate',
             duration: null,
             activities: [],
+            painFrequency: '',
+            painType: '',
+            durationMonths: 3,
+            activityTriggers: [],
+            additionalNotes: '',
             currentStep: 1,
             totalSteps: 4,
             currentLanguage: 'en',
@@ -1853,6 +2239,11 @@
             tts: {
                 provider: localStorage.getItem('tts_provider') || 'browser',
                 key: localStorage.getItem('tts_api_key') || '',
+                openai: {
+                    endpoint: 'https://api.openai.com/v1/audio/speech',
+                    voice: localStorage.getItem('openai_tts_voice') || 'alloy',
+                    model: 'tts-1'
+                },
                 elevenlabs: {
                     endpoint: 'https://api.elevenlabs.io/v1/text-to-speech',
                     voiceId: '21m00Tcm4TlvDq8ikWAM'
@@ -1923,19 +2314,51 @@
             document.getElementById('configModal').classList.add('active');
             document.getElementById('openaiKey').value = API_CONFIG.openai.key;
             document.getElementById('ttsProvider').value = API_CONFIG.tts.provider;
+            document.getElementById('openaiVoice').value = API_CONFIG.tts.openai.voice;
 
-            if (API_CONFIG.tts.provider !== 'browser') {
+            // Show/hide OpenAI voice selector
+            const openaiVoiceGroup = document.getElementById('openaiVoiceGroup');
+            if (API_CONFIG.tts.provider === 'openai') {
+                openaiVoiceGroup.style.display = 'block';
+            } else {
+                openaiVoiceGroup.style.display = 'none';
+            }
+
+            // Show/hide TTS key field
+            if (API_CONFIG.tts.provider !== 'browser' && API_CONFIG.tts.provider !== 'openai') {
                 document.getElementById('ttsKeyGroup').style.display = 'block';
                 document.getElementById('ttsKey').value = API_CONFIG.tts.key;
+            } else {
+                document.getElementById('ttsKeyGroup').style.display = 'none';
             }
         }
 
         document.getElementById('ttsProvider')?.addEventListener('change', function(e) {
             const ttsKeyGroup = document.getElementById('ttsKeyGroup');
-            if (e.target.value === 'browser') {
+            const openaiVoiceGroup = document.getElementById('openaiVoiceGroup');
+
+            // Show OpenAI voice selector only when OpenAI TTS is selected
+            if (e.target.value === 'openai') {
+                openaiVoiceGroup.style.display = 'block';
+                ttsKeyGroup.style.display = 'none';
+            } else {
+                openaiVoiceGroup.style.display = 'none';
+            }
+
+            // Show TTS key field for ElevenLabs and Google Cloud
+            if (e.target.value === 'browser' || e.target.value === 'openai') {
                 ttsKeyGroup.style.display = 'none';
             } else {
                 ttsKeyGroup.style.display = 'block';
+            }
+        });
+
+        // Duration slider update
+        document.getElementById('durationMonths')?.addEventListener('input', function(e) {
+            const value = e.target.value;
+            const durationValue = document.getElementById('durationValue');
+            if (durationValue) {
+                durationValue.textContent = value === '1' ? '1 month' : `${value} months`;
             }
         });
 
@@ -1943,6 +2366,7 @@
             const openaiKey = document.getElementById('openaiKey').value.trim();
             const ttsProvider = document.getElementById('ttsProvider').value;
             const ttsKey = document.getElementById('ttsKey').value.trim();
+            const openaiVoice = document.getElementById('openaiVoice').value;
 
             if (!openaiKey) {
                 alert('Please enter your OpenAI API key');
@@ -1951,13 +2375,16 @@
 
             localStorage.setItem('openai_api_key', openaiKey);
             localStorage.setItem('tts_provider', ttsProvider);
-            if (ttsProvider !== 'browser') {
+            localStorage.setItem('openai_tts_voice', openaiVoice);
+
+            if (ttsProvider !== 'browser' && ttsProvider !== 'openai') {
                 localStorage.setItem('tts_api_key', ttsKey);
             }
 
             API_CONFIG.openai.key = openaiKey;
             API_CONFIG.tts.provider = ttsProvider;
             API_CONFIG.tts.key = ttsKey;
+            API_CONFIG.tts.openai.voice = openaiVoice;
 
             document.getElementById('configModal').classList.remove('active');
             speak('Configuration saved successfully');
@@ -2016,29 +2443,53 @@
         }
 
         function buildPhysiotherapyPrompt() {
-            return `You are an expert physiotherapist AI assistant. Analyze the following patient pain assessment and provide professional insights.
+            const frequencyText = assessmentData.painFrequency ? `\n- Pain Frequency: ${assessmentData.painFrequency}` : '';
+            const painTypeText = assessmentData.painType ? `\n- Pain Type: ${assessmentData.painType}` : '';
+            const durationMonthsText = assessmentData.durationMonths ? `\n- Duration in Months: ${assessmentData.durationMonths} month(s)` : '';
+            const triggersText = assessmentData.activityTriggers.length > 0 ? `\n- Activity Triggers: ${assessmentData.activityTriggers.join(', ')}` : '';
+            const notesText = assessmentData.additionalNotes ? `\n- Additional Notes: ${assessmentData.additionalNotes}` : '';
+
+            return `You are an expert physiotherapist AI assistant with years of clinical experience. Analyze the following comprehensive patient pain assessment and provide professional, evidence-based insights.
 
 PATIENT DETAILS:
 - Gender: ${assessmentData.gender}
 - Affected Body Part: ${assessmentData.bodyPart}
 - Pain Intensity: ${assessmentData.intensity}/10 (${assessmentData.intensityLabel})
-- Duration: ${assessmentData.duration}
-- Affected Activities: ${assessmentData.activities.join(', ')}
+- Duration: ${assessmentData.duration}${durationMonthsText}${frequencyText}${painTypeText}${triggersText}
+- Affected Activities: ${assessmentData.activities.join(', ')}${notesText}
 
 INSTRUCTIONS:
-1. Provide a brief initial assessment (2-3 sentences)
-2. Give a likely diagnosis based on the symptoms (be specific but cautious)
-3. Provide a realistic recovery timeline with milestones
-4. Suggest a treatment plan including exercises and therapy recommendations
-5. List important precautions and red flags to watch for
+Based on this detailed information, provide a comprehensive analysis:
 
-Format your response in 4 sections with clear headers:
+1. **Initial Assessment**: Give a brief clinical impression (2-3 sentences) considering pain type, frequency, and triggers.
+
+2. **Likely Diagnosis**: Provide 1-2 possible diagnoses based on:
+   - Pain location and type (${assessmentData.painType || 'not specified'})
+   - Frequency pattern (${assessmentData.painFrequency || 'not specified'})
+   - Activity triggers and aggravating factors
+   - Duration and progression
+   Be specific but include appropriate medical disclaimers.
+
+3. **Recovery Timeline**: Provide a realistic timeline with:
+   - Expected recovery duration
+   - Key milestones (week 2, week 4, week 8, etc.)
+   - Factors that may speed up or slow recovery
+   - Confidence level in the timeline
+
+4. **Treatment Plan**: Recommend:
+   - Specific exercises (with frequency/duration)
+   - Physical therapy modalities
+   - Lifestyle modifications
+   - When to seek immediate medical attention
+   - Self-care strategies
+
+Format your response in 4 clear sections with headers:
 - Initial Assessment
 - Diagnosis & Analysis
 - Recovery Timeline
 - Treatment Plan
 
-Keep each section concise and patient-friendly. Use professional but accessible language.`;
+Keep each section concise, evidence-based, and patient-friendly. Use professional but accessible language.`;
         }
 
         // ==================== TEXT-TO-SPEECH ====================
@@ -2049,6 +2500,8 @@ Keep each section concise and patient-friendly. Use professional but accessible 
 
             if (provider === 'browser') {
                 speakBrowser(text);
+            } else if (provider === 'openai' && API_CONFIG.openai.key) {
+                await speakOpenAI(text);
             } else if (provider === 'elevenlabs' && API_CONFIG.tts.key) {
                 await speakElevenLabs(text);
             } else if (provider === 'google' && API_CONFIG.tts.key) {
@@ -2071,6 +2524,37 @@ Keep each section concise and patient-friendly. Use professional but accessible 
                 }
 
                 speechSynthesis.speak(utterance);
+            }
+        }
+
+        async function speakOpenAI(text) {
+            try {
+                const response = await fetch(API_CONFIG.tts.openai.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.openai.key}`
+                    },
+                    body: JSON.stringify({
+                        model: API_CONFIG.tts.openai.model,
+                        voice: API_CONFIG.tts.openai.voice,
+                        input: text,
+                        speed: 1.0
+                    })
+                });
+
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    playAudioUrl(audioUrl);
+                } else {
+                    const errorText = await response.text();
+                    console.error('OpenAI TTS error:', errorText);
+                    speakBrowser(text);
+                }
+            } catch (error) {
+                console.error('Error with OpenAI TTS:', error);
+                speakBrowser(text);
             }
         }
 
@@ -2313,6 +2797,21 @@ Keep each section concise and patient-friendly. Use professional but accessible 
             const currentStep = assessmentData.currentStep;
 
             if (currentStep === 3) {
+                // Collect enhanced input fields before AI analysis
+                const painFrequency = document.getElementById('painFrequency')?.value || '';
+                const painType = document.querySelector('input[name="painType"]:checked')?.value || '';
+                const durationMonths = document.getElementById('durationMonths')?.value || 3;
+                const activityTriggers = Array.from(document.querySelectorAll('input[name="activityTrigger"]:checked'))
+                    .map(el => el.value);
+                const additionalNotes = document.getElementById('additionalNotes')?.value || '';
+
+                assessmentData.painFrequency = painFrequency;
+                assessmentData.painType = painType;
+                assessmentData.durationMonths = parseInt(durationMonths);
+                assessmentData.activityTriggers = activityTriggers;
+                assessmentData.additionalNotes = additionalNotes;
+
+                saveSession();
                 runAIAnalysis();
                 return;
             }
@@ -2403,13 +2902,19 @@ Keep each section concise and patient-friendly. Use professional but accessible 
         function updateNextButton() {
             const step = assessmentData.currentStep;
             const nextBtnText = document.getElementById('nextBtnText');
+            const nextBtn = document.getElementById('nextBtn');
 
             if (step === 3) {
                 nextBtnText.textContent = 'Analyze My Pain';
+                if (nextBtn && !nextBtn.disabled) {
+                    nextBtn.classList.add('pulse');
+                }
             } else if (step === 4) {
                 nextBtnText.textContent = 'Book Consultation';
+                if (nextBtn) nextBtn.classList.remove('pulse');
             } else {
                 nextBtnText.textContent = 'Continue';
+                if (nextBtn) nextBtn.classList.remove('pulse');
             }
         }
 
@@ -2469,10 +2974,10 @@ Keep each section concise and patient-friendly. Use professional but accessible 
             const messages = [];
 
             const sections = [
-                { title: 'Initial Assessment', icon: '🎯' },
-                { title: 'Diagnosis & Analysis', icon: '📊' },
-                { title: 'Recovery Timeline', icon: '⏱️' },
-                { title: 'Treatment Plan', icon: '💊' }
+                { title: 'Initial Assessment', icon: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>' },
+                { title: 'Diagnosis & Analysis', icon: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>' },
+                { title: 'Recovery Timeline', icon: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>' },
+                { title: 'Treatment Plan', icon: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>' }
             ];
 
             sections.forEach(section => {
@@ -2489,7 +2994,7 @@ Keep each section concise and patient-friendly. Use professional but accessible 
 
             if (messages.length === 0) {
                 messages.push({
-                    title: '🤖 AI Analysis',
+                    title: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zM7.5 11.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S9.83 13 9 13s-1.5-.67-1.5-1.5zM16 17H8v-2h8v2zm-1-4c-.83 0-1.5-.67-1.5-1.5S14.17 10 15 10s1.5.67 1.5 1.5S15.83 13 15 13z"/></svg> AI Analysis',
                     content: aiText
                 });
             }
@@ -2500,19 +3005,19 @@ Keep each section concise and patient-friendly. Use professional but accessible 
         function getLocalAnalysis() {
             return [
                 {
-                    title: '🎯 Initial Assessment',
+                    title: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Initial Assessment',
                     content: `Based on your ${assessmentData.intensityLabel} ${assessmentData.bodyPart} pain that's been present for ${assessmentData.duration}, I've analyzed your condition. The fact that it affects ${assessmentData.activities.join(', ')} suggests we need to address this carefully.`
                 },
                 {
-                    title: '📊 Diagnosis',
+                    title: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg> Diagnosis',
                     content: `You likely have ${assessmentData.intensityLabel === 'severe' ? 'significant soft tissue involvement' : 'muscle strain or minor soft tissue injury'}. This is common and treatable with proper care. The pattern suggests potential inflammation and possibly some compensatory movement patterns.`
                 },
                 {
-                    title: '⏱️ Recovery Timeline',
+                    title: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> Recovery Timeline',
                     content: `Expected recovery: ${assessmentData.intensityLabel === 'severe' ? '6-12 weeks' : '2-4 weeks'} with consistent treatment. Most patients see significant improvement within the first 2 weeks. Week 1-2: Pain reduction, Week 3-4: Function restoration, Beyond: Strengthening phase.`
                 },
                 {
-                    title: '💊 Treatment Plan',
+                    title: '<svg viewBox="0 0 24 24" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;fill:currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg> Treatment Plan',
                     content: "I recommend: 1) Professional physiotherapy evaluation, 2) Targeted strengthening exercises (progressive loading), 3) Pain management techniques (ice/heat therapy), 4) Lifestyle modifications to avoid aggravating activities, 5) Gradual return to normal function."
                 }
             ];
