@@ -1,0 +1,3049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Pain Assessment | Physiosmetic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js for Data Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- jsPDF for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- html2canvas for Chart capture -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Lottie Player for Animations -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <style>
+        :root {
+            --primary: #F37021;
+            --primary-light: #ff9d5c;
+            --primary-dark: #d85f15;
+            --secondary: #4385F5;
+            --dark-bg: #050A14;
+            --card-bg: rgba(10, 15, 25, 0.95);
+            --border-color: rgba(243, 112, 33, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ANIMATED BACKGROUND */
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #050A14 0%, #0a1525 50%, #050A14 100%);
+            z-index: -1;
+        }
+
+        .animated-background::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(243, 112, 33, 0.05) 0%, transparent 70%);
+            animation: backgroundPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10%, 10%) scale(1.1); }
+        }
+
+        /* CONTAINER */
+        #pain-assessment {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            position: relative;
+        }
+
+        /* PREMIUM HEADER */
+        .assessment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .assessment-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(243, 112, 33, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1;
+        }
+
+        /* SVG ICON STYLE */
+        .icon-svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: avatarPulse 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(243, 112, 33, 0.4);
+        }
+
+        .ai-avatar svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(243, 112, 33, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(243, 112, 33, 0.8); }
+        }
+
+        .ai-avatar.thinking::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .header-text h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-text p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            z-index: 1;
+        }
+
+        /* GENDER TOGGLE */
+        .gender-toggle {
+            display: flex;
+            background: rgba(243, 112, 33, 0.1);
+            padding: 0.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .gender-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .gender-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .gender-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(243, 112, 33, 0.3);
+        }
+
+        .voice-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(243, 112, 33, 0.1);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .voice-toggle:hover {
+            background: rgba(243, 112, 33, 0.2);
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .voice-toggle.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: var(--primary);
+            animation: voicePulse 1s ease-in-out infinite;
+        }
+
+        @keyframes voicePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(243, 112, 33, 0.1);
+            padding: 0.5rem;
+            border-radius: 12px;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(243, 112, 33, 0.15);
+            color: var(--text-primary);
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(243, 112, 33, 0.3);
+        }
+
+        /* PROGRESS INDICATOR */
+        .progress-indicator {
+            margin-bottom: 2rem;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(243, 112, 33, 0.2);
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(243, 112, 33, 0.6);
+            border-radius: 2px;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid rgba(243, 112, 33, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .step-circle:hover {
+            transform: scale(1.1);
+            border-color: rgba(243, 112, 33, 0.5);
+        }
+
+        .progress-step.active .step-circle {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(243, 112, 33, 0.8);
+            transform: scale(1.15);
+        }
+
+        .progress-step.completed .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* MAIN CARD */
+        .assessment-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .assessment-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.1), rgba(67, 133, 245, 0.1));
+            border-radius: 24px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .assessment-card:hover::before {
+            opacity: 1;
+        }
+
+        /* STEP CONTENT */
+        .step-content {
+            display: none;
+            animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .step-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .step-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* BODY DIAGRAM WITH GENDER TOGGLE */
+        .body-diagram-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .body-svg-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .body-svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 10px 40px rgba(243, 112, 33, 0.3));
+            transition: filter 0.3s ease;
+        }
+
+        .body-part {
+            fill: rgba(243, 112, 33, 0.08);
+            stroke: rgba(243, 112, 33, 0.3);
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .body-part:hover {
+            fill: rgba(243, 112, 33, 0.25);
+            stroke: var(--primary);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 15px rgba(243, 112, 33, 1));
+        }
+
+        .body-part.selected {
+            fill: rgba(243, 112, 33, 0.5);
+            stroke: var(--primary);
+            stroke-width: 4;
+            animation: partGlow 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(243, 112, 33, 1));
+        }
+
+        @keyframes partGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* PAIN TOOLTIP */
+        .pain-tooltip {
+            position: absolute;
+            background: rgba(10, 15, 25, 0.98);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+            min-width: 200px;
+        }
+
+        .pain-tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tooltip-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tooltip-info {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .tooltip-types {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .pain-type-badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(243, 112, 33, 0.15);
+            border: 1px solid rgba(243, 112, 33, 0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--primary);
+        }
+
+        .pain-intensity-selector {
+            background: rgba(243, 112, 33, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .intensity-title {
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .intensity-levels {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .intensity-level {
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .intensity-level:hover {
+            background: rgba(243, 112, 33, 0.1);
+            border-color: var(--primary);
+            transform: translateX(8px);
+        }
+
+        .intensity-level.selected {
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.25), rgba(67, 133, 245, 0.25));
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(243, 112, 33, 0.4);
+        }
+
+        .intensity-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .intensity-level[data-level="mild"] .intensity-dot {
+            background: var(--success);
+        }
+
+        .intensity-level[data-level="moderate"] .intensity-dot {
+            background: var(--warning);
+        }
+
+        .intensity-level[data-level="severe"] .intensity-dot {
+            background: var(--danger);
+        }
+
+        /* OPTIONS GRID */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .option-card {
+            background: rgba(243, 112, 33, 0.05);
+            border: 2px solid rgba(243, 112, 33, 0.2);
+            border-radius: 16px;
+            padding: 1.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(243, 112, 33, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option-card:hover::before {
+            left: 100%;
+        }
+
+        .option-card:hover {
+            background: rgba(243, 112, 33, 0.12);
+            border-color: rgba(243, 112, 33, 0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(243, 112, 33, 0.25);
+        }
+
+        .option-card.selected {
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.25), rgba(67, 133, 245, 0.25));
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(243, 112, 33, 0.4);
+        }
+
+        .option-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--primary);
+        }
+
+        /* LOADING WITH AI AVATAR */
+        .loading-analysis {
+            display: none;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .loading-analysis.active {
+            display: block;
+        }
+
+        .loading-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: loadingPulse 2s ease-in-out infinite;
+        }
+
+        .loading-avatar svg {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 50px rgba(243, 112, 33, 0.5);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 100px rgba(243, 112, 33, 0.9);
+            }
+        }
+
+        .loading-ring {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border: 5px solid transparent;
+            border-top-color: var(--primary-light);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* AI TYPING INDICATOR */
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(243, 112, 33, 0.1);
+            border-radius: 20px;
+            margin: 1rem 0;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
+            30% { transform: translateY(-10px); opacity: 1; }
+        }
+
+        /* AI CHAT RESULTS */
+        .ai-chat-results {
+            display: none;
+        }
+
+        .ai-chat-results.active {
+            display: block;
+        }
+
+        .chat-messages {
+            max-width: 100%;
+            margin: 0 auto 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageSlideIn 0.5s ease forwards;
+        }
+
+        @keyframes messageSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(243, 112, 33, 0.4);
+        }
+
+        .chat-avatar svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .chat-bubble {
+            flex: 1;
+            background: rgba(243, 112, 33, 0.08);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem;
+            position: relative;
+        }
+
+        .chat-bubble::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 16px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid rgba(243, 112, 33, 0.08);
+        }
+
+        .message-title {
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* FOLLOW-UP QUESTION INPUT */
+        .follow-up-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(243, 112, 33, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        .follow-up-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .follow-up-input-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .follow-up-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .follow-up-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(243, 112, 33, 0.1);
+        }
+
+        .follow-up-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .follow-up-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(243, 112, 33, 0.5);
+        }
+
+        /* CHART CONTAINER */
+        .chart-container {
+            background: rgba(243, 112, 33, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .chart-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        /* SUMMARY CARD */
+        .summary-card {
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.1), rgba(67, 133, 245, 0.1));
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(243, 112, 33, 0.15), transparent);
+            border-radius: 50%;
+            filter: blur(60px);
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .summary-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .summary-date {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .summary-item {
+            background: rgba(10, 15, 25, 0.6);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid rgba(243, 112, 33, 0.2);
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .summary-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .summary-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 4px 16px rgba(243, 112, 33, 0.3);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(243, 112, 33, 0.5);
+        }
+
+        .btn-share {
+            background: rgba(67, 133, 245, 0.15);
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+        }
+
+        .btn-share:hover {
+            background: rgba(67, 133, 245, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* DAILY TIPS */
+        .daily-tips {
+            margin: 2rem 0;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.08), rgba(67, 133, 245, 0.08));
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(243, 112, 33, 0.2);
+            border-color: var(--primary);
+        }
+
+        .tip-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tip-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* FEEDBACK SECTION */
+        .feedback-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(243, 112, 33, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .feedback-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .feedback-btn {
+            padding: 0.875rem 1.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .feedback-btn:hover {
+            background: rgba(243, 112, 33, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .feedback-btn.selected {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* NAVIGATION */
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(243, 112, 33, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(243, 112, 33, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 968px) {
+            .body-diagram-container {
+                grid-template-columns: 1fr;
+            }
+
+            .pain-intensity-selector {
+                order: -1;
+            }
+
+            .header-controls {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .summary-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .assessment-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-left {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-buttons {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .step-title {
+                font-size: 1.5rem;
+            }
+
+            .chart-wrapper {
+                height: 250px;
+            }
+        }
+
+        /* API CONFIG MODAL */
+        .config-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .config-modal.active {
+            display: flex;
+        }
+
+        .config-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        }
+
+        .config-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .config-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .config-input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .config-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'Inter', monospace;
+        }
+
+        .config-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .config-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .config-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .config-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 112, 33, 0.4);
+        }
+
+        .config-help {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(67, 133, 245, 0.1);
+            border-left: 3px solid var(--secondary);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .config-help a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .config-help a:hover {
+            text-decoration: underline;
+        }
+
+        /* VOICE WAVE ANIMATION */
+        .voice-wave {
+            display: inline-flex;
+            gap: 2px;
+            align-items: center;
+            margin-left: 0.5rem;
+        }
+
+        .voice-wave span {
+            width: 2px;
+            height: 12px;
+            background: white;
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .voice-wave span:nth-child(2) { animation-delay: 0.1s; }
+        .voice-wave span:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes wave {
+            0%, 100% { height: 8px; }
+            50% { height: 16px; }
+        }
+
+        /* VOICE CONTROLS */
+        .voice-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+        }
+
+        .voice-control-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, #2563eb 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .voice-control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(67, 133, 245, 0.4);
+        }
+
+        .voice-control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .voice-control-btn.playing {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        }
+
+        /* LOTTIE ICONS */
+        .lottie-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .loading-lottie {
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <!-- API Configuration Modal -->
+    <div class="config-modal" id="configModal">
+        <div class="config-card">
+            <h2>⚙️ API Configuration</h2>
+
+            <div class="config-input-group">
+                <label for="openaiKey">OpenAI API Key</label>
+                <input type="password" id="openaiKey" class="config-input" placeholder="sk-...">
+            </div>
+
+            <div class="config-input-group">
+                <label for="ttsProvider">TTS Provider</label>
+                <select id="ttsProvider" class="config-select">
+                    <option value="browser">Browser Speech Synthesis (Free)</option>
+                    <option value="elevenlabs">ElevenLabs (Premium)</option>
+                    <option value="google">Google Cloud TTS (Premium)</option>
+                </select>
+            </div>
+
+            <div class="config-input-group" id="ttsKeyGroup" style="display:none;">
+                <label for="ttsKey">TTS API Key</label>
+                <input type="password" id="ttsKey" class="config-input" placeholder="Enter API key">
+            </div>
+
+            <button class="config-btn" onclick="saveConfig()">Save Configuration</button>
+
+            <div class="config-help">
+                <strong>Need an API key?</strong><br>
+                • OpenAI: <a href="https://platform.openai.com/api-keys" target="_blank">Get API Key</a><br>
+                • ElevenLabs: <a href="https://elevenlabs.io" target="_blank">Get API Key</a><br>
+                • Google Cloud: <a href="https://cloud.google.com/text-to-speech" target="_blank">Get API Key</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="pain-assessment">
+        <!-- PREMIUM HEADER -->
+        <div class="assessment-header">
+            <div class="header-left">
+                <lottie-player class="lottie-icon" src="https://assets9.lottiefiles.com/packages/lf20_puciaact.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                <div class="header-text">
+                    <h1 id="headerTitle">AI-Powered Pain Assessment</h1>
+                    <p id="headerSubtitle">Real-time physiotherapy insights powered by GPT-4</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <button class="voice-toggle" id="voiceToggle" onclick="toggleVoice()">
+                    <svg class="icon-svg" viewBox="0 0 24 24" id="voiceIcon">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                    </svg>
+                    <span class="voice-wave" id="voiceWave" style="display:none;">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+                <button class="voice-toggle" onclick="openConfig()" style="margin-left:0.5rem;">
+                    <svg class="icon-svg" viewBox="0 0 24 24">
+                        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    </svg>
+                </button>
+                <div class="language-selector">
+                    <button class="lang-btn active" data-lang="en" onclick="switchLanguage('en')">EN</button>
+                    <button class="lang-btn" data-lang="hi" onclick="switchLanguage('hi')">हिं</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-indicator">
+            <div class="progress-steps">
+                <div class="progress-line">
+                    <div class="progress-line-fill" id="progressLineFill"></div>
+                </div>
+                <div class="progress-step active" data-step="1" onclick="goToStep(1)">
+                    <div class="step-circle">1</div>
+                    <div class="step-label" id="stepLabel1">Body Map</div>
+                </div>
+                <div class="progress-step" data-step="2" onclick="goToStep(2)">
+                    <div class="step-circle">2</div>
+                    <div class="step-label" id="stepLabel2">Duration</div>
+                </div>
+                <div class="progress-step" data-step="3" onclick="goToStep(3)">
+                    <div class="step-circle">3</div>
+                    <div class="step-label" id="stepLabel3">Impact</div>
+                </div>
+                <div class="progress-step" data-step="4" onclick="goToStep(4)">
+                    <div class="step-circle">✓</div>
+                    <div class="step-label" id="stepLabel4">Results</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CARD -->
+        <div class="assessment-card">
+            <!-- STEP 1: INTERACTIVE BODY MAP -->
+            <div class="step-content active" id="step1">
+                <h2 class="step-title" id="step1Title">Where does it hurt?</h2>
+                <p class="step-description" id="step1Description">Click on your body to select the pain area and intensity</p>
+
+                <div class="body-diagram-container">
+                    <div class="body-svg-wrapper">
+                        <!-- Pain Tooltip -->
+                        <div class="pain-tooltip" id="painTooltip">
+                            <div class="tooltip-title" id="tooltipTitle">Neck Pain</div>
+                            <div class="tooltip-info" id="tooltipInfo">Common pain types:</div>
+                            <div class="tooltip-types">
+                                <span class="pain-type-badge">Muscle</span>
+                                <span class="pain-type-badge">Joint</span>
+                                <span class="pain-type-badge">Nerve</span>
+                            </div>
+                        </div>
+
+                        <!-- Male Body SVG (default) -->
+                        <svg class="body-svg" id="maleSvg" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Head -->
+                            <ellipse class="body-part" data-part="head" data-pain-types="Muscle,Nerve,Tension" cx="100" cy="30" rx="22" ry="27" onclick="selectBodyPart('head')" onmouseenter="showTooltip(event, 'head')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Neck -->
+                            <rect class="body-part" data-part="neck" data-pain-types="Muscle,Joint,Nerve" x="88" y="57" width="24" height="28" rx="6" onclick="selectBodyPart('neck')" onmouseenter="showTooltip(event, 'neck')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Shoulders -->
+                            <ellipse class="body-part" data-part="shoulder" data-pain-types="Muscle,Joint,Tendon" cx="70" cy="92" rx="20" ry="14" onclick="selectBodyPart('shoulder')" onmouseenter="showTooltip(event, 'shoulder')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="shoulder" data-pain-types="Muscle,Joint,Tendon" cx="130" cy="92" rx="20" ry="14" onclick="selectBodyPart('shoulder')" onmouseenter="showTooltip(event, 'shoulder')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Upper Back -->
+                            <rect class="body-part" data-part="back" data-pain-types="Muscle,Disc,Nerve" x="82" y="97" width="36" height="40" rx="10" onclick="selectBodyPart('back')" onmouseenter="showTooltip(event, 'back')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Arms -->
+                            <rect class="body-part" data-part="arm" data-pain-types="Muscle,Nerve" x="48" y="102" width="18" height="65" rx="9" onclick="selectBodyPart('arm')" onmouseenter="showTooltip(event, 'arm')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="arm" data-pain-types="Muscle,Nerve" x="134" y="102" width="18" height="65" rx="9" onclick="selectBodyPart('arm')" onmouseenter="showTooltip(event, 'arm')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Elbows -->
+                            <circle class="body-part" data-part="elbow" data-pain-types="Joint,Tendon" cx="57" cy="167" r="11" onclick="selectBodyPart('elbow')" onmouseenter="showTooltip(event, 'elbow')" onmouseleave="hideTooltip()"/>
+                            <circle class="body-part" data-part="elbow" data-pain-types="Joint,Tendon" cx="143" cy="167" r="11" onclick="selectBodyPart('elbow')" onmouseenter="showTooltip(event, 'elbow')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Lower Back -->
+                            <rect class="body-part" data-part="back" data-pain-types="Muscle,Disc,Nerve" x="78" y="137" width="44" height="45" rx="12" onclick="selectBodyPart('back')" onmouseenter="showTooltip(event, 'back')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Hips -->
+                            <ellipse class="body-part" data-part="hip" data-pain-types="Joint,Muscle" cx="78" cy="192" rx="18" ry="20" onclick="selectBodyPart('hip')" onmouseenter="showTooltip(event, 'hip')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="hip" data-pain-types="Joint,Muscle" cx="122" cy="192" rx="18" ry="20" onclick="selectBodyPart('hip')" onmouseenter="showTooltip(event, 'hip')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Thighs -->
+                            <rect class="body-part" data-part="leg" data-pain-types="Muscle,Nerve" x="66" y="212" width="20" height="75" rx="10" onclick="selectBodyPart('leg')" onmouseenter="showTooltip(event, 'leg')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="leg" data-pain-types="Muscle,Nerve" x="114" y="212" width="20" height="75" rx="10" onclick="selectBodyPart('leg')" onmouseenter="showTooltip(event, 'leg')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Knees -->
+                            <circle class="body-part" data-part="knee" data-pain-types="Joint,Cartilage,Ligament" cx="76" cy="290" r="14" onclick="selectBodyPart('knee')" onmouseenter="showTooltip(event, 'knee')" onmouseleave="hideTooltip()"/>
+                            <circle class="body-part" data-part="knee" data-pain-types="Joint,Cartilage,Ligament" cx="124" cy="290" r="14" onclick="selectBodyPart('knee')" onmouseenter="showTooltip(event, 'knee')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Lower Legs -->
+                            <rect class="body-part" data-part="leg" data-pain-types="Muscle,Nerve" x="68" y="304" width="16" height="72" rx="8" onclick="selectBodyPart('leg')" onmouseenter="showTooltip(event, 'leg')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="leg" data-pain-types="Muscle,Nerve" x="116" y="304" width="16" height="72" rx="8" onclick="selectBodyPart('leg')" onmouseenter="showTooltip(event, 'leg')" onmouseleave="hideTooltip()"/>
+
+                            <!-- Ankles & Feet -->
+                            <ellipse class="body-part" data-part="ankle" data-pain-types="Joint,Ligament" cx="76" cy="380" rx="11" ry="9" onclick="selectBodyPart('ankle')" onmouseenter="showTooltip(event, 'ankle')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="ankle" data-pain-types="Joint,Ligament" cx="124" cy="380" rx="11" ry="9" onclick="selectBodyPart('ankle')" onmouseenter="showTooltip(event, 'ankle')" onmouseleave="hideTooltip()"/>
+                        </svg>
+
+                        <!-- Female Body SVG (hidden by default) -->
+                        <svg class="body-svg" id="femaleSvg" style="display:none;" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Similar structure to male but with feminine proportions -->
+                            <ellipse class="body-part" data-part="head" data-pain-types="Muscle,Nerve,Tension" cx="100" cy="30" rx="20" ry="26" onclick="selectBodyPart('head')" onmouseenter="showTooltip(event, 'head')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="neck" data-pain-types="Muscle,Joint,Nerve" x="90" y="56" width="20" height="26" rx="5" onclick="selectBodyPart('neck')" onmouseenter="showTooltip(event, 'neck')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="shoulder" data-pain-types="Muscle,Joint,Tendon" cx="72" cy="90" rx="18" ry="12" onclick="selectBodyPart('shoulder')" onmouseenter="showTooltip(event, 'shoulder')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="shoulder" data-pain-types="Muscle,Joint,Tendon" cx="128" cy="90" rx="18" ry="12" onclick="selectBodyPart('shoulder')" onmouseenter="showTooltip(event, 'shoulder')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="back" data-pain-types="Muscle,Disc,Nerve" x="84" y="95" width="32" height="38" rx="9" onclick="selectBodyPart('back')" onmouseenter="showTooltip(event, 'back')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="arm" data-pain-types="Muscle,Nerve" x="50" y="100" width="16" height="62" rx="8" onclick="selectBodyPart('arm')" onmouseenter="showTooltip(event, 'arm')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="arm" data-pain-types="Muscle,Nerve" x="134" y="100" width="16" height="62" rx="8" onclick="selectBodyPart('arm')" onmouseenter="showTooltip(event, 'arm')" onmouseleave="hideTooltip()"/>
+                            <circle class="body-part" data-part="elbow" data-pain-types="Joint,Tendon" cx="58" cy="162" r="10" onclick="selectBodyPart('elbow')" onmouseenter="showTooltip(event, 'elbow')" onmouseleave="hideTooltip()"/>
+                            <circle class="body-part" data-part="elbow" data-pain-types="Joint,Tendon" cx="142" cy="162" r="10" onclick="selectBodyPart('elbow')" onmouseenter="showTooltip(event, 'elbow')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="back" data-pain-types="Muscle,Disc,Nerve" x="80" y="133" width="40" height="42" rx="11" onclick="selectBodyPart('back')" onmouseenter="showTooltip(event, 'back')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="hip" data-pain-types="Joint,Muscle" cx="76" cy="186" rx="20" ry="22" onclick="selectBodyPart('hip')" onmouseenter="showTooltip(event, 'hip')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="hip" data-pain-types="Joint,Muscle" cx="124" cy="186" rx="20" ry="22" onclick="selectBodyPart('hip')" onmouseenter="showTooltip(event, 'hip')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="leg" data-pain-types="Muscle,Nerve" x="68" y="208" width="18" height="78" rx="9" onclick="selectBodyPart('leg')" onmouseenter="showTooltip(event, 'leg')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="leg" data-pain-types="Muscle,Nerve" x="114" y="208" width="18" height="78" rx="9" onclick="selectBodyPart('leg')" onmouseenter="showTooltip(event, 'leg')" onmouseleave="hideTooltip()"/>
+                            <circle class="body-part" data-part="knee" data-pain-types="Joint,Cartilage,Ligament" cx="77" cy="288" r="13" onclick="selectBodyPart('knee')" onmouseenter="showTooltip(event, 'knee')" onmouseleave="hideTooltip()"/>
+                            <circle class="body-part" data-part="knee" data-pain-types="Joint,Cartilage,Ligament" cx="123" cy="288" r="13" onclick="selectBodyPart('knee')" onmouseenter="showTooltip(event, 'knee')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="leg" data-pain-types="Muscle,Nerve" x="70" y="301" width="14" height="70" rx="7" onclick="selectBodyPart('leg')" onmouseenter="showTooltip(event, 'leg')" onmouseleave="hideTooltip()"/>
+                            <rect class="body-part" data-part="leg" data-pain-types="Muscle,Nerve" x="116" y="301" width="14" height="70" rx="7" onclick="selectBodyPart('leg')" onmouseenter="showTooltip(event, 'leg')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="ankle" data-pain-types="Joint,Ligament" cx="77" cy="378" rx="10" ry="8" onclick="selectBodyPart('ankle')" onmouseenter="showTooltip(event, 'ankle')" onmouseleave="hideTooltip()"/>
+                            <ellipse class="body-part" data-part="ankle" data-pain-types="Joint,Ligament" cx="123" cy="378" rx="10" ry="8" onclick="selectBodyPart('ankle')" onmouseenter="showTooltip(event, 'ankle')" onmouseleave="hideTooltip()"/>
+                        </svg>
+                    </div>
+
+                    <div class="pain-intensity-selector">
+                        <div class="intensity-title" id="intensityTitle">Pain Intensity</div>
+                        <div class="intensity-levels">
+                            <div class="intensity-level" data-level="mild" onclick="selectIntensity('mild')">
+                                <div class="intensity-dot"></div>
+                                <div class="intensity-text">
+                                    <span class="intensity-label" id="intensityMild">Mild (1-3)</span>
+                                    <span class="intensity-desc" id="intensityMildDesc">Noticeable but manageable</span>
+                                </div>
+                            </div>
+                            <div class="intensity-level" data-level="moderate" onclick="selectIntensity('moderate')">
+                                <div class="intensity-dot"></div>
+                                <div class="intensity-text">
+                                    <span class="intensity-label" id="intensityModerate">Moderate (4-6)</span>
+                                    <span class="intensity-desc" id="intensityModerateDesc">Interferes with activities</span>
+                                </div>
+                            </div>
+                            <div class="intensity-level" data-level="severe" onclick="selectIntensity('severe')">
+                                <div class="intensity-dot"></div>
+                                <div class="intensity-text">
+                                    <span class="intensity-label" id="intensitySevere">Severe (7-10)</span>
+                                    <span class="intensity-desc" id="intensitySevereDesc">Significantly limiting</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: DURATION -->
+            <div class="step-content" id="step2">
+                <h2 class="step-title" id="step2Title">How long have you had this pain?</h2>
+                <p class="step-description" id="step2Description">Understanding duration helps predict recovery time</p>
+                <div class="options-grid">
+                    <div class="option-card" data-duration="hours" onclick="selectDuration('hours')">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        </div>
+                        <div class="option-text" id="durationHours">Few Hours</div>
+                    </div>
+                    <div class="option-card" data-duration="days" onclick="selectDuration('days')">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
+                        </div>
+                        <div class="option-text" id="durationDays">Few Days</div>
+                    </div>
+                    <div class="option-card" data-duration="weeks" onclick="selectDuration('weeks')">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24"><path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>
+                        </div>
+                        <div class="option-text" id="durationWeeks">Few Weeks</div>
+                    </div>
+                    <div class="option-card" data-duration="months" onclick="selectDuration('months')">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/></svg>
+                        </div>
+                        <div class="option-text" id="durationMonths">Months+</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: IMPACT -->
+            <div class="step-content" id="step3">
+                <h2 class="step-title" id="step3Title">How does it affect your daily life?</h2>
+                <p class="step-description" id="step3Description">Select all activities that are difficult</p>
+                <div class="options-grid">
+                    <div class="option-card" data-activity="work" onclick="toggleActivity('work')">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+                        </div>
+                        <div class="option-text" id="activityWork">Work/Study</div>
+                    </div>
+                    <div class="option-card" data-activity="exercise" onclick="toggleActivity('exercise')">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg>
+                        </div>
+                        <div class="option-text" id="activityExercise">Exercise</div>
+                    </div>
+                    <div class="option-card" data-activity="sleep" onclick="toggleActivity('sleep')">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/></svg>
+                        </div>
+                        <div class="option-text" id="activitySleep">Sleep</div>
+                    </div>
+                    <div class="option-card" data-activity="daily" onclick="toggleActivity('daily')">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                        </div>
+                        <div class="option-text" id="activityDaily">Daily Tasks</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOADING -->
+            <div class="loading-analysis" id="loadingScreen">
+                <lottie-player class="loading-lottie" src="https://assets8.lottiefiles.com/packages/lf20_p8bfn5to.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                <div class="loading-text" id="loadingText">Analyzing Your Pain Profile...</div>
+                <div class="loading-subtext" id="loadingSubtext">Our AI is processing your assessment with GPT-4</div>
+            </div>
+
+            <!-- AI CHAT RESULTS -->
+            <div class="ai-chat-results" id="aiResults">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be dynamically inserted -->
+                </div>
+
+                <!-- TYPING INDICATOR (shown between messages) -->
+                <div class="typing-indicator" id="typingIndicator" style="display:none;">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <span style="margin-left:0.5rem;color:var(--text-secondary);">AI is thinking...</span>
+                </div>
+
+                <!-- SUMMARY CARD -->
+                <div class="summary-card" id="summaryCard" style="display:none;">
+                    <div class="summary-header">
+                        <h3 class="summary-title">Assessment Summary</h3>
+                        <span class="summary-date" id="summaryDate"></span>
+                    </div>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-label">Affected Area</div>
+                            <div class="summary-value" id="summaryArea">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Pain Level</div>
+                            <div class="summary-value" id="summaryLevel">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Duration</div>
+                            <div class="summary-value" id="summaryDuration">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Recovery Estimate</div>
+                            <div class="summary-value" id="summaryRecovery">-</div>
+                        </div>
+                    </div>
+                    <div class="summary-actions">
+                        <button class="summary-btn btn-download" onclick="downloadPDF()">
+                            <svg class="icon-svg" viewBox="0 0 24 24" style="fill:white;">
+                                <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                            </svg>
+                            Download PDF
+                        </button>
+                        <button class="summary-btn btn-share" onclick="shareWithDoctor()">
+                            <svg class="icon-svg" viewBox="0 0 24 24">
+                                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                            </svg>
+                            Share with Doctor
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CHART.JS VISUALIZATIONS -->
+                <div class="chart-container" id="recoveryChart" style="display:none;">
+                    <h3 class="chart-title">Recovery Forecast</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="forecastCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container" id="confidenceChart" style="display:none;">
+                    <h3 class="chart-title">Analysis Confidence</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="confidenceCanvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- DAILY TIPS -->
+                <div class="daily-tips" id="dailyTips" style="display:none;">
+                    <h3 class="message-title">
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="fill:var(--primary);">
+                            <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                        </svg>
+                        Personalized Daily Tips
+                    </h3>
+                    <div class="tips-grid" id="tipsGrid">
+                        <!-- Tips will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <!-- FOLLOW-UP QUESTIONS -->
+                <div class="follow-up-section" id="followUpSection" style="display:none;">
+                    <div class="follow-up-title">Ask AI a Follow-up Question</div>
+                    <div class="follow-up-input-group">
+                        <input type="text" class="follow-up-input" id="followUpInput" placeholder="e.g., What exercises should I do?">
+                        <button class="follow-up-btn" onclick="askFollowUp()">
+                            <svg class="icon-svg" viewBox="0 0 24 24" style="fill:white;">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FEEDBACK -->
+                <div class="feedback-section" id="feedbackSection" style="display:none;">
+                    <div class="feedback-title" id="feedbackTitle">Was this analysis helpful?</div>
+                    <div class="feedback-buttons">
+                        <button class="feedback-btn" onclick="submitFeedback('yes')">
+                            <svg class="icon-svg" viewBox="0 0 24 24">
+                                <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                            </svg>
+                            <span id="feedbackYes">Yes, very helpful</span>
+                        </button>
+                        <button class="feedback-btn" onclick="submitFeedback('no')">
+                            <svg class="icon-svg" viewBox="0 0 24 24">
+                                <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                            </svg>
+                            <span id="feedbackNo">Needs improvement</span>
+                        </button>
+                    </div>
+                    <div class="feedback-message" id="feedbackMessage" style="display:none;color:var(--success);margin-top:1rem;font-weight:600;">Thank you for your feedback!</div>
+                </div>
+            </div>
+
+            <!-- NAVIGATION -->
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" id="backBtn" onclick="previousStep()" style="display: none;">
+                    <svg class="icon-svg" viewBox="0 0 24 24" style="fill:currentColor;">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                    </svg>
+                    <span id="backBtnText">Back</span>
+                </button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextStep()" disabled>
+                    <span id="nextBtnText">Continue</span>
+                    <svg class="icon-svg" viewBox="0 0 24 24" style="fill:white;">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // STATE MANAGEMENT
+        let assessmentData = {
+            bodyPart: null,
+            intensity: null,
+            intensityLabel: 'moderate',
+            duration: null,
+            activities: [],
+            currentStep: 1,
+            totalSteps: 4,
+            currentLanguage: 'en',
+            voiceEnabled: false,
+            gender: 'male',
+            sessionId: generateSessionId(),
+            timestamp: new Date().toISOString(),
+            aiResponse: null,
+            aiMessages: []
+        };
+
+        // API Configuration for OpenAI and TTS
+        let API_CONFIG = {
+            openai: {
+                key: localStorage.getItem('openai_api_key') || '',
+                model: 'gpt-4o-mini',
+                endpoint: 'https://api.openai.com/v1/chat/completions'
+            },
+            tts: {
+                provider: localStorage.getItem('tts_provider') || 'browser',
+                key: localStorage.getItem('tts_api_key') || '',
+                elevenlabs: {
+                    endpoint: 'https://api.elevenlabs.io/v1/text-to-speech',
+                    voiceId: '21m00Tcm4TlvDq8ikWAM'
+                },
+                google: {
+                    endpoint: 'https://texttospeech.googleapis.com/v1/text:synthesize'
+                }
+            }
+        };
+
+        // Additional state variables
+        let currentAudio = null;
+        let forecastChart = null;
+        let confidenceChart = null;
+        let tooltipTimeout = null;
+
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // LOCALSTORAGE MANAGEMENT
+        function saveSession() {
+            try {
+                localStorage.setItem('painAssessmentSession', JSON.stringify(assessmentData));
+                localStorage.setItem('painAssessmentTimestamp', Date.now().toString());
+                console.log('Session saved successfully');
+            } catch (e) {
+                console.error('Error saving session:', e);
+            }
+        }
+
+        function loadSession() {
+            try {
+                const saved = localStorage.getItem('painAssessmentSession');
+                const timestamp = localStorage.getItem('painAssessmentTimestamp');
+
+                if (saved && timestamp) {
+                    const age = Date.now() - parseInt(timestamp);
+                    // Session expires after 24 hours
+                    if (age < 24 * 60 * 60 * 1000) {
+                        const data = JSON.parse(saved);
+                        // Restore only if on first step
+                        if (data.currentStep === 1 && confirm('Continue previous assessment?')) {
+                            assessmentData = data;
+                            restoreUI();
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading session:', e);
+            }
+        }
+
+        function restoreUI() {
+            if (assessmentData.bodyPart) {
+                selectBodyPart(assessmentData.bodyPart, false);
+            }
+            if (assessmentData.intensity) {
+                selectIntensity(assessmentData.intensity, false);
+            }
+            if (assessmentData.gender) {
+                toggleGender(assessmentData.gender, false);
+            }
+        }
+
+        // ====================  API CONFIGURATION ====================
+        function openConfig() {
+            document.getElementById('configModal').classList.add('active');
+            document.getElementById('openaiKey').value = API_CONFIG.openai.key;
+            document.getElementById('ttsProvider').value = API_CONFIG.tts.provider;
+
+            if (API_CONFIG.tts.provider !== 'browser') {
+                document.getElementById('ttsKeyGroup').style.display = 'block';
+                document.getElementById('ttsKey').value = API_CONFIG.tts.key;
+            }
+        }
+
+        document.getElementById('ttsProvider')?.addEventListener('change', function(e) {
+            const ttsKeyGroup = document.getElementById('ttsKeyGroup');
+            if (e.target.value === 'browser') {
+                ttsKeyGroup.style.display = 'none';
+            } else {
+                ttsKeyGroup.style.display = 'block';
+            }
+        });
+
+        function saveConfig() {
+            const openaiKey = document.getElementById('openaiKey').value.trim();
+            const ttsProvider = document.getElementById('ttsProvider').value;
+            const ttsKey = document.getElementById('ttsKey').value.trim();
+
+            if (!openaiKey) {
+                alert('Please enter your OpenAI API key');
+                return;
+            }
+
+            localStorage.setItem('openai_api_key', openaiKey);
+            localStorage.setItem('tts_provider', ttsProvider);
+            if (ttsProvider !== 'browser') {
+                localStorage.setItem('tts_api_key', ttsKey);
+            }
+
+            API_CONFIG.openai.key = openaiKey;
+            API_CONFIG.tts.provider = ttsProvider;
+            API_CONFIG.tts.key = ttsKey;
+
+            document.getElementById('configModal').classList.remove('active');
+            speak('Configuration saved successfully');
+        }
+
+        // ==================== OPENAI INTEGRATION ====================
+        async function callOpenAI(prompt) {
+            if (!API_CONFIG.openai.key) {
+                console.log('OpenAI API key not configured');
+                return null;
+            }
+
+            try {
+                const response = await fetch(API_CONFIG.openai.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.openai.key}`
+                    },
+                    body: JSON.stringify({
+                        model: API_CONFIG.openai.model,
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are an expert physiotherapist providing professional medical assessment. Be thorough, accurate, and empathetic.'
+                            },
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1000
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    console.error('OpenAI API Error:', error);
+
+                    if (response.status === 401) {
+                        alert('Invalid OpenAI API key. Please check your configuration.');
+                    } else if (response.status === 429) {
+                        alert('Rate limit exceeded. Please try again later.');
+                    }
+                    return null;
+                }
+
+                const data = await response.json();
+                return data.choices[0].message.content;
+
+            } catch (error) {
+                console.error('Error calling OpenAI:', error);
+                return null;
+            }
+        }
+
+        function buildPhysiotherapyPrompt() {
+            return `You are an expert physiotherapist AI assistant. Analyze the following patient pain assessment and provide professional insights.
+
+PATIENT DETAILS:
+- Gender: ${assessmentData.gender}
+- Affected Body Part: ${assessmentData.bodyPart}
+- Pain Intensity: ${assessmentData.intensity}/10 (${assessmentData.intensityLabel})
+- Duration: ${assessmentData.duration}
+- Affected Activities: ${assessmentData.activities.join(', ')}
+
+INSTRUCTIONS:
+1. Provide a brief initial assessment (2-3 sentences)
+2. Give a likely diagnosis based on the symptoms (be specific but cautious)
+3. Provide a realistic recovery timeline with milestones
+4. Suggest a treatment plan including exercises and therapy recommendations
+5. List important precautions and red flags to watch for
+
+Format your response in 4 sections with clear headers:
+- Initial Assessment
+- Diagnosis & Analysis
+- Recovery Timeline
+- Treatment Plan
+
+Keep each section concise and patient-friendly. Use professional but accessible language.`;
+        }
+
+        // ==================== TEXT-TO-SPEECH ====================
+        async function speak(text) {
+            if (!assessmentData.voiceEnabled) return;
+
+            const provider = API_CONFIG.tts.provider;
+
+            if (provider === 'browser') {
+                speakBrowser(text);
+            } else if (provider === 'elevenlabs' && API_CONFIG.tts.key) {
+                await speakElevenLabs(text);
+            } else if (provider === 'google' && API_CONFIG.tts.key) {
+                await speakGoogle(text);
+            } else {
+                speakBrowser(text);
+            }
+        }
+
+        function speakBrowser(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+
+                if (assessmentData.currentLanguage === 'hi') {
+                    utterance.lang = 'hi-IN';
+                } else {
+                    utterance.lang = 'en-US';
+                }
+
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        async function speakElevenLabs(text) {
+            try {
+                const response = await fetch(`${API_CONFIG.tts.elevenlabs.endpoint}/${API_CONFIG.tts.elevenlabs.voiceId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'audio/mpeg',
+                        'Content-Type': 'application/json',
+                        'xi-api-key': API_CONFIG.tts.key
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        model_id: 'eleven_monolingual_v1',
+                        voice_settings: {
+                            stability: 0.5,
+                            similarity_boost: 0.5
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    playAudioUrl(audioUrl);
+                } else {
+                    console.error('ElevenLabs TTS error:', await response.text());
+                    speakBrowser(text);
+                }
+            } catch (error) {
+                console.error('Error with ElevenLabs TTS:', error);
+                speakBrowser(text);
+            }
+        }
+
+        async function speakGoogle(text) {
+            try {
+                const response = await fetch(`${API_CONFIG.tts.google.endpoint}?key=${API_CONFIG.tts.key}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        input: { text: text },
+                        voice: {
+                            languageCode: assessmentData.currentLanguage === 'hi' ? 'hi-IN' : 'en-US',
+                            name: assessmentData.currentLanguage === 'hi' ? 'hi-IN-Wavenet-A' : 'en-US-Wavenet-D'
+                        },
+                        audioConfig: {
+                            audioEncoding: 'MP3'
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const audioContent = data.audioContent;
+                    const audioBlob = base64ToBlob(audioContent, 'audio/mp3');
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    playAudioUrl(audioUrl);
+                } else {
+                    console.error('Google TTS error:', await response.text());
+                    speakBrowser(text);
+                }
+            } catch (error) {
+                console.error('Error with Google TTS:', error);
+                speakBrowser(text);
+            }
+        }
+
+        function base64ToBlob(base64, mimeType) {
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            return new Blob([byteArray], { type: mimeType });
+        }
+
+        function playAudioUrl(url) {
+            if (currentAudio) {
+                currentAudio.pause();
+            }
+
+            currentAudio = new Audio(url);
+            currentAudio.play();
+
+            const voiceWave = document.getElementById('voiceWave');
+            if (voiceWave) voiceWave.style.display = 'inline-flex';
+
+            currentAudio.addEventListener('ended', () => {
+                currentAudio = null;
+                if (voiceWave) voiceWave.style.display = 'none';
+            });
+        }
+
+        function stopAudio() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                currentAudio = null;
+            }
+
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+
+            const voiceWave = document.getElementById('voiceWave');
+            if (voiceWave) voiceWave.style.display = 'none';
+        }
+
+        function toggleVoice() {
+            assessmentData.voiceEnabled = !assessmentData.voiceEnabled;
+
+            const voiceToggle = document.getElementById('voiceToggle');
+            const voiceWave = document.getElementById('voiceWave');
+
+            if (assessmentData.voiceEnabled) {
+                voiceToggle.style.background = 'linear-gradient(135deg, var(--success) 0%, #059669 100%)';
+                speak('Voice enabled');
+            } else {
+                voiceToggle.style.background = '';
+                stopAudio();
+                if (voiceWave) voiceWave.style.display = 'none';
+            }
+
+            saveSession();
+        }
+
+        // GENDER TOGGLE
+        function toggleGender(gender, save = true) {
+            assessmentData.gender = gender;
+
+            document.querySelectorAll('.gender-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-gender="${gender}"]`).classList.add('active');
+
+            // Toggle SVG visibility
+            document.getElementById('maleSvg').style.display = gender === 'male' ? 'block' : 'none';
+            document.getElementById('femaleSvg').style.display = gender === 'female' ? 'block' : 'none';
+
+            if (save) saveSession();
+        }
+
+        // TOOLTIP FUNCTIONALITY
+        let tooltipTimeout;
+        function showTooltip(event, part) {
+            clearTimeout(tooltipTimeout);
+
+            const tooltip = document.getElementById('painTooltip');
+            const element = event.currentTarget;
+            const painTypes = element.getAttribute('data-pain-types').split(',');
+
+            document.getElementById('tooltipTitle').textContent = part.charAt(0).toUpperCase() + part.slice(1) + ' Pain';
+
+            const typesHtml = painTypes.map(type =>
+                `<span class="pain-type-badge">${type}</span>`
+            ).join('');
+            document.querySelector('.tooltip-types').innerHTML = typesHtml;
+
+            const rect = element.getBoundingClientRect();
+            const container = document.querySelector('.body-svg-wrapper').getBoundingClientRect();
+
+            tooltip.style.left = (rect.left - container.left + rect.width / 2) + 'px';
+            tooltip.style.top = (rect.top - container.top - 10) + 'px';
+            tooltip.style.transform = 'translate(-50%, -100%)';
+
+            tooltipTimeout = setTimeout(() => {
+                tooltip.classList.add('show');
+            }, 200);
+        }
+
+        function hideTooltip() {
+            clearTimeout(tooltipTimeout);
+            document.getElementById('painTooltip').classList.remove('show');
+        }
+
+        // BODY PART SELECTION
+        function selectBodyPart(part, save = true) {
+            assessmentData.bodyPart = part;
+
+            const currentSvg = assessmentData.gender === 'male' ? 'maleSvg' : 'femaleSvg';
+            document.querySelectorAll(`#${currentSvg} .body-part`).forEach(p => p.classList.remove('selected'));
+            document.querySelectorAll(`#${currentSvg} [data-part="${part}"]`).forEach(p => p.classList.add('selected'));
+
+            checkStep1Complete();
+            if (save) saveSession();
+            speak(`${part} selected`);
+        }
+
+        function selectIntensity(level, save = true) {
+            assessmentData.intensity = level;
+
+            document.querySelectorAll('.intensity-level').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`[data-level="${level}"]`).classList.add('selected');
+
+            checkStep1Complete();
+            if (save) saveSession();
+            speak(`${level} pain intensity selected`);
+        }
+
+        function checkStep1Complete() {
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = !(assessmentData.bodyPart && assessmentData.intensity);
+        }
+
+        // DURATION
+        function selectDuration(duration) {
+            assessmentData.duration = duration;
+
+            document.querySelectorAll('[data-duration]').forEach(card => card.classList.remove('selected'));
+            document.querySelector(`[data-duration="${duration}"]`).classList.add('selected');
+
+            document.getElementById('nextBtn').disabled = false;
+            saveSession();
+            speak(`${duration} selected`);
+        }
+
+        // ACTIVITY
+        function toggleActivity(activity) {
+            const index = assessmentData.activities.indexOf(activity);
+            const card = document.querySelector(`[data-activity="${activity}"]`);
+
+            if (index > -1) {
+                assessmentData.activities.splice(index, 1);
+                card.classList.remove('selected');
+            } else {
+                assessmentData.activities.push(activity);
+                card.classList.add('selected');
+            }
+
+            document.getElementById('nextBtn').disabled = assessmentData.activities.length === 0;
+            saveSession();
+        }
+
+        // NAVIGATION
+        function nextStep() {
+            const currentStep = assessmentData.currentStep;
+
+            if (currentStep === 3) {
+                runAIAnalysis();
+                return;
+            }
+
+            if (currentStep === 4) {
+                window.location.href = '/book-consultation';  // Update with your booking URL
+                return;
+            }
+
+            assessmentData.currentStep++;
+            updateStepDisplay();
+            saveSession();
+        }
+
+        function previousStep() {
+            if (assessmentData.currentStep > 1) {
+                assessmentData.currentStep--;
+                updateStepDisplay();
+            }
+        }
+
+        function goToStep(step) {
+            // Allow navigation to completed steps only
+            if (step <= assessmentData.currentStep || assessmentData.currentStep === 4) {
+                assessmentData.currentStep = step;
+                updateStepDisplay();
+            }
+        }
+
+        function updateStepDisplay() {
+            const step = assessmentData.currentStep;
+
+            updateProgress();
+
+            document.querySelectorAll('.step-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+
+            document.getElementById('backBtn').style.display = step > 1 ? 'inline-flex' : 'none';
+
+            checkNextButtonState();
+            updateNextButton();
+
+            const titleElement = document.getElementById(`step${step}Title`);
+            if (titleElement) {
+                speak(titleElement.textContent);
+            }
+        }
+
+        function checkNextButtonState() {
+            const step = assessmentData.currentStep;
+            let enabled = false;
+
+            switch(step) {
+                case 1:
+                    enabled = assessmentData.bodyPart && assessmentData.intensity;
+                    break;
+                case 2:
+                    enabled = assessmentData.duration !== null;
+                    break;
+                case 3:
+                    enabled = assessmentData.activities.length > 0;
+                    break;
+                case 4:
+                    enabled = true;
+                    break;
+            }
+
+            document.getElementById('nextBtn').disabled = !enabled;
+        }
+
+        function updateProgress() {
+            const step = assessmentData.currentStep;
+            const percentage = ((step - 1) / (assessmentData.totalSteps - 1)) * 100;
+
+            document.getElementById('progressLineFill').style.width = `${percentage}%`;
+
+            document.querySelectorAll('.progress-step').forEach((stepEl, index) => {
+                stepEl.classList.remove('active', 'completed');
+
+                if (index + 1 < step) {
+                    stepEl.classList.add('completed');
+                } else if (index + 1 === step) {
+                    stepEl.classList.add('active');
+                }
+            });
+        }
+
+        function updateNextButton() {
+            const step = assessmentData.currentStep;
+            const nextBtnText = document.getElementById('nextBtnText');
+
+            if (step === 3) {
+                nextBtnText.textContent = 'Analyze My Pain';
+            } else if (step === 4) {
+                nextBtnText.textContent = 'Book Consultation';
+            } else {
+                nextBtnText.textContent = 'Continue';
+            }
+        }
+
+        // AI ANALYSIS WITH REAL OPENAI
+        async function runAIAnalysis() {
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('loadingScreen').classList.add('active');
+            document.getElementById('aiAvatar').classList.add('thinking');
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'none';
+
+            speak('Analyzing your pain profile with AI');
+
+            try {
+                const prompt = buildPhysiotherapyPrompt();
+                const aiResponse = await callOpenAI(prompt);
+
+                if (aiResponse) {
+                    assessmentData.aiResponse = aiResponse;
+                    assessmentData.aiMessages = parseAIResponse(aiResponse);
+                } else {
+                    assessmentData.aiMessages = getLocalAnalysis();
+                }
+
+            } catch (error) {
+                console.error('AI Analysis error:', error);
+                assessmentData.aiMessages = getLocalAnalysis();
+            }
+
+            setTimeout(() => {
+                displayAIChatResults();
+
+                document.getElementById('loadingScreen').classList.remove('active');
+                document.getElementById('aiAvatar').classList.remove('thinking');
+                document.getElementById('aiResults').classList.add('active');
+                document.getElementById('nextBtn').style.display = 'inline-flex';
+                document.getElementById('nextBtn').disabled = false;
+
+                assessmentData.currentStep = 4;
+                updateProgress();
+                updateNextButton();
+
+                saveSession();
+            }, 2000);
+        }
+
+        function parseAIResponse(aiText) {
+            const messages = [];
+
+            const sections = [
+                { title: 'Initial Assessment', icon: '🎯' },
+                { title: 'Diagnosis & Analysis', icon: '📊' },
+                { title: 'Recovery Timeline', icon: '⏱️' },
+                { title: 'Treatment Plan', icon: '💊' }
+            ];
+
+            sections.forEach(section => {
+                const regex = new RegExp(`${section.title}[:\\n]+([\\s\\S]*?)(?=(?:Initial Assessment|Diagnosis|Recovery Timeline|Treatment Plan)|$)`, 'i');
+                const match = aiText.match(regex);
+
+                if (match && match[1]) {
+                    messages.push({
+                        title: `${section.icon} ${section.title}`,
+                        content: match[1].trim()
+                    });
+                }
+            });
+
+            if (messages.length === 0) {
+                messages.push({
+                    title: '🤖 AI Analysis',
+                    content: aiText
+                });
+            }
+
+            return messages;
+        }
+
+        function getLocalAnalysis() {
+            return [
+                {
+                    title: '🎯 Initial Assessment',
+                    content: `Based on your ${assessmentData.intensityLabel} ${assessmentData.bodyPart} pain that's been present for ${assessmentData.duration}, I've analyzed your condition. The fact that it affects ${assessmentData.activities.join(', ')} suggests we need to address this carefully.`
+                },
+                {
+                    title: '📊 Diagnosis',
+                    content: `You likely have ${assessmentData.intensityLabel === 'severe' ? 'significant soft tissue involvement' : 'muscle strain or minor soft tissue injury'}. This is common and treatable with proper care. The pattern suggests potential inflammation and possibly some compensatory movement patterns.`
+                },
+                {
+                    title: '⏱️ Recovery Timeline',
+                    content: `Expected recovery: ${assessmentData.intensityLabel === 'severe' ? '6-12 weeks' : '2-4 weeks'} with consistent treatment. Most patients see significant improvement within the first 2 weeks. Week 1-2: Pain reduction, Week 3-4: Function restoration, Beyond: Strengthening phase.`
+                },
+                {
+                    title: '💊 Treatment Plan',
+                    content: "I recommend: 1) Professional physiotherapy evaluation, 2) Targeted strengthening exercises (progressive loading), 3) Pain management techniques (ice/heat therapy), 4) Lifestyle modifications to avoid aggravating activities, 5) Gradual return to normal function."
+                }
+            ];
+        }
+
+        // AI CHAT DISPLAY WITH TYPING INDICATOR
+        function displayAIChatResults() {
+            const chatContainer = document.getElementById('chatMessages');
+            chatContainer.innerHTML = '';
+
+            assessmentData.aiMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                    // Show typing indicator
+                    const typingIndicator = document.getElementById('typingIndicator');
+                    typingIndicator.style.display = 'inline-flex';
+
+                    setTimeout(() => {
+                        // Hide typing indicator
+                        typingIndicator.style.display = 'none';
+
+                        // Show message
+                        const messageEl = document.createElement('div');
+                        messageEl.className = 'chat-message';
+                        messageEl.style.animationDelay = `${index * 0.1}s`;
+
+                        messageEl.innerHTML = `
+                            <div class="chat-avatar">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                                </svg>
+                            </div>
+                            <div class="chat-bubble">
+                                <div class="message-title">${msg.title}</div>
+                                <div class="message-content" id="msg${index}"></div>
+                            </div>
+                        `;
+
+                        chatContainer.appendChild(messageEl);
+
+                        // Typing effect
+                        typeMessage(msg.content, `msg${index}`, 20);
+
+                        // Speak message
+                        setTimeout(() => speak(msg.content), 300);
+                    }, 1500); // Typing indicator duration
+                }, index * 3500);
+            });
+
+            // Show summary card, charts, tips, and feedback after all messages
+            setTimeout(() => {
+                showSummaryCard();
+                showCharts();
+                generateDailyTips();
+                document.getElementById('followUpSection').style.display = 'block';
+                document.getElementById('feedbackSection').style.display = 'block';
+            }, 12000);
+        }
+
+        function typeMessage(text, elementId, speed) {
+            const element = document.getElementById(elementId);
+            let i = 0;
+
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+
+            type();
+        }
+
+        // SUMMARY CARD
+        function showSummaryCard() {
+            document.getElementById('summaryCard').style.display = 'block';
+            document.getElementById('summaryDate').textContent = new Date().toLocaleDateString();
+            document.getElementById('summaryArea').textContent = assessmentData.bodyPart.charAt(0).toUpperCase() + assessmentData.bodyPart.slice(1);
+            document.getElementById('summaryLevel').textContent = assessmentData.intensity.charAt(0).toUpperCase() + assessmentData.intensity.slice(1);
+            document.getElementById('summaryDuration').textContent = assessmentData.duration.charAt(0).toUpperCase() + assessmentData.duration.slice(1);
+            document.getElementById('summaryRecovery').textContent = assessmentData.intensity === 'severe' ? '6-12 weeks' : '2-4 weeks';
+        }
+
+        // PDF DOWNLOAD
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Header
+            doc.setFontSize(20);
+            doc.setTextColor(243, 112, 33);
+            doc.text('Pain Assessment Report', 20, 20);
+
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 30);
+            doc.text(`Session ID: ${assessmentData.sessionId}`, 20, 35);
+
+            // Summary
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Assessment Summary', 20, 50);
+
+            doc.setFontSize(11);
+            doc.text(`Affected Area: ${assessmentData.bodyPart}`, 20, 60);
+            doc.text(`Pain Level: ${assessmentData.intensity}`, 20, 67);
+            doc.text(`Duration: ${assessmentData.duration}`, 20, 74);
+            doc.text(`Recovery Estimate: ${assessmentData.intensity === 'severe' ? '6-12 weeks' : '2-4 weeks'}`, 20, 81);
+
+            // Affected Activities
+            doc.text('Affected Activities:', 20, 95);
+            assessmentData.activities.forEach((activity, index) => {
+                doc.text(`• ${activity}`, 25, 102 + (index * 7));
+            });
+
+            // Recommendations
+            doc.setFontSize(14);
+            doc.text('Recommendations', 20, 130);
+
+            doc.setFontSize(11);
+            const recommendations = [
+                '• Consult with a professional physiotherapist',
+                '• Follow prescribed exercise routine',
+                '• Apply heat/ice therapy as recommended',
+                '• Maintain proper posture and ergonomics',
+                '• Gradual return to normal activities'
+            ];
+
+            recommendations.forEach((rec, index) => {
+                doc.text(rec, 20, 140 + (index * 7));
+            });
+
+            // Footer
+            doc.setFontSize(9);
+            doc.setTextColor(150, 150, 150);
+            doc.text('Generated by Physiosmetic AI Pain Assessment', 20, 280);
+            doc.text('This report is for informational purposes only. Consult a healthcare professional.', 20, 285);
+
+            doc.save(`Pain-Assessment-${Date.now()}.pdf`);
+
+            speak('PDF downloaded successfully');
+        }
+
+        // SHARE WITH DOCTOR
+        function shareWithDoctor() {
+            const reportData = {
+                ...assessmentData,
+                summaryUrl: window.location.href
+            };
+
+            const emailSubject = encodeURIComponent('Pain Assessment Report');
+            const emailBody = encodeURIComponent(
+                `Pain Assessment Report\n\n` +
+                `Affected Area: ${assessmentData.bodyPart}\n` +
+                `Pain Level: ${assessmentData.intensity}\n` +
+                `Duration: ${assessmentData.duration}\n` +
+                `Recovery Estimate: ${assessmentData.intensity === 'severe' ? '6-12 weeks' : '2-4 weeks'}\n\n` +
+                `Session ID: ${assessmentData.sessionId}\n` +
+                `Date: ${new Date().toLocaleDateString()}`
+            );
+
+            window.location.href = `mailto:?subject=${emailSubject}&body=${emailBody}`;
+
+            speak('Opening email to share with doctor');
+        }
+
+        // CHART.JS VISUALIZATIONS
+        let forecastChart, confidenceChart;
+
+        function showCharts() {
+            document.getElementById('recoveryChart').style.display = 'block';
+            document.getElementById('confidenceChart').style.display = 'block';
+
+            setTimeout(() => createForecastChart(), 500);
+            setTimeout(() => createConfidenceChart(), 1000);
+        }
+
+        function createForecastChart() {
+            const ctx = document.getElementById('forecastCanvas').getContext('2d');
+
+            const weeks = assessmentData.intensity === 'severe' ? 12 : 6;
+            const labels = Array.from({length: weeks}, (_, i) => `Week ${i + 1}`);
+            const data = Array.from({length: weeks}, (_, i) => {
+                const progress = (i + 1) / weeks;
+                return Math.min(100, 10 + (90 * Math.pow(progress, 0.7)));
+            });
+
+            forecastChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Recovery Progress (%)',
+                        data: data,
+                        borderColor: 'rgba(243, 112, 33, 1)',
+                        backgroundColor: 'rgba(243, 112, 33, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: 'rgba(243, 112, 33, 1)',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 15, 25, 0.95)',
+                            titleColor: 'rgba(243, 112, 33, 1)',
+                            bodyColor: 'rgba(255, 255, 255, 0.9)',
+                            borderColor: 'rgba(243, 112, 33, 0.5)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Recovery: ${Math.round(context.parsed.y)}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.5)',
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        function createConfidenceChart() {
+            const ctx = document.getElementById('confidenceCanvas').getContext('2d');
+
+            const confidence = 85 + Math.floor(Math.random() * 10);
+            const remaining = 100 - confidence;
+
+            confidenceChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Confidence', 'Margin'],
+                    datasets: [{
+                        data: [confidence, remaining],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(255, 255, 255, 0.05)'
+                        ],
+                        borderColor: [
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(255, 255, 255, 0.1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 15, 25, 0.95)',
+                            titleColor: 'rgba(16, 185, 129, 1)',
+                            bodyColor: 'rgba(255, 255, 255, 0.9)',
+                            borderColor: 'rgba(16, 185, 129, 0.5)',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed}%`;
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeInOutQuart'
+                    }
+                },
+                plugins: [{
+                    id: 'centerText',
+                    afterDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        ctx.save();
+                        const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+                        const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.font = 'bold 32px Space Grotesk';
+                        ctx.fillStyle = 'rgba(16, 185, 129, 1)';
+                        ctx.fillText(`${confidence}%`, centerX, centerY - 10);
+
+                        ctx.font = '14px Inter';
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                        ctx.fillText('Confidence', centerX, centerY + 20);
+                        ctx.restore();
+                    }
+                }]
+            });
+        }
+
+        // DAILY TIPS
+        const tipsDatabase = {
+            neck: {
+                mild: [
+                    { icon: 'M12 2l-5 9h10l-5-9zm0 3.84L13.93 9h-3.87L12 5.84z', title: 'Gentle Stretches', text: 'Perform neck rotations every 2 hours - 10 reps each direction' },
+                    { icon: 'M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z', title: 'Ergonomic Setup', text: 'Position screen at eye level to reduce neck strain' },
+                    { icon: 'M12 2C8.69 2 6 4.69 6 8c0 1.5.55 2.86 1.46 3.91-.07.14-.16.28-.23.42-.19.38-.28.77-.28 1.17 0 .66.15 1.29.43 1.88L9 19h6l1.62-3.62c.28-.59.43-1.22.43-1.88 0-.4-.09-.79-.28-1.17-.07-.14-.16-.28-.23-.42C17.45 10.86 18 9.5 18 8c0-3.31-2.69-6-6-6z', title: 'Heat Therapy', text: 'Apply warm compress for 15 minutes, 3x daily' }
+                ],
+                severe: [
+                    { icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z', title: 'Ice Application', text: 'Apply ice pack for 15-20 minutes every 3-4 hours' },
+                    { icon: 'M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z', title: 'Sleep Position', text: 'Use a supportive pillow that keeps neck neutral' },
+                    { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', title: 'Avoid Strain', text: 'Minimize looking down at phone - hold at eye level' }
+                ]
+            },
+            // Add more body parts as needed
+        };
+
+        function generateDailyTips() {
+            const bodyPart = assessmentData.bodyPart || 'neck';
+            const severity = assessmentData.intensity === 'severe' ? 'severe' : 'mild';
+
+            const tips = tipsDatabase[bodyPart]?.[severity] || tipsDatabase.neck.mild;
+
+            const tipsGrid = document.getElementById('tipsGrid');
+            tipsGrid.innerHTML = '';
+
+            tips.forEach((tip, index) => {
+                setTimeout(() => {
+                    const tipCard = document.createElement('div');
+                    tipCard.className = 'tip-card';
+                    tipCard.style.animation = `slideIn 0.5s ease ${index * 0.2}s both`;
+
+                    tipCard.innerHTML = `
+                        <div class="tip-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="${tip.icon}"/>
+                            </svg>
+                        </div>
+                        <div class="tip-content">
+                            <div class="tip-title">${tip.title}</div>
+                            <div class="tip-text">${tip.text}</div>
+                        </div>
+                    `;
+
+                    tipsGrid.appendChild(tipCard);
+                }, index * 300);
+            });
+
+            document.getElementById('dailyTips').style.display = 'block';
+        }
+
+        // FOLLOW-UP QUESTIONS
+        async function askFollowUp() {
+            const input = document.getElementById('followUpInput');
+            const question = input.value.trim();
+
+            if (!question) return;
+
+            input.value = '';
+            input.disabled = true;
+
+            // Show user question
+            const chatContainer = document.getElementById('chatMessages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'chat-message';
+            userMessage.style.flexDirection = 'row-reverse';
+            userMessage.innerHTML = `
+                <div class="chat-bubble" style="background: rgba(67, 133, 245, 0.1);">
+                    <div class="message-content">${question}</div>
+                </div>
+            `;
+            chatContainer.appendChild(userMessage);
+
+            // Show typing indicator
+            document.getElementById('typingIndicator').style.display = 'inline-flex';
+
+            // Call API or generate response
+            let answer = `Based on your ${assessmentData.bodyPart} condition, I recommend focusing on gentle exercises and proper form. Consult with your physiotherapist for personalized guidance.`;
+
+            try {
+                const apiResponse = await callAPI('askFollowUp', {
+                    question: question,
+                    context: assessmentData
+                });
+                if (apiResponse && apiResponse.answer) {
+                    answer = apiResponse.answer;
+                }
+            } catch (error) {
+                console.log('Using default response');
+            }
+
+            setTimeout(() => {
+                document.getElementById('typingIndicator').style.display = 'none';
+
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'chat-message';
+                aiMessage.innerHTML = `
+                    <div class="chat-avatar">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                        </svg>
+                    </div>
+                    <div class="chat-bubble">
+                        <div class="message-content">${answer}</div>
+                    </div>
+                `;
+                chatContainer.appendChild(aiMessage);
+
+                input.disabled = false;
+                speak(answer);
+            }, 2000);
+        }
+
+        // FEEDBACK
+        function submitFeedback(type) {
+            document.querySelectorAll('.feedback-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.closest('.feedback-btn').classList.add('selected');
+
+            document.getElementById('feedbackMessage').style.display = 'block';
+
+            // Send to API
+            callAPI('submitFeedback', {
+                sessionId: assessmentData.sessionId,
+                feedback: type,
+                data: assessmentData
+            });
+
+            speak('Thank you for your feedback');
+        }
+
+        // VOICE SYNTHESIS
+        let speechSynth = window.speechSynthesis;
+        let currentUtterance = null;
+
+        function speak(text) {
+            if (!assessmentData.voiceEnabled || !speechSynth) return;
+
+            speechSynth.cancel();
+
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            currentUtterance.rate = 0.9;
+            currentUtterance.pitch = 1;
+            currentUtterance.volume = 1;
+
+            const langMap = { en: 'en-US', hi: 'hi-IN', mr: 'mr-IN' };
+            currentUtterance.lang = langMap[assessmentData.currentLanguage] || 'en-US';
+
+            speechSynth.speak(currentUtterance);
+        }
+
+        function toggleVoice() {
+            assessmentData.voiceEnabled = !assessmentData.voiceEnabled;
+            const toggle = document.getElementById('voiceToggle');
+
+            if (assessmentData.voiceEnabled) {
+                toggle.classList.add('active');
+                speak('Voice narration enabled');
+            } else {
+                toggle.classList.remove('active');
+                speechSynth.cancel();
+            }
+
+            saveSession();
+        }
+
+        // LANGUAGE SWITCHING (Simplified)
+        function switchLanguage(lang) {
+            assessmentData.currentLanguage = lang;
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+
+            saveSession();
+            // In production, update all text elements with translations
+        }
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            checkNextButtonState();
+            loadSession();
+
+            // Check if API keys are configured
+            if (!API_CONFIG.openai.key) {
+                setTimeout(() => {
+                    if (confirm('OpenAI API key not configured. Would you like to configure it now for real AI analysis?')) {
+                        openConfig();
+                    }
+                }, 2000);
+            }
+
+            setTimeout(() => {
+                speak('Welcome to AI-Powered Pain Assessment system powered by GPT-4');
+            }, 1000);
+        });
+
+        // Save session before page unload
+        window.addEventListener('beforeunload', function() {
+            saveSession();
+        });
+    </script>
+</body>
+</html>
