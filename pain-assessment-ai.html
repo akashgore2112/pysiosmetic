@@ -2415,11 +2415,18 @@ Keep each section concise and patient-friendly. Use professional but accessible 
 
         // AI ANALYSIS WITH REAL OPENAI
         async function runAIAnalysis() {
-            document.getElementById('step3').classList.remove('active');
-            document.getElementById('loadingScreen').classList.add('active');
-            document.getElementById('aiAvatar').classList.add('thinking');
-            document.getElementById('nextBtn').style.display = 'none';
-            document.getElementById('backBtn').style.display = 'none';
+            // Safe DOM element access with null checks
+            const step3 = document.getElementById('step3');
+            const loadingScreen = document.getElementById('loadingScreen');
+            const nextBtn = document.getElementById('nextBtn');
+            const backBtn = document.getElementById('backBtn');
+            const aiResults = document.getElementById('aiResults');
+
+            // Hide step 3 and show loading
+            if (step3) step3.classList.remove('active');
+            if (loadingScreen) loadingScreen.classList.add('active');
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (backBtn) backBtn.style.display = 'none';
 
             speak('Analyzing your pain profile with AI');
 
@@ -2442,11 +2449,13 @@ Keep each section concise and patient-friendly. Use professional but accessible 
             setTimeout(() => {
                 displayAIChatResults();
 
-                document.getElementById('loadingScreen').classList.remove('active');
-                document.getElementById('aiAvatar').classList.remove('thinking');
-                document.getElementById('aiResults').classList.add('active');
-                document.getElementById('nextBtn').style.display = 'inline-flex';
-                document.getElementById('nextBtn').disabled = false;
+                // Hide loading and show results
+                if (loadingScreen) loadingScreen.classList.remove('active');
+                if (aiResults) aiResults.classList.add('active');
+                if (nextBtn) {
+                    nextBtn.style.display = 'inline-flex';
+                    nextBtn.disabled = false;
+                }
 
                 assessmentData.currentStep = 4;
                 updateProgress();
@@ -2512,17 +2521,26 @@ Keep each section concise and patient-friendly. Use professional but accessible 
         // AI CHAT DISPLAY WITH TYPING INDICATOR
         function displayAIChatResults() {
             const chatContainer = document.getElementById('chatMessages');
+            if (!chatContainer) {
+                console.error('Chat container not found');
+                return;
+            }
+
             chatContainer.innerHTML = '';
 
             assessmentData.aiMessages.forEach((msg, index) => {
                 setTimeout(() => {
                     // Show typing indicator
                     const typingIndicator = document.getElementById('typingIndicator');
-                    typingIndicator.style.display = 'inline-flex';
+                    if (typingIndicator) {
+                        typingIndicator.style.display = 'inline-flex';
+                    }
 
                     setTimeout(() => {
                         // Hide typing indicator
-                        typingIndicator.style.display = 'none';
+                        if (typingIndicator) {
+                            typingIndicator.style.display = 'none';
+                        }
 
                         // Show message
                         const messageEl = document.createElement('div');
@@ -2541,7 +2559,9 @@ Keep each section concise and patient-friendly. Use professional but accessible 
                             </div>
                         `;
 
-                        chatContainer.appendChild(messageEl);
+                        if (chatContainer) {
+                            chatContainer.appendChild(messageEl);
+                        }
 
                         // Typing effect
                         typeMessage(msg.content, `msg${index}`, 20);
@@ -2557,17 +2577,23 @@ Keep each section concise and patient-friendly. Use professional but accessible 
                 showSummaryCard();
                 showCharts();
                 generateDailyTips();
-                document.getElementById('followUpSection').style.display = 'block';
-                document.getElementById('feedbackSection').style.display = 'block';
+
+                const followUpSection = document.getElementById('followUpSection');
+                const feedbackSection = document.getElementById('feedbackSection');
+
+                if (followUpSection) followUpSection.style.display = 'block';
+                if (feedbackSection) feedbackSection.style.display = 'block';
             }, 12000);
         }
 
         function typeMessage(text, elementId, speed) {
             const element = document.getElementById(elementId);
+            if (!element) return;
+
             let i = 0;
 
             function type() {
-                if (i < text.length) {
+                if (i < text.length && element) {
                     element.textContent += text.charAt(i);
                     i++;
                     setTimeout(type, speed);
@@ -2579,12 +2605,27 @@ Keep each section concise and patient-friendly. Use professional but accessible 
 
         // SUMMARY CARD
         function showSummaryCard() {
-            document.getElementById('summaryCard').style.display = 'block';
-            document.getElementById('summaryDate').textContent = new Date().toLocaleDateString();
-            document.getElementById('summaryArea').textContent = assessmentData.bodyPart.charAt(0).toUpperCase() + assessmentData.bodyPart.slice(1);
-            document.getElementById('summaryLevel').textContent = assessmentData.intensity.charAt(0).toUpperCase() + assessmentData.intensity.slice(1);
-            document.getElementById('summaryDuration').textContent = assessmentData.duration.charAt(0).toUpperCase() + assessmentData.duration.slice(1);
-            document.getElementById('summaryRecovery').textContent = assessmentData.intensity === 'severe' ? '6-12 weeks' : '2-4 weeks';
+            const summaryCard = document.getElementById('summaryCard');
+            const summaryDate = document.getElementById('summaryDate');
+            const summaryArea = document.getElementById('summaryArea');
+            const summaryLevel = document.getElementById('summaryLevel');
+            const summaryDuration = document.getElementById('summaryDuration');
+            const summaryRecovery = document.getElementById('summaryRecovery');
+
+            if (summaryCard) summaryCard.style.display = 'block';
+            if (summaryDate) summaryDate.textContent = new Date().toLocaleDateString();
+            if (summaryArea && assessmentData.bodyPart) {
+                summaryArea.textContent = assessmentData.bodyPart.charAt(0).toUpperCase() + assessmentData.bodyPart.slice(1);
+            }
+            if (summaryLevel && assessmentData.intensity) {
+                summaryLevel.textContent = assessmentData.intensity.charAt(0).toUpperCase() + assessmentData.intensity.slice(1);
+            }
+            if (summaryDuration && assessmentData.duration) {
+                summaryDuration.textContent = assessmentData.duration.charAt(0).toUpperCase() + assessmentData.duration.slice(1);
+            }
+            if (summaryRecovery) {
+                summaryRecovery.textContent = assessmentData.intensity === 'severe' ? '6-12 weeks' : '2-4 weeks';
+            }
         }
 
         // PDF DOWNLOAD
@@ -2672,15 +2713,25 @@ Keep each section concise and patient-friendly. Use professional but accessible 
 
         // CHART.JS VISUALIZATIONS
         function showCharts() {
-            document.getElementById('recoveryChart').style.display = 'block';
-            document.getElementById('confidenceChart').style.display = 'block';
+            const recoveryChart = document.getElementById('recoveryChart');
+            const confidenceChart = document.getElementById('confidenceChart');
+
+            if (recoveryChart) recoveryChart.style.display = 'block';
+            if (confidenceChart) confidenceChart.style.display = 'block';
 
             setTimeout(() => createForecastChart(), 500);
             setTimeout(() => createConfidenceChart(), 1000);
         }
 
         function createForecastChart() {
-            const ctx = document.getElementById('forecastCanvas').getContext('2d');
+            const canvas = document.getElementById('forecastCanvas');
+            if (!canvas) {
+                console.error('Forecast canvas not found');
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
 
             const weeks = assessmentData.intensity === 'severe' ? 12 : 6;
             const labels = Array.from({length: weeks}, (_, i) => `Week ${i + 1}`);
@@ -2767,7 +2818,14 @@ Keep each section concise and patient-friendly. Use professional but accessible 
         }
 
         function createConfidenceChart() {
-            const ctx = document.getElementById('confidenceCanvas').getContext('2d');
+            const canvas = document.getElementById('confidenceCanvas');
+            if (!canvas) {
+                console.error('Confidence canvas not found');
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
 
             const confidence = 85 + Math.floor(Math.random() * 10);
             const remaining = 100 - confidence;
@@ -2857,12 +2915,19 @@ Keep each section concise and patient-friendly. Use professional but accessible 
         };
 
         function generateDailyTips() {
+            const tipsGrid = document.getElementById('tipsGrid');
+            const dailyTips = document.getElementById('dailyTips');
+
+            if (!tipsGrid) {
+                console.error('Tips grid not found');
+                return;
+            }
+
             const bodyPart = assessmentData.bodyPart || 'neck';
             const severity = assessmentData.intensity === 'severe' ? 'severe' : 'mild';
 
-            const tips = tipsDatabase[bodyPart]?.[severity] || tipsDatabase.neck.mild;
+            const tips = tipsDatabase[bodyPart]?.[severity] || tipsDatabase.neck?.mild || [];
 
-            const tipsGrid = document.getElementById('tipsGrid');
             tipsGrid.innerHTML = '';
 
             tips.forEach((tip, index) => {
@@ -2874,20 +2939,22 @@ Keep each section concise and patient-friendly. Use professional but accessible 
                     tipCard.innerHTML = `
                         <div class="tip-icon">
                             <svg viewBox="0 0 24 24">
-                                <path d="${tip.icon}"/>
+                                <path d="${tip.icon || ''}"/>
                             </svg>
                         </div>
                         <div class="tip-content">
-                            <div class="tip-title">${tip.title}</div>
-                            <div class="tip-text">${tip.text}</div>
+                            <div class="tip-title">${tip.title || ''}</div>
+                            <div class="tip-text">${tip.text || ''}</div>
                         </div>
                     `;
 
-                    tipsGrid.appendChild(tipCard);
+                    if (tipsGrid) {
+                        tipsGrid.appendChild(tipCard);
+                    }
                 }, index * 300);
             });
 
-            document.getElementById('dailyTips').style.display = 'block';
+            if (dailyTips) dailyTips.style.display = 'block';
         }
 
         // FOLLOW-UP QUESTIONS
