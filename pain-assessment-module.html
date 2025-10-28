@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Pain Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="pain-assessment"></div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+      integrity="sha384-0jJ1m0An0MhN8d+5ZzlGdLylUKzvzV2sn9u0Jqeq0VBiP7T0B6iyJXAW7xIDZ7rL"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"
+      integrity="sha384-t4yJlZfQw3jI2iDxWB/5KShKfGgIK8nNAh7U4pAPtO6wQDCclhxH9NlY2IuW1FQG"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // Temporary local testing key for AI module (replace with your real key locally)
+      if (!window.PAIN_ASSESSMENT_OPENAI_KEY) {
+        const localTestingKey = "YOUR_OPENAI_API_KEY_HERE";
+        if (localTestingKey && !localTestingKey.includes("YOUR_OPENAI_API_KEY_HERE")) {
+          window.PAIN_ASSESSMENT_OPENAI_KEY = localTestingKey;
+          console.log("[PainAssessment] OpenAI API key successfully injected!");
+        } else {
+          console.warn(
+            "[PainAssessment] No OpenAI API key provided. Set window.PAIN_ASSESSMENT_OPENAI_KEY before loading main.js for local testing."
+          );
+        }
+      }
+    </script>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
