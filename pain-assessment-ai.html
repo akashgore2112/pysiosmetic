@@ -2219,7 +2219,6 @@ Keep each section concise and patient-friendly. Use professional but accessible 
         }
 
         // TOOLTIP FUNCTIONALITY
-        let tooltipTimeout;
         function showTooltip(event, part) {
             clearTimeout(tooltipTimeout);
 
@@ -2970,41 +2969,6 @@ Keep each section concise and patient-friendly. Use professional but accessible 
             });
 
             speak('Thank you for your feedback');
-        }
-
-        // VOICE SYNTHESIS
-        let speechSynth = window.speechSynthesis;
-        let currentUtterance = null;
-
-        function speak(text) {
-            if (!assessmentData.voiceEnabled || !speechSynth) return;
-
-            speechSynth.cancel();
-
-            currentUtterance = new SpeechSynthesisUtterance(text);
-            currentUtterance.rate = 0.9;
-            currentUtterance.pitch = 1;
-            currentUtterance.volume = 1;
-
-            const langMap = { en: 'en-US', hi: 'hi-IN', mr: 'mr-IN' };
-            currentUtterance.lang = langMap[assessmentData.currentLanguage] || 'en-US';
-
-            speechSynth.speak(currentUtterance);
-        }
-
-        function toggleVoice() {
-            assessmentData.voiceEnabled = !assessmentData.voiceEnabled;
-            const toggle = document.getElementById('voiceToggle');
-
-            if (assessmentData.voiceEnabled) {
-                toggle.classList.add('active');
-                speak('Voice narration enabled');
-            } else {
-                toggle.classList.remove('active');
-                speechSynth.cancel();
-            }
-
-            saveSession();
         }
 
         // LANGUAGE SWITCHING (Simplified)
