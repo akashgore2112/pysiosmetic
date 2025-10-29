@@ -524,7 +524,7 @@
             fill: rgba(243, 112, 33, 0.5);
             stroke: var(--primary);
             stroke-width: 4;
-            animation: partGlow 2s ease-in-out infinite, pulseHighlight 0.6s ease-out;
+            animation: partGlow 2s ease-in-out infinite, pulseHighlight 0.3s ease-out;
             filter: drop-shadow(0 0 20px rgba(243, 112, 33, 1));
         }
 
@@ -2888,7 +2888,8 @@
     <script>
         // STATE MANAGEMENT
         let assessmentData = {
-            bodyPart: null,
+            bodyPart: null,  // Keep for backward compatibility (first selected part)
+            selectedParts: [],  // NEW: Track multiple selected body parts
             intensity: null,
             intensityLabel: 'moderate',
             duration: null,
@@ -3687,37 +3688,166 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             document.getElementById('painTooltip').classList.remove('show');
         }
 
-        // BODY PART SELECTION
+        // BODY PART SELECTION - Multi-selection with toggle support
         function selectBodyPart(part, save = true, clickEvent = null) {
-            assessmentData.bodyPart = part;
-
             const currentSvg = assessmentData.gender === 'male' ? 'maleSvg' : 'femaleSvg';
 
-            // Remove selected class from all body parts
-            document.querySelectorAll(`#${currentSvg} .body-part`).forEach(p => p.classList.remove('selected'));
+            let clickedElement = null;
 
-            // If we have a click event, select only the clicked element
-            // This fixes the issue with symmetrical parts (left/right shoulder, knee, etc.)
+            // Determine which element was clicked or should be toggled
             if (clickEvent && clickEvent.target) {
-                clickEvent.target.classList.add('selected');
+                clickedElement = clickEvent.target;
             } else {
-                // Fallback: select all matching parts (for programmatic selection)
-                // But only select the first one to avoid ambiguity
+                // Fallback: find first matching part for programmatic selection
                 const matchingParts = document.querySelectorAll(`#${currentSvg} [data-part="${part}"]`);
                 if (matchingParts.length > 0) {
-                    matchingParts[0].classList.add('selected');
+                    clickedElement = matchingParts[0];
                 }
             }
 
-            // Render dynamic sections for this body part
-            renderDynamicSections(part);
+            if (!clickedElement) return;
 
-            // Re-render impact options for this body part
-            renderImpactOptions();
+            // Toggle selection
+            const isCurrentlySelected = clickedElement.classList.contains('selected');
+
+            if (isCurrentlySelected) {
+                // Deselect this part
+                clickedElement.classList.remove('selected');
+                assessmentData.selectedParts = assessmentData.selectedParts.filter(p => p !== part);
+            } else {
+                // Select this part
+                clickedElement.classList.add('selected');
+                if (!assessmentData.selectedParts.includes(part)) {
+                    assessmentData.selectedParts.push(part);
+                }
+            }
+
+            // Update the main bodyPart to the first selected (for backward compatibility)
+            assessmentData.bodyPart = assessmentData.selectedParts.length > 0 ? assessmentData.selectedParts[0] : null;
+
+            // Update all dependent UI elements
+            updateSelectedParts();
 
             checkStep1Complete();
             if (save) saveSession();
-            speak(`${part} selected`);
+
+            // Voice feedback
+            const action = isCurrentlySelected ? 'deselected' : 'selected';
+            speak(`${part} ${action}`);
+        }
+
+        // Update UI based on all selected parts
+        function updateSelectedParts() {
+            const selectedParts = assessmentData.selectedParts;
+
+            if (selectedParts.length === 0) {
+                // No parts selected - clear dynamic content
+                return;
+            }
+
+            if (selectedParts.length === 1) {
+                // Single part selected - use existing logic
+                renderDynamicSections(selectedParts[0]);
+                renderImpactOptions();
+            } else {
+                // Multiple parts selected - merge context
+                renderDynamicSections(selectedParts[0]); // Use first part's context for now
+                renderImpactForMultipleParts(selectedParts);
+            }
+        }
+
+        // Render combined impact options for multiple body parts
+        function renderImpactForMultipleParts(selectedParts) {
+            const step3 = document.getElementById('step3');
+            if (!step3) return;
+
+            // Collect all unique impact descriptions from all selected parts
+            const allImpacts = {
+                mild: [],
+                moderate: [],
+                severe: [],
+                critical: []
+            };
+
+            // Gather impacts from all selected parts
+            selectedParts.forEach(part => {
+                const impactSet = IMPACT_MATRIX[part] || IMPACT_MATRIX.default;
+                Object.keys(allImpacts).forEach(level => {
+                    if (impactSet[level]) {
+                        allImpacts[level].push({
+                            title: impactSet[level].title,
+                            description: impactSet[level].description,
+                            icon: impactSet[level].icon,
+                            part: part
+                        });
+                    }
+                });
+            });
+
+            // Find or create impact section
+            let impactSection = step3.querySelector('.impact-section');
+            if (!impactSection) {
+                impactSection = document.createElement('div');
+                impactSection.className = 'impact-section';
+                const stepContent = step3.querySelector('.step-content');
+                if (stepContent) {
+                    stepContent.insertBefore(impactSection, stepContent.firstChild);
+                }
+            }
+
+            // SVG icons for each impact level
+            const svgIcons = {
+                'check-circle': '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>',
+                'alert-triangle': '<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>',
+                'alert-circle': '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>',
+                'alert-octagon': '<path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2zm0-6h2v4h-2z"/>'
+            };
+
+            // Build deduplicated impact cards
+            const impactLevels = ['mild', 'moderate', 'severe', 'critical'];
+            const cardsHTML = impactLevels.map(level => {
+                const impacts = allImpacts[level];
+
+                // Deduplicate descriptions using Set
+                const uniqueDescriptions = [...new Set(impacts.map(i => i.description))];
+
+                // Use the first impact's data
+                const firstImpact = impacts[0];
+
+                // Combine descriptions if multiple unique ones exist
+                const combinedDescription = uniqueDescriptions.length > 1
+                    ? uniqueDescriptions.join('; ')
+                    : uniqueDescriptions[0];
+
+                return `
+                    <div class="impact-card" data-impact="${level}" onclick="handleImpactSelect('${level}')">
+                        <div class="impact-icon">
+                            <svg viewBox="0 0 24 24">
+                                ${svgIcons[firstImpact.icon]}
+                            </svg>
+                        </div>
+                        <div class="impact-content">
+                            <div class="impact-title">${firstImpact.title}</div>
+                            <div class="impact-description">${combinedDescription}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            impactSection.innerHTML = `
+                <h3 class="section-title" data-i18n="impactLabel">${t('impactLabel') || 'Impact on Daily Life'}</h3>
+                <div class="impact-options">
+                    ${cardsHTML}
+                </div>
+            `;
+
+            // Highlight selected impact if exists
+            if (assessmentData.impactLevel) {
+                const selectedCard = impactSection.querySelector(`[data-impact="${assessmentData.impactLevel}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                }
+            }
         }
 
         // DYNAMIC SECTION RENDERING BASED ON BODY PART
@@ -4914,9 +5044,18 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         // LANGUAGE SWITCHING (Simplified)
         // TRANSLATION HELPER FUNCTION
-        function t(key) {
+        function t(key, lang = null) {
+            // Use provided language or current language
+            const targetLang = lang || assessmentData.currentLanguage;
+
             // Normalize language code (e.g., "mr-IN" → "mr")
-            const normalizedLang = assessmentData.currentLanguage.split('-')[0];
+            const normalizedLang = normalizeLangCode(targetLang);
+
+            // Ensure TRANSLATIONS is loaded
+            if (typeof TRANSLATIONS === 'undefined') {
+                console.warn('TRANSLATIONS not loaded');
+                return key;
+            }
 
             // Try current language, fallback to English, then return key
             return TRANSLATIONS[normalizedLang]?.[key] || TRANSLATIONS.en?.[key] || key;
@@ -4929,7 +5068,15 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             return code.split('-')[0].toLowerCase();
         }
 
-        function applyTranslations() {
+        function applyTranslations(lang = null) {
+            // Use specified language or current language
+            const targetLang = lang || assessmentData.currentLanguage;
+            const normalizedLang = normalizeLangCode(targetLang);
+
+            // Ensure we're using the normalized language
+            if (assessmentData.currentLanguage !== normalizedLang) {
+                assessmentData.currentLanguage = normalizedLang;
+            }
             // Header
             const headerTitle = document.getElementById('headerTitle');
             const headerSubtitle = document.getElementById('headerSubtitle');
@@ -5122,18 +5269,41 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                             const country = data.country_code;
                             const region = data.region;
 
-                            // Regional language mapping for India
-                            if (country === 'IN') {
+                            // Extract language from API response if available
+                            let detectedLang = null;
+
+                            // Check if API provides language code
+                            if (data.languages) {
+                                // languages might be a string like "en-US,mr-IN"
+                                const langCodes = typeof data.languages === 'string'
+                                    ? data.languages.split(',')
+                                    : data.languages;
+
+                                // Get first non-English language and normalize it
+                                const nonEnglishLang = Array.isArray(langCodes)
+                                    ? langCodes.find(l => !l.startsWith('en'))
+                                    : langCodes;
+
+                                if (nonEnglishLang) {
+                                    detectedLang = normalizeLangCode(nonEnglishLang);
+                                }
+                            }
+
+                            // Fallback to region-based mapping for India
+                            if (!detectedLang && country === 'IN') {
                                 const regionLangMap = {
                                     'Maharashtra': 'mr',
                                     'Tamil Nadu': 'ta',
                                     'Gujarat': 'gu'
                                 };
 
-                                if (regionLangMap[region]) {
-                                    regionalLanguage = regionLangMap[region];
-                                    localStorage.setItem('regionLang', regionalLanguage);
-                                }
+                                detectedLang = regionLangMap[region];
+                            }
+
+                            // Store detected language if found
+                            if (detectedLang) {
+                                regionalLanguage = detectedLang;
+                                localStorage.setItem('regionLang', regionalLanguage);
                             }
 
                             localStorage.setItem('detected_region', region || 'Unknown');
@@ -5170,16 +5340,18 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             // Rebuild language buttons to update active state
             setupLanguages();
 
-            // Re-apply all translations globally
-            applyTranslations();
+            // Re-apply all translations globally (explicitly pass language for fallback)
+            applyTranslations(assessmentData.currentLanguage);
 
             // Re-render dynamic content with new language
-            if (assessmentData.bodyPart && CONTEXT_MATRIX[assessmentData.bodyPart]) {
+            if (assessmentData.selectedParts && assessmentData.selectedParts.length > 0) {
+                // Multi-part or single-part selection
+                updateSelectedParts();
+            } else if (assessmentData.bodyPart && CONTEXT_MATRIX[assessmentData.bodyPart]) {
+                // Legacy single part
                 renderDynamicSections(assessmentData.bodyPart);
+                renderImpactOptions();
             }
-
-            // Re-render impact options
-            renderImpactOptions();
 
             saveSession();
 
