@@ -18,6 +18,9 @@
     <!-- Lottie Player for Animations -->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
+    <!-- Translations Dictionary -->
+    <script src="translations.js"></script>
+
     <style>
         :root {
             --primary: #F37021;
@@ -1818,12 +1821,133 @@
             color: white;
         }
 
+        /* STICKY PROGRESS HEADER */
+        .sticky-progress-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 998;
+            background: rgba(5, 10, 20, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .progress-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            opacity: 1;
+        }
+
+        .progress-step.completed {
+            opacity: 0.8;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(243, 112, 33, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .step-number {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px rgba(243, 112, 33, 0.5);
+        }
+
+        .progress-step.completed .step-number {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .progress-step.active .step-label {
+            color: var(--text-primary);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 2px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(243, 112, 33, 0.5);
+        }
+
         @media (max-width: 768px) {
             .sticky-lang-bar {
                 top: auto;
                 bottom: 5rem;
                 right: 1rem;
                 flex-direction: column;
+            }
+
+            .sticky-progress-header {
+                padding: 0.75rem 1rem;
+            }
+
+            .step-label {
+                display: none;
+            }
+
+            .progress-steps {
+                justify-content: center;
+                gap: 1.5rem;
+                margin-bottom: 0.75rem;
             }
 
             .context-chips {
@@ -2042,13 +2166,38 @@
 <body>
     <div class="animated-background"></div>
 
-    <!-- STICKY LANGUAGE BAR -->
+    <!-- STICKY LANGUAGE BAR (3 Languages Only) -->
     <div class="sticky-lang-bar" id="stickyLangBar">
         <button class="sticky-lang-btn active" data-lang="en" onclick="switchLanguage('en')">EN</button>
         <button class="sticky-lang-btn" data-lang="hi" onclick="switchLanguage('hi')">हिं</button>
-        <button class="sticky-lang-btn" data-lang="mr" onclick="switchLanguage('mr')">मर</button>
-        <button class="sticky-lang-btn" data-lang="ta" onclick="switchLanguage('ta')">த</button>
-        <button class="sticky-lang-btn" data-lang="gu" onclick="switchLanguage('gu')">ગુ</button>
+        <button class="sticky-lang-btn" data-lang="regional" onclick="switchLanguage('regional')" id="regionalLangBtn" style="display:none;"></button>
+    </div>
+
+    <!-- STICKY PROGRESS HEADER -->
+    <div class="sticky-progress-header" id="stickyProgressHeader" style="display:none;">
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Location</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Duration</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Impact</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Analysis</div>
+                </div>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBarFill" style="width: 25%"></div>
+            </div>
+        </div>
     </div>
 
     <!-- API Configuration Modal -->
@@ -2610,176 +2759,15 @@
             aiMessages: []
         };
 
-        // TRANSLATIONS SYSTEM
-        const TRANSLATIONS = {
-            en: {
-                headerTitle: 'AI-Powered Pain Assessment',
-                headerSubtitle: 'Real-time physiotherapy insights powered by GPT-4',
-                step1Title: 'Where does it hurt?',
-                step1Description: 'Click on your body to select the pain area and intensity',
-                step2Title: 'How long have you had this pain?',
-                step2Description: 'Select the duration that best matches your experience',
-                step3Title: 'How does it affect your daily life?',
-                step3Description: 'Provide detailed information about your pain',
-                painFrequencyLabel: 'Pain Frequency',
-                painFrequencyPlaceholder: 'Select frequency',
-                painFrequencyOccasional: 'Occasional (1-2 times/week)',
-                painFrequencyFrequent: 'Frequent (3-5 times/week)',
-                painFrequencyConstant: 'Constant (Daily/All day)',
-                painTypeLabel: 'Pain Type',
-                painTypeDull: 'Dull/Aching',
-                painTypeSharp: 'Sharp/Stabbing',
-                painTypeThrobbing: 'Throbbing',
-                painTypeBurning: 'Burning/Tingling',
-                durationMonthsLabel: 'Duration in Months',
-                activityTriggersLabel: 'Activity Triggers (Check all that apply)',
-                triggerWalking: 'Walking',
-                triggerSitting: 'Sitting',
-                triggerSleeping: 'Sleeping/Lying down',
-                triggerExercise: 'Exercise/Physical activity',
-                triggerStanding: 'Standing',
-                triggerBending: 'Bending/Lifting',
-                additionalNotesLabel: 'Additional Notes (Optional)',
-                additionalNotesPlaceholder: 'Any other symptoms, medications, or relevant information...',
-                subsectionTitle: 'How does it affect you?',
-                subsectionDescription: 'Select all activities that are difficult',
-                activityWork: 'Work/Study',
-                activityExercise: 'Exercise',
-                activitySleep: 'Sleep',
-                activityDaily: 'Daily Tasks',
-                backBtn: 'Back',
-                continueBtn: 'Continue',
-                analyzeBtn: 'Analyze My Pain',
-                bookBtn: 'Book Consultation',
-                loadingText: 'Analyzing Your Pain Profile...',
-                loadingSubtext: 'Our AI is processing your assessment with GPT-4',
-                followUpTitle: 'Ask AI a Follow-up Question',
-                followUpPlaceholder: 'e.g., What exercises should I do?',
-                sendBtn: 'Send',
-                configSaved: 'Configuration saved successfully',
-                summaryTitle: 'Assessment Summary',
-                summaryArea: 'Affected Area',
-                summaryLevel: 'Pain Level',
-                summaryDuration: 'Duration',
-                summaryRecovery: 'Recovery Estimate',
-                downloadPDF: 'Download PDF',
-                shareWithDoctor: 'Share with Doctor',
-                recoveryForecast: 'Recovery Forecast',
-                analysisConfidence: 'Analysis Confidence',
-                personalizedTips: 'Personalized Daily Tips',
-                months: 'months',
-                month: 'month'
-            },
-            hi: {
-                headerTitle: 'AI-संचालित दर्द मूल्यांकन',
-                headerSubtitle: 'GPT-4 द्वारा संचालित वास्तविक समय फिजियोथेरेपी अंतर्दृष्टि',
-                step1Title: 'कहाँ दर्द होता है?',
-                step1Description: 'दर्द क्षेत्र और तीव्रता चुनने के लिए अपने शरीर पर क्लिक करें',
-                step2Title: 'आपको यह दर्द कब से है?',
-                step2Description: 'वह अवधि चुनें जो आपके अनुभव से मेल खाती है',
-                step3Title: 'यह आपके दैनिक जीवन को कैसे प्रभावित करता है?',
-                step3Description: 'अपने दर्द के बारे में विस्तृत जानकारी प्रदान करें',
-                painFrequencyLabel: 'दर्द की आवृत्ति',
-                painFrequencyPlaceholder: 'आवृत्ति चुनें',
-                painFrequencyOccasional: 'कभी-कभी (सप्ताह में 1-2 बार)',
-                painFrequencyFrequent: 'अक्सर (सप्ताह में 3-5 बार)',
-                painFrequencyConstant: 'लगातार (दैनिक/पूरे दिन)',
-                painTypeLabel: 'दर्द का प्रकार',
-                painTypeDull: 'सुस्त/दर्द',
-                painTypeSharp: 'तेज/चुभने वाला',
-                painTypeThrobbing: 'धड़कता हुआ',
-                painTypeBurning: 'जलन/झुनझुनी',
-                durationMonthsLabel: 'महीनों में अवधि',
-                activityTriggersLabel: 'गतिविधि ट्रिगर (सभी लागू चुनें)',
-                triggerWalking: 'चलना',
-                triggerSitting: 'बैठना',
-                triggerSleeping: 'सोना/लेटना',
-                triggerExercise: 'व्यायाम/शारीरिक गतिविधि',
-                triggerStanding: 'खड़े रहना',
-                triggerBending: 'झुकना/उठाना',
-                additionalNotesLabel: 'अतिरिक्त नोट्स (वैकल्पिक)',
-                additionalNotesPlaceholder: 'कोई अन्य लक्षण, दवाएं, या प्रासंगिक जानकारी...',
-                subsectionTitle: 'यह आपको कैसे प्रभावित करता है?',
-                subsectionDescription: 'सभी कठिन गतिविधियों का चयन करें',
-                activityWork: 'काम/अध्ययन',
-                activityExercise: 'व्यायाम',
-                activitySleep: 'नींद',
-                activityDaily: 'दैनिक कार्य',
-                backBtn: 'पीछे',
-                continueBtn: 'जारी रखें',
-                analyzeBtn: 'मेरे दर्द का विश्लेषण करें',
-                bookBtn: 'परामर्श बुक करें',
-                loadingText: 'आपके दर्द प्रोफाइल का विश्लेषण...',
-                loadingSubtext: 'हमारा AI GPT-4 के साथ आपके मूल्यांकन को संसाधित कर रहा है',
-                followUpTitle: 'AI से एक फॉलो-अप प्रश्न पूछें',
-                followUpPlaceholder: 'उदा., मुझे कौन से व्यायाम करने चाहिए?',
-                sendBtn: 'भेजें',
-                configSaved: 'कॉन्फ़िगरेशन सफलतापूर्वक सहेजा गया',
-                summaryTitle: 'मूल्यांकन सारांश',
-                summaryArea: 'प्रभावित क्षेत्र',
-                summaryLevel: 'दर्द स्तर',
-                summaryDuration: 'अवधि',
-                summaryRecovery: 'रिकवरी अनुमान',
-                downloadPDF: 'PDF डाउनलोड करें',
-                shareWithDoctor: 'डॉक्टर के साथ साझा करें',
-                recoveryForecast: 'रिकवरी पूर्वानुमान',
-                analysisConfidence: 'विश्लेषण विश्वास',
-                personalizedTips: 'व्यक्तिगत दैनिक सुझाव',
-                months: 'महीने',
-                month: 'महीना'
-            },
-            mr: {
-                // Marathi translations
-                headerTitle: 'AI-सक्षम वेदना मूल्यमापन',
-                headerSubtitle: 'GPT-4 द्वारे संचालित रिअल-टाइम फिजिओथेरपी अंतर्दृष्टी',
-                step1Title: 'कुठे दुखते?',
-                step1Description: 'वेदना क्षेत्र आणि तीव्रता निवडण्यासाठी आपल्या शरीरावर क्लिक करा',
-                step2Title: 'ही वेदना किती काळापासून आहे?',
-                step3Title: 'हे आपल्या दैनंदिन जीवनावर कसा परिणाम करते?',
-                painFrequencyLabel: 'वेदना वारंवारता',
-                painTypeLabel: 'वेदनाचा प्रकार',
-                backBtn: 'मागे',
-                continueBtn: 'पुढे चला',
-                analyzeBtn: 'माझ्या वेदनाचे विश्लेषण करा',
-                months: 'महिने',
-                month: 'महिना'
-            },
-            ta: {
-                // Tamil translations
-                headerTitle: 'AI-இயக்கப்படும் வலி மதிப்பீடு',
-                headerSubtitle: 'GPT-4 மூலம் இயக்கப்படும் நேரடி பிசியோதெரபி நுண்ணறிவு',
-                step1Title: 'எங்கே வலிக்கிறது?',
-                step1Description: 'வலி பகுதியையும் தீவிரத்தையும் தேர்ந்தெடுக்க உங்கள் உடலில் கிளிக் செய்யவும்',
-                step2Title: 'இந்த வலி எவ்வளவு காலமாக உள்ளது?',
-                step3Title: 'இது உங்கள் அன்றாட வாழ்க்கையை எவ்வாறு பாதிக்கிறது?',
-                painFrequencyLabel: 'வலி அதிர்வெண்',
-                painTypeLabel: 'வலி வகை',
-                backBtn: 'பின்',
-                continueBtn: 'தொடரவும்',
-                analyzeBtn: 'என் வலியை பகுப்பாய்வு செய்யுங்கள்',
-                months: 'மாதங்கள்',
-                month: 'மாதம்'
-            },
-            gu: {
-                // Gujarati translations
-                headerTitle: 'AI-સંચાલિત પીડા મૂલ્યાંકન',
-                headerSubtitle: 'GPT-4 દ્વારા સંચાલિત રીઅલ-ટાઇમ ફિઝિયોથેરાપી આંતરદૃષ્ટિ',
-                step1Title: 'ક્યાં દુખાવો થાય છે?',
-                step1Description: 'પીડા વિસ્તાર અને તીવ્રતા પસંદ કરવા માટે તમારા શરીર પર ક્લિક કરો',
-                step2Title: 'આ પીડા કેટલા સમયથી છે?',
-                step3Title: 'આ તમારા દૈનિક જીવનને કેવી રીતે અસર કરે છે?',
-                painFrequencyLabel: 'પીડા આવર્તન',
-                painTypeLabel: 'પીડા પ્રકાર',
-                backBtn: 'પાછળ',
-                continueBtn: 'આગળ વધો',
-                analyzeBtn: 'મારી પીડાનું વિશ્લેષણ કરો',
-                months: 'મહિનાઓ',
-                month: 'મહિનો'
-            }
-        };
+        // TRANSLATIONS SYSTEM - Loaded from external translations.js file
+        // TRANSLATIONS object is now available globally
 
-        // DYNAMIC SECTION INPUTS BASED ON BODY PART
-        const SECTION_INPUTS = {
+        // Enhanced state to track regional language
+        let regionalLanguage = null;  // Will be auto-detected (mr, ta, or gu)
+        let regionalLanguageName = '';  // Display name for regional button
+
+        // CONTEXT MATRIX - Comprehensive body-part specific configuration
+        const CONTEXT_MATRIX = {
             knee: {
                 duration: {
                     options: ['1-2 weeks', '2-4 weeks', '1-3 months', '3-6 months', '6+ months'],
@@ -3386,7 +3374,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         // DYNAMIC SECTION RENDERING BASED ON BODY PART
         function renderDynamicSections(bodyPart) {
-            const sectionConfig = SECTION_INPUTS[bodyPart];
+            const sectionConfig = CONTEXT_MATRIX[bodyPart];
             if (!sectionConfig) {
                 console.log(`No specific configuration for ${bodyPart}, using default`);
                 return;
@@ -3668,8 +3656,13 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const step = assessmentData.currentStep;
             const percentage = ((step - 1) / (assessmentData.totalSteps - 1)) * 100;
 
-            document.getElementById('progressLineFill').style.width = `${percentage}%`;
+            // Update main progress bar
+            const progressLineFill = document.getElementById('progressLineFill');
+            if (progressLineFill) {
+                progressLineFill.style.width = `${percentage}%`;
+            }
 
+            // Update all progress steps (both main and sticky header)
             document.querySelectorAll('.progress-step').forEach((stepEl, index) => {
                 stepEl.classList.remove('active', 'completed');
 
@@ -3679,6 +3672,23 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     stepEl.classList.add('active');
                 }
             });
+
+            // Update sticky progress header
+            const stickyHeader = document.getElementById('stickyProgressHeader');
+            const progressBarFill = document.getElementById('progressBarFill');
+
+            if (stickyHeader && progressBarFill) {
+                // Show sticky header after step 1
+                if (step > 1) {
+                    stickyHeader.style.display = 'block';
+                } else {
+                    stickyHeader.style.display = 'none';
+                }
+
+                // Update progress bar fill
+                const stickyPercentage = (step / assessmentData.totalSteps) * 100;
+                progressBarFill.style.width = `${stickyPercentage}%`;
+            }
         }
 
         function updateNextButton() {
@@ -4654,59 +4664,95 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             try {
                 // Check if language is already set in localStorage
                 const savedLang = localStorage.getItem('preferred_language');
-                if (savedLang) {
-                    assessmentData.currentLanguage = savedLang;
-                    applyTranslations();
-                    return;
-                }
 
-                // Auto-detect based on region
+                // Always default to English first
+                assessmentData.currentLanguage = 'en';
+
+                // Auto-detect regional language for India
                 const response = await fetch('https://ipapi.co/json/');
                 if (response.ok) {
                     const data = await response.json();
                     const country = data.country_code;
                     const region = data.region; // State/region name
 
-                    // Regional language mapping for India
+                    // Regional language mapping for India (3-language system)
                     if (country === 'IN') {
-                        // Check state for regional language
                         const regionLangMap = {
-                            'Maharashtra': 'mr',  // Marathi
-                            'Tamil Nadu': 'ta',   // Tamil
-                            'Gujarat': 'gu'       // Gujarati
+                            'Maharashtra': { code: 'mr', name: 'मर', fullName: 'Marathi' },
+                            'Tamil Nadu': { code: 'ta', name: 'த', fullName: 'Tamil' },
+                            'Gujarat': { code: 'gu', name: 'ગુ', fullName: 'Gujarati' }
                         };
 
-                        assessmentData.currentLanguage = regionLangMap[region] || 'hi';
-                    } else {
-                        assessmentData.currentLanguage = 'en';
+                        if (regionLangMap[region]) {
+                            regionalLanguage = regionLangMap[region].code;
+                            regionalLanguageName = regionLangMap[region].name;
+
+                            // Show regional language button
+                            const regionalBtn = document.getElementById('regionalLangBtn');
+                            if (regionalBtn) {
+                                regionalBtn.textContent = regionalLanguageName;
+                                regionalBtn.style.display = 'block';
+                                regionalBtn.setAttribute('data-lang', regionalLanguage);
+                            }
+
+                            // If user had saved regional language, restore it
+                            if (savedLang && savedLang === regionalLanguage) {
+                                assessmentData.currentLanguage = regionalLanguage;
+                            }
+                        }
                     }
 
-                    localStorage.setItem('preferred_language', assessmentData.currentLanguage);
+                    // If user had saved EN or HI, restore it
+                    if (savedLang && (savedLang === 'en' || savedLang === 'hi')) {
+                        assessmentData.currentLanguage = savedLang;
+                    }
+
                     localStorage.setItem('detected_region', region || 'Unknown');
-                    applyTranslations();
+                    if (regionalLanguage) {
+                        localStorage.setItem('regional_language', regionalLanguage);
+                    }
                 }
+
+                applyTranslations();
+                updateLanguageButtons();
             } catch (error) {
                 console.log('Language auto-detection failed, using default (English)');
                 assessmentData.currentLanguage = 'en';
                 applyTranslations();
+                updateLanguageButtons();
             }
         }
 
         function switchLanguage(lang) {
+            // Handle "regional" button click
+            if (lang === 'regional' && regionalLanguage) {
+                lang = regionalLanguage;
+            }
+
             assessmentData.currentLanguage = lang;
             localStorage.setItem('preferred_language', lang);
 
-            // Update both header and sticky bar buttons
-            document.querySelectorAll('.lang-btn, .sticky-lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelectorAll(`[data-lang="${lang}"]`).forEach(btn => {
-                btn.classList.add('active');
-            });
-
+            updateLanguageButtons();
             applyTranslations();
             saveSession();
             speak(t('headerTitle'));
+        }
+
+        function updateLanguageButtons() {
+            // Update all language buttons
+            document.querySelectorAll('.lang-btn, .sticky-lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Activate current language button
+            const currentLang = assessmentData.currentLanguage;
+            const selector = currentLang === regionalLanguage
+                ? '[data-lang="regional"]'
+                : `[data-lang="${currentLang}"]`;
+
+            document.querySelectorAll(selector).forEach(btn => {
+                btn.classList.add('active');
+            });
         }
 
         // INITIALIZATION
