@@ -1720,6 +1720,117 @@
             margin-bottom: 0.5rem;
         }
 
+        /* CONTEXT QUESTIONS */
+        .context-questions-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .context-question {
+            margin-bottom: 1.5rem;
+        }
+
+        .context-question:last-child {
+            margin-bottom: 0;
+        }
+
+        /* CONTEXT SUMMARY CHIPS */
+        .context-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+        }
+
+        .context-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.2), rgba(255, 140, 66, 0.2));
+            border: 1px solid rgba(243, 112, 33, 0.3);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            animation: chipFadeIn 0.4s ease;
+        }
+
+        .context-chip svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--primary);
+        }
+
+        @keyframes chipFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* STICKY LANGUAGE BAR */
+        .sticky-lang-bar {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 999;
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 0.5rem;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .sticky-lang-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sticky-lang-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .sticky-lang-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sticky-lang-bar {
+                top: auto;
+                bottom: 5rem;
+                right: 1rem;
+                flex-direction: column;
+            }
+
+            .context-chips {
+                flex-direction: column;
+            }
+        }
+
         @media (max-width: 768px) {
             .input-row {
                 grid-template-columns: 1fr;
@@ -1930,6 +2041,15 @@
 </head>
 <body>
     <div class="animated-background"></div>
+
+    <!-- STICKY LANGUAGE BAR -->
+    <div class="sticky-lang-bar" id="stickyLangBar">
+        <button class="sticky-lang-btn active" data-lang="en" onclick="switchLanguage('en')">EN</button>
+        <button class="sticky-lang-btn" data-lang="hi" onclick="switchLanguage('hi')">हिं</button>
+        <button class="sticky-lang-btn" data-lang="mr" onclick="switchLanguage('mr')">मर</button>
+        <button class="sticky-lang-btn" data-lang="ta" onclick="switchLanguage('ta')">த</button>
+        <button class="sticky-lang-btn" data-lang="gu" onclick="switchLanguage('gu')">ગુ</button>
+    </div>
 
     <!-- API Configuration Modal -->
     <div class="config-modal" id="configModal">
@@ -2607,6 +2727,135 @@
                 personalizedTips: 'व्यक्तिगत दैनिक सुझाव',
                 months: 'महीने',
                 month: 'महीना'
+            },
+            mr: {
+                // Marathi translations
+                headerTitle: 'AI-सक्षम वेदना मूल्यमापन',
+                headerSubtitle: 'GPT-4 द्वारे संचालित रिअल-टाइम फिजिओथेरपी अंतर्दृष्टी',
+                step1Title: 'कुठे दुखते?',
+                step1Description: 'वेदना क्षेत्र आणि तीव्रता निवडण्यासाठी आपल्या शरीरावर क्लिक करा',
+                step2Title: 'ही वेदना किती काळापासून आहे?',
+                step3Title: 'हे आपल्या दैनंदिन जीवनावर कसा परिणाम करते?',
+                painFrequencyLabel: 'वेदना वारंवारता',
+                painTypeLabel: 'वेदनाचा प्रकार',
+                backBtn: 'मागे',
+                continueBtn: 'पुढे चला',
+                analyzeBtn: 'माझ्या वेदनाचे विश्लेषण करा',
+                months: 'महिने',
+                month: 'महिना'
+            },
+            ta: {
+                // Tamil translations
+                headerTitle: 'AI-இயக்கப்படும் வலி மதிப்பீடு',
+                headerSubtitle: 'GPT-4 மூலம் இயக்கப்படும் நேரடி பிசியோதெரபி நுண்ணறிவு',
+                step1Title: 'எங்கே வலிக்கிறது?',
+                step1Description: 'வலி பகுதியையும் தீவிரத்தையும் தேர்ந்தெடுக்க உங்கள் உடலில் கிளிக் செய்யவும்',
+                step2Title: 'இந்த வலி எவ்வளவு காலமாக உள்ளது?',
+                step3Title: 'இது உங்கள் அன்றாட வாழ்க்கையை எவ்வாறு பாதிக்கிறது?',
+                painFrequencyLabel: 'வலி அதிர்வெண்',
+                painTypeLabel: 'வலி வகை',
+                backBtn: 'பின்',
+                continueBtn: 'தொடரவும்',
+                analyzeBtn: 'என் வலியை பகுப்பாய்வு செய்யுங்கள்',
+                months: 'மாதங்கள்',
+                month: 'மாதம்'
+            },
+            gu: {
+                // Gujarati translations
+                headerTitle: 'AI-સંચાલિત પીડા મૂલ્યાંકન',
+                headerSubtitle: 'GPT-4 દ્વારા સંચાલિત રીઅલ-ટાઇમ ફિઝિયોથેરાપી આંતરદૃષ્ટિ',
+                step1Title: 'ક્યાં દુખાવો થાય છે?',
+                step1Description: 'પીડા વિસ્તાર અને તીવ્રતા પસંદ કરવા માટે તમારા શરીર પર ક્લિક કરો',
+                step2Title: 'આ પીડા કેટલા સમયથી છે?',
+                step3Title: 'આ તમારા દૈનિક જીવનને કેવી રીતે અસર કરે છે?',
+                painFrequencyLabel: 'પીડા આવર્તન',
+                painTypeLabel: 'પીડા પ્રકાર',
+                backBtn: 'પાછળ',
+                continueBtn: 'આગળ વધો',
+                analyzeBtn: 'મારી પીડાનું વિશ્લેષણ કરો',
+                months: 'મહિનાઓ',
+                month: 'મહિનો'
+            }
+        };
+
+        // DYNAMIC SECTION INPUTS BASED ON BODY PART
+        const SECTION_INPUTS = {
+            knee: {
+                duration: {
+                    options: ['1-2 weeks', '2-4 weeks', '1-3 months', '3-6 months', '6+ months'],
+                    contextQuestions: [
+                        { label: 'Does it hurt when climbing stairs?', type: 'radio', options: ['Yes', 'No', 'Sometimes'] },
+                        { label: 'Do you hear any clicking or popping sounds?', type: 'radio', options: ['Yes', 'No', 'Occasionally'] },
+                        { label: 'Is there swelling around the knee?', type: 'radio', options: ['Yes', 'No', 'Mild swelling'] }
+                    ]
+                },
+                activities: ['Walking', 'Running', 'Climbing stairs', 'Squatting', 'Standing for long periods']
+            },
+            back: {
+                duration: {
+                    options: ['Less than 1 week', '1-4 weeks', '1-3 months', '3-6 months', 'Chronic (6+ months)'],
+                    contextQuestions: [
+                        { label: 'Does the pain radiate to your legs?', type: 'radio', options: ['Yes', 'No', 'Sometimes'] },
+                        { label: 'Is it worse in the morning?', type: 'radio', options: ['Yes', 'No', 'About the same'] },
+                        { label: 'Does coughing or sneezing increase the pain?', type: 'radio', options: ['Yes', 'No', 'Slightly'] }
+                    ]
+                },
+                activities: ['Sitting', 'Standing', 'Bending', 'Lifting objects', 'Sleeping']
+            },
+            shoulder: {
+                duration: {
+                    options: ['1-2 weeks', '2-4 weeks', '1-3 months', '3-6 months', '6+ months'],
+                    contextQuestions: [
+                        { label: 'Can you raise your arm above your head?', type: 'radio', options: ['Yes', 'No', 'With difficulty'] },
+                        { label: 'Do you feel weakness in the shoulder?', type: 'radio', options: ['Yes', 'No', 'Sometimes'] },
+                        { label: 'Is there pain at night?', type: 'radio', options: ['Yes', 'No', 'Occasionally'] }
+                    ]
+                },
+                activities: ['Reaching overhead', 'Lifting objects', 'Carrying bags', 'Sleeping on that side', 'Throwing motions']
+            },
+            neck: {
+                duration: {
+                    options: ['1-2 days', '3-7 days', '1-4 weeks', '1-3 months', '3+ months'],
+                    contextQuestions: [
+                        { label: 'Do you have headaches associated with neck pain?', type: 'radio', options: ['Yes', 'No', 'Sometimes'] },
+                        { label: 'Does the pain radiate to your arms?', type: 'radio', options: ['Yes', 'No', 'Occasionally'] },
+                        { label: 'Is it difficult to turn your head?', type: 'radio', options: ['Yes', 'No', 'Slightly'] }
+                    ]
+                },
+                activities: ['Looking at phone/computer', 'Driving', 'Reading', 'Sleeping', 'Turning head']
+            },
+            wrist: {
+                duration: {
+                    options: ['1-3 days', '4-7 days', '1-2 weeks', '2-4 weeks', '1+ month'],
+                    contextQuestions: [
+                        { label: 'Do you have numbness or tingling in your fingers?', type: 'radio', options: ['Yes', 'No', 'Sometimes'] },
+                        { label: 'Is grip strength affected?', type: 'radio', options: ['Yes', 'No', 'Slightly'] },
+                        { label: 'Does typing or writing increase pain?', type: 'radio', options: ['Yes', 'No', 'Moderately'] }
+                    ]
+                },
+                activities: ['Typing', 'Writing', 'Gripping objects', 'Using phone', 'Lifting items']
+            },
+            ankle: {
+                duration: {
+                    options: ['1-3 days', '4-7 days', '1-2 weeks', '2-4 weeks', '1+ month'],
+                    contextQuestions: [
+                        { label: 'Did you injure your ankle recently?', type: 'radio', options: ['Yes', 'No', 'Not sure'] },
+                        { label: 'Is there visible swelling or bruising?', type: 'radio', options: ['Yes', 'No', 'Mild'] },
+                        { label: 'Can you bear weight on it?', type: 'radio', options: ['Yes', 'No', 'With difficulty'] }
+                    ]
+                },
+                activities: ['Walking', 'Running', 'Climbing stairs', 'Standing', 'Sports activities']
+            },
+            hip: {
+                duration: {
+                    options: ['1-2 weeks', '2-4 weeks', '1-3 months', '3-6 months', '6+ months'],
+                    contextQuestions: [
+                        { label: 'Does the pain radiate to the groin?', type: 'radio', options: ['Yes', 'No', 'Sometimes'] },
+                        { label: 'Is it difficult to put on shoes/socks?', type: 'radio', options: ['Yes', 'No', 'Slightly'] },
+                        { label: 'Do you hear clicking sounds from the hip?', type: 'radio', options: ['Yes', 'No', 'Occasionally'] }
+                    ]
+                },
+                activities: ['Walking', 'Climbing stairs', 'Sitting for long periods', 'Getting up from sitting', 'Lying on that side']
             }
         };
 
@@ -3130,6 +3379,154 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             checkStep1Complete();
             if (save) saveSession();
             speak(`${part} selected`);
+
+            // Trigger dynamic section rendering for steps 2 and 3
+            renderDynamicSections(part);
+        }
+
+        // DYNAMIC SECTION RENDERING BASED ON BODY PART
+        function renderDynamicSections(bodyPart) {
+            const sectionConfig = SECTION_INPUTS[bodyPart];
+            if (!sectionConfig) {
+                console.log(`No specific configuration for ${bodyPart}, using default`);
+                return;
+            }
+
+            // Render dynamic duration options (Step 2)
+            renderDynamicDuration(sectionConfig.duration);
+
+            // Render dynamic activities (Step 3)
+            renderDynamicActivities(sectionConfig.activities);
+
+            // Render context-specific questions (Step 3)
+            renderContextQuestions(sectionConfig.duration.contextQuestions);
+        }
+
+        function renderDynamicDuration(durationConfig) {
+            const step2 = document.getElementById('step2');
+            const durationGrid = step2.querySelector('.options-grid');
+
+            if (!durationGrid || !durationConfig) return;
+
+            // Clear existing options
+            durationGrid.innerHTML = '';
+
+            // Add animation class
+            durationGrid.style.opacity = '0';
+
+            // Render new options
+            durationConfig.options.forEach(option => {
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.setAttribute('data-duration', option);
+                card.onclick = () => selectDuration(option);
+                card.innerHTML = `
+                    <div class="option-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <div class="option-text">${option}</div>
+                `;
+                durationGrid.appendChild(card);
+            });
+
+            // Fade in
+            setTimeout(() => {
+                durationGrid.style.transition = 'opacity 0.5s ease';
+                durationGrid.style.opacity = '1';
+            }, 100);
+        }
+
+        function renderDynamicActivities(activities) {
+            const step3 = document.getElementById('step3');
+            const activityGrid = step3.querySelector('.options-grid');
+
+            if (!activityGrid || !activities) return;
+
+            // Clear existing activities
+            activityGrid.innerHTML = '';
+
+            // Add animation
+            activityGrid.style.opacity = '0';
+
+            // Render new activities
+            activities.forEach((activity, index) => {
+                const activityId = activity.toLowerCase().replace(/\s+/g, '-');
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.setAttribute('data-activity', activityId);
+                card.onclick = () => toggleActivity(activityId);
+
+                const icons = [
+                    '<path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>',
+                    '<path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>',
+                    '<path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>',
+                    '<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>',
+                    '<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>'
+                ];
+
+                card.innerHTML = `
+                    <div class="option-icon">
+                        <svg viewBox="0 0 24 24">${icons[index % icons.length]}</svg>
+                    </div>
+                    <div class="option-text">${activity}</div>
+                `;
+                activityGrid.appendChild(card);
+            });
+
+            // Fade in
+            setTimeout(() => {
+                activityGrid.style.transition = 'opacity 0.5s ease';
+                activityGrid.style.opacity = '1';
+            }, 100);
+        }
+
+        function renderContextQuestions(questions) {
+            if (!questions || questions.length === 0) return;
+
+            const step3 = document.getElementById('step3');
+            let contextContainer = step3.querySelector('.context-questions-container');
+
+            // Create container if it doesn't exist
+            if (!contextContainer) {
+                contextContainer = document.createElement('div');
+                contextContainer.className = 'context-questions-container';
+                contextContainer.style.opacity = '0';
+
+                // Insert before the enhanced-inputs section
+                const enhancedInputs = step3.querySelector('.enhanced-inputs');
+                if (enhancedInputs) {
+                    step3.insertBefore(contextContainer, enhancedInputs);
+                }
+            }
+
+            // Clear existing questions
+            contextContainer.innerHTML = '<h3 class="subsection-title">Additional Context</h3>';
+
+            // Render questions
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'context-question';
+                questionDiv.innerHTML = `
+                    <label class="input-label">${q.label}</label>
+                    <div class="radio-group">
+                        ${q.options.map((opt, i) => `
+                            <label class="radio-label">
+                                <input type="radio" name="contextQ${index}" value="${opt}">
+                                <span>${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                contextContainer.appendChild(questionDiv);
+            });
+
+            // Fade in
+            setTimeout(() => {
+                contextContainer.style.transition = 'opacity 0.5s ease';
+                contextContainer.style.opacity = '1';
+            }, 200);
         }
 
         function selectIntensity(level, save = true) {
@@ -3515,6 +3912,80 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             }
             if (summaryRecovery) {
                 summaryRecovery.textContent = assessmentData.intensity === 'severe' ? '6-12 weeks' : '2-4 weeks';
+            }
+
+            // Add context summary chips
+            showContextChips();
+        }
+
+        function showContextChips() {
+            const summaryCard = document.getElementById('summaryCard');
+            if (!summaryCard) return;
+
+            // Remove existing chips if any
+            let chipsContainer = summaryCard.querySelector('.context-chips');
+            if (chipsContainer) {
+                chipsContainer.remove();
+            }
+
+            // Create new chips container
+            chipsContainer = document.createElement('div');
+            chipsContainer.className = 'context-chips';
+
+            // Prepare chip data
+            const chips = [];
+
+            if (assessmentData.painType) {
+                chips.push({
+                    icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>',
+                    label: `${assessmentData.painType} pain`
+                });
+            }
+
+            if (assessmentData.painFrequency) {
+                chips.push({
+                    icon: '<path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>',
+                    label: assessmentData.painFrequency
+                });
+            }
+
+            if (assessmentData.activities && assessmentData.activities.length > 0) {
+                chips.push({
+                    icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>',
+                    label: `${assessmentData.activities.length} activities affected`
+                });
+            }
+
+            if (assessmentData.durationMonths) {
+                chips.push({
+                    icon: '<path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>',
+                    label: `${assessmentData.durationMonths} ${assessmentData.durationMonths === 1 ? 'month' : 'months'}`
+                });
+            }
+
+            const confidence = assessmentData.intensity === 'severe' ? 'High confidence' : 'Moderate confidence';
+            chips.push({
+                icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>',
+                label: confidence
+            });
+
+            // Render chips
+            chips.forEach(chip => {
+                const chipEl = document.createElement('div');
+                chipEl.className = 'context-chip';
+                chipEl.innerHTML = `
+                    <svg viewBox="0 0 24 24">${chip.icon}</svg>
+                    <span>${chip.label}</span>
+                `;
+                chipsContainer.appendChild(chipEl);
+            });
+
+            // Insert chips after summary grid
+            const summaryActions = summaryCard.querySelector('.summary-actions');
+            if (summaryActions) {
+                summaryCard.insertBefore(chipsContainer, summaryActions);
+            } else {
+                summaryCard.appendChild(chipsContainer);
             }
         }
 
@@ -4190,19 +4661,28 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 }
 
                 // Auto-detect based on region
-                const response = await fetch('https://ipapi.co/json/', { timeout: 3000 });
+                const response = await fetch('https://ipapi.co/json/');
                 if (response.ok) {
                     const data = await response.json();
                     const country = data.country_code;
+                    const region = data.region; // State/region name
 
-                    // Set Hindi for India
+                    // Regional language mapping for India
                     if (country === 'IN') {
-                        assessmentData.currentLanguage = 'hi';
+                        // Check state for regional language
+                        const regionLangMap = {
+                            'Maharashtra': 'mr',  // Marathi
+                            'Tamil Nadu': 'ta',   // Tamil
+                            'Gujarat': 'gu'       // Gujarati
+                        };
+
+                        assessmentData.currentLanguage = regionLangMap[region] || 'hi';
                     } else {
                         assessmentData.currentLanguage = 'en';
                     }
 
                     localStorage.setItem('preferred_language', assessmentData.currentLanguage);
+                    localStorage.setItem('detected_region', region || 'Unknown');
                     applyTranslations();
                 }
             } catch (error) {
@@ -4216,11 +4696,13 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             assessmentData.currentLanguage = lang;
             localStorage.setItem('preferred_language', lang);
 
-            document.querySelectorAll('.lang-btn').forEach(btn => {
+            // Update both header and sticky bar buttons
+            document.querySelectorAll('.lang-btn, .sticky-lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            const langBtn = document.querySelector(`[data-lang="${lang}"]`);
-            if (langBtn) langBtn.classList.add('active');
+            document.querySelectorAll(`[data-lang="${lang}"]`).forEach(btn => {
+                btn.classList.add('active');
+            });
 
             applyTranslations();
             saveSession();
