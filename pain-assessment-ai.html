@@ -1785,6 +1785,90 @@
             animation: pulse 1.5s ease-in-out infinite;
         }
 
+        /* IMPACT OPTIONS */
+        .impact-section {
+            margin: 2rem 0;
+        }
+
+        .impact-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .impact-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .impact-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(243, 112, 33, 0.2);
+        }
+
+        .impact-card.selected {
+            background: linear-gradient(135deg, rgba(243, 112, 33, 0.1), rgba(255, 140, 66, 0.1));
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(243, 112, 33, 0.3);
+        }
+
+        .impact-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(243, 112, 33, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .impact-card:hover .impact-icon,
+        .impact-card.selected .impact-icon {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .impact-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+
+        .impact-card:hover .impact-icon svg,
+        .impact-card.selected .impact-icon svg {
+            fill: white;
+        }
+
+        .impact-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .impact-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .impact-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
         /* CONTEXT SUMMARY CHIPS */
         .context-chips {
             display: flex;
@@ -1864,6 +1948,12 @@
         .sticky-lang-btn.active {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
+        }
+
+        .lang-flag {
+            display: inline-block;
+            margin-right: 0.25rem;
+            font-size: 1rem;
         }
 
         /* STICKY PROGRESS HEADER */
@@ -3920,8 +4010,11 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 const aiResponse = await callOpenAI(prompt);
 
                 if (aiResponse) {
-                    assessmentData.aiResponse = aiResponse;
-                    assessmentData.aiMessages = parseAIResponse(aiResponse);
+                    // Translate AI response if not in English
+                    const translatedResponse = await translateAIResponse(aiResponse);
+
+                    assessmentData.aiResponse = translatedResponse;
+                    assessmentData.aiMessages = parseAIResponse(translatedResponse);
                 } else {
                     assessmentData.aiMessages = getLocalAnalysis();
                 }
@@ -4848,99 +4941,379 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             updateNextButton();
         }
 
+        // ==================== LANGUAGE SYSTEM (3 Languages) ====================
+        function setupLanguages() {
+            // Build 3-language buttons: EN, HI, Regional (if detected)
+            const stickyLangBar = document.getElementById('stickyLangBar');
+            if (!stickyLangBar) return;
+
+            // Clear existing buttons
+            stickyLangBar.innerHTML = '';
+
+            // Language configurations with flag emojis
+            const languages = [
+                { code: 'en', name: 'EN', flag: '🇬🇧', fullName: 'English' },
+                { code: 'hi', name: 'हिं', flag: '🇮🇳', fullName: 'Hindi' }
+            ];
+
+            // Add regional language if detected
+            if (regionalLanguage) {
+                const regionalConfig = {
+                    'mr': { code: 'mr', name: 'मर', flag: '🇮🇳', fullName: 'Marathi' },
+                    'ta': { code: 'ta', name: 'த', flag: '🇮🇳', fullName: 'Tamil' },
+                    'gu': { code: 'gu', name: 'ગુ', flag: '🇮🇳', fullName: 'Gujarati' }
+                };
+
+                if (regionalConfig[regionalLanguage]) {
+                    languages.push(regionalConfig[regionalLanguage]);
+                }
+            }
+
+            // Create buttons
+            languages.forEach(lang => {
+                const btn = document.createElement('button');
+                btn.className = 'sticky-lang-btn';
+                btn.setAttribute('data-lang', lang.code);
+                btn.setAttribute('title', lang.fullName);
+                btn.onclick = () => switchLanguage(lang.code);
+
+                // Add flag and name
+                btn.innerHTML = `<span class="lang-flag">${lang.flag}</span> ${lang.name}`;
+
+                // Set active state
+                if (lang.code === assessmentData.currentLanguage) {
+                    btn.classList.add('active');
+                }
+
+                stickyLangBar.appendChild(btn);
+            });
+        }
+
         async function detectAndSetLanguage() {
             try {
-                // Check if language is already set in localStorage
+                // Check cached region first
+                const cachedRegion = localStorage.getItem('regionLang');
                 const savedLang = localStorage.getItem('preferred_language');
 
                 // Always default to English first
                 assessmentData.currentLanguage = 'en';
 
-                // Auto-detect regional language for India
-                const response = await fetch('https://ipapi.co/json/');
-                if (response.ok) {
-                    const data = await response.json();
-                    const country = data.country_code;
-                    const region = data.region; // State/region name
-
-                    // Regional language mapping for India (3-language system)
-                    if (country === 'IN') {
-                        const regionLangMap = {
-                            'Maharashtra': { code: 'mr', name: 'मर', fullName: 'Marathi' },
-                            'Tamil Nadu': { code: 'ta', name: 'த', fullName: 'Tamil' },
-                            'Gujarat': { code: 'gu', name: 'ગુ', fullName: 'Gujarati' }
-                        };
-
-                        if (regionLangMap[region]) {
-                            regionalLanguage = regionLangMap[region].code;
-                            regionalLanguageName = regionLangMap[region].name;
-
-                            // Show regional language button
-                            const regionalBtn = document.getElementById('regionalLangBtn');
-                            if (regionalBtn) {
-                                regionalBtn.textContent = regionalLanguageName;
-                                regionalBtn.style.display = 'block';
-                                regionalBtn.setAttribute('data-lang', regionalLanguage);
-                            }
-
-                            // If user had saved regional language, restore it
-                            if (savedLang && savedLang === regionalLanguage) {
-                                assessmentData.currentLanguage = regionalLanguage;
-                            }
-                        }
-                    }
-
-                    // If user had saved EN or HI, restore it
-                    if (savedLang && (savedLang === 'en' || savedLang === 'hi')) {
+                // Try to use cached region if available
+                if (cachedRegion) {
+                    regionalLanguage = cachedRegion;
+                    if (savedLang && savedLang === cachedRegion) {
                         assessmentData.currentLanguage = savedLang;
                     }
+                } else {
+                    // Auto-detect regional language via IP
+                    const response = await fetch('https://ipapi.co/json/');
+                    if (response.ok) {
+                        const data = await response.json();
+                        const country = data.country_code;
+                        const region = data.region;
 
-                    localStorage.setItem('detected_region', region || 'Unknown');
-                    if (regionalLanguage) {
-                        localStorage.setItem('regional_language', regionalLanguage);
+                        // Regional language mapping for India
+                        if (country === 'IN') {
+                            const regionLangMap = {
+                                'Maharashtra': 'mr',
+                                'Tamil Nadu': 'ta',
+                                'Gujarat': 'gu'
+                            };
+
+                            if (regionLangMap[region]) {
+                                regionalLanguage = regionLangMap[region];
+                                localStorage.setItem('regionLang', regionalLanguage);
+                            }
+                        }
+
+                        localStorage.setItem('detected_region', region || 'Unknown');
                     }
                 }
 
+                // Restore saved language if valid
+                if (savedLang && (savedLang === 'en' || savedLang === 'hi' || savedLang === regionalLanguage)) {
+                    assessmentData.currentLanguage = savedLang;
+                }
+
+                // Setup language buttons (3 only)
+                setupLanguages();
                 applyTranslations();
-                updateLanguageButtons();
             } catch (error) {
                 console.log('Language auto-detection failed, using default (English)');
                 assessmentData.currentLanguage = 'en';
+                setupLanguages();
                 applyTranslations();
-                updateLanguageButtons();
             }
         }
 
         function switchLanguage(lang) {
-            // Handle "regional" button click
-            if (lang === 'regional' && regionalLanguage) {
-                lang = regionalLanguage;
-            }
-
             assessmentData.currentLanguage = lang;
             localStorage.setItem('preferred_language', lang);
 
-            updateLanguageButtons();
+            // Rebuild language buttons to update active state
+            setupLanguages();
+
+            // Re-apply all translations globally
             applyTranslations();
             saveSession();
+
+            // Speak confirmation
             speak(t('headerTitle'));
+
+            // Auto-scroll to current section
+            autoScrollToCurrentSection();
         }
 
-        function updateLanguageButtons() {
-            // Update all language buttons
-            document.querySelectorAll('.lang-btn, .sticky-lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+        // ==================== AUTO-SCROLL ====================
+        function autoScrollToCurrentSection() {
+            const currentStep = assessmentData.currentStep;
+            const stepElement = document.getElementById(`step${currentStep}`);
 
-            // Activate current language button
+            if (stepElement && stepElement.style.display !== 'none') {
+                setTimeout(() => {
+                    stepElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 300);
+            }
+        }
+
+        // ==================== MUTATION OBSERVER FOR DYNAMIC CONTENT ====================
+        const translationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { // Element node
+                        // Translate elements with data-i18n attribute
+                        const i18nElements = node.querySelectorAll?.('[data-i18n]') || [];
+                        i18nElements.forEach(el => {
+                            const key = el.getAttribute('data-i18n');
+                            if (key && t(key)) {
+                                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                                    el.placeholder = t(key);
+                                } else {
+                                    el.textContent = t(key);
+                                }
+                            }
+                        });
+
+                        // If the added node itself has data-i18n
+                        if (node.hasAttribute?.('data-i18n')) {
+                            const key = node.getAttribute('data-i18n');
+                            if (key && t(key)) {
+                                if (node.tagName === 'INPUT' || node.tagName === 'TEXTAREA') {
+                                    node.placeholder = t(key);
+                                } else {
+                                    node.textContent = t(key);
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        });
+
+        // Start observing the document for changes
+        function startTranslationObserver() {
+            translationObserver.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+
+        // ==================== AI RESPONSE TRANSLATION ====================
+        async function translateAIResponse(text) {
             const currentLang = assessmentData.currentLanguage;
-            const selector = currentLang === regionalLanguage
-                ? '[data-lang="regional"]'
-                : `[data-lang="${currentLang}"]`;
 
-            document.querySelectorAll(selector).forEach(btn => {
-                btn.classList.add('active');
+            // No translation needed for English
+            if (currentLang === 'en') {
+                return text;
+            }
+
+            // Try OpenAI translation if API key is available
+            if (API_CONFIG.openai.key) {
+                try {
+                    const langNames = {
+                        'hi': 'Hindi',
+                        'mr': 'Marathi',
+                        'ta': 'Tamil',
+                        'gu': 'Gujarati'
+                    };
+
+                    const targetLang = langNames[currentLang] || 'Hindi';
+
+                    const response = await fetch(API_CONFIG.openai.endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_CONFIG.openai.key}`
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-4o-mini',
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: `You are a professional medical translator. Translate the following medical assessment text to ${targetLang}. Maintain medical accuracy and professional tone.`
+                                },
+                                {
+                                    role: 'user',
+                                    content: text
+                                }
+                            ],
+                            temperature: 0.3,
+                            max_tokens: 1500
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.choices[0].message.content;
+                    }
+                } catch (error) {
+                    console.error('OpenAI translation error:', error);
+                }
+            }
+
+            // Fallback to MyMemory API (free, no key required)
+            try {
+                const langCodes = {
+                    'hi': 'hi',
+                    'mr': 'mr',
+                    'ta': 'ta',
+                    'gu': 'gu'
+                };
+
+                const targetLang = langCodes[currentLang] || 'hi';
+
+                // Split text into chunks (MyMemory has length limits)
+                const chunkSize = 500;
+                const chunks = [];
+                for (let i = 0; i < text.length; i += chunkSize) {
+                    chunks.push(text.substring(i, i + chunkSize));
+                }
+
+                const translatedChunks = await Promise.all(
+                    chunks.map(async (chunk) => {
+                        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=en|${targetLang}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            return data.responseData.translatedText;
+                        }
+                        return chunk;
+                    })
+                );
+
+                return translatedChunks.join(' ');
+            } catch (error) {
+                console.error('MyMemory translation error:', error);
+                return text; // Return original text if translation fails
+            }
+        }
+
+        // ==================== IMPACT OPTIONS ====================
+        function renderImpactOptions() {
+            const step3 = document.getElementById('step3');
+            if (!step3) return;
+
+            // Find or create impact section
+            let impactSection = step3.querySelector('.impact-section');
+            if (!impactSection) {
+                impactSection = document.createElement('div');
+                impactSection.className = 'impact-section';
+
+                // Insert at the beginning of step3
+                const stepContent = step3.querySelector('.step-content');
+                if (stepContent) {
+                    stepContent.insertBefore(impactSection, stepContent.firstChild);
+                }
+            }
+
+            impactSection.innerHTML = `
+                <h3 class="section-title" data-i18n="impactLabel">${t('impactLabel') || 'Impact on Daily Life'}</h3>
+                <div class="impact-options">
+                    <div class="impact-card" data-impact="mild" onclick="handleImpactSelect('mild')">
+                        <div class="impact-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <div class="impact-content">
+                            <div class="impact-title" data-i18n="impactMild">${t('impactMild') || 'Mild'}</div>
+                            <div class="impact-description">${t('impactMildDesc') || 'Slightly annoying'}</div>
+                        </div>
+                    </div>
+                    <div class="impact-card" data-impact="moderate" onclick="handleImpactSelect('moderate')">
+                        <div class="impact-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                        <div class="impact-content">
+                            <div class="impact-title" data-i18n="impactModerate">${t('impactModerate') || 'Moderate'}</div>
+                            <div class="impact-description">${t('impactModerateDesc') || 'Affects some activities'}</div>
+                        </div>
+                    </div>
+                    <div class="impact-card" data-impact="severe" onclick="handleImpactSelect('severe')">
+                        <div class="impact-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                        </div>
+                        <div class="impact-content">
+                            <div class="impact-title" data-i18n="impactSevere">${t('impactSevere') || 'Severe'}</div>
+                            <div class="impact-description">${t('impactSevereDesc') || 'Significantly limits daily life'}</div>
+                        </div>
+                    </div>
+                    <div class="impact-card" data-impact="critical" onclick="handleImpactSelect('critical')">
+                        <div class="impact-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2zm0-6h2v4h-2z"/>
+                            </svg>
+                        </div>
+                        <div class="impact-content">
+                            <div class="impact-title" data-i18n="impactCritical">${t('impactCritical') || 'Critical'}</div>
+                            <div class="impact-description">${t('impactCriticalDesc') || 'Unable to perform basic tasks'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Highlight selected impact if exists
+            if (assessmentData.impactLevel) {
+                const selectedCard = impactSection.querySelector(`[data-impact="${assessmentData.impactLevel}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                }
+            }
+        }
+
+        function handleImpactSelect(impact) {
+            assessmentData.impactLevel = impact;
+
+            // Update UI
+            document.querySelectorAll('.impact-card').forEach(card => {
+                card.classList.remove('selected');
             });
+
+            const selectedCard = document.querySelector(`[data-impact="${impact}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+
+            // Refresh dependent questions based on impact level
+            const bodyPart = assessmentData.bodyPart;
+            if (bodyPart && CONTEXT_MATRIX[bodyPart]) {
+                renderDynamicSections(bodyPart);
+            }
+
+            saveSession();
+            checkNextButtonState();
+
+            // Speak confirmation
+            speak(`${t(impact)} impact selected`);
+
+            // Auto-scroll to next section
+            autoScrollToCurrentSection();
         }
 
         // INITIALIZATION
@@ -4954,6 +5327,12 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
             // Apply translations after loading session
             applyTranslations();
+
+            // Start mutation observer for dynamic content
+            startTranslationObserver();
+
+            // Render impact options in Step 3
+            renderImpactOptions();
 
             // Check if API keys are configured
             if (!API_CONFIG.openai.key) {
