@@ -524,8 +524,23 @@
             fill: rgba(243, 112, 33, 0.5);
             stroke: var(--primary);
             stroke-width: 4;
-            animation: partGlow 2s ease-in-out infinite;
+            animation: partGlow 2s ease-in-out infinite, pulseHighlight 0.6s ease-out;
             filter: drop-shadow(0 0 20px rgba(243, 112, 33, 1));
+        }
+
+        @keyframes pulseHighlight {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         @keyframes partGlow {
@@ -2982,6 +2997,59 @@
             }
         };
 
+        // IMPACT MATRIX - Body-part specific impact questions
+        const IMPACT_MATRIX = {
+            knee: {
+                mild: { title: 'Mild Discomfort', description: 'Slight stiffness, manageable with rest', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Difficulty with stairs and prolonged standing', icon: 'alert-triangle' },
+                severe: { title: 'Severe Limitation', description: 'Walking is painful, daily activities affected', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Unable to bear weight, needs immediate attention', icon: 'alert-octagon' }
+            },
+            back: {
+                mild: { title: 'Mild Ache', description: 'Occasional discomfort when sitting/standing', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Affects bending, lifting, and daily tasks', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Radiating pain, difficulty with movement', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Immobilizing pain, neurological symptoms', icon: 'alert-octagon' }
+            },
+            shoulder: {
+                mild: { title: 'Mild Stiffness', description: 'Limited overhead reach, manageable', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Difficulty with dressing and carrying', icon: 'alert-triangle' },
+                severe: { title: 'Severe Restriction', description: 'Cannot lift arm, nighttime pain', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Frozen shoulder, severe weakness', icon: 'alert-octagon' }
+            },
+            neck: {
+                mild: { title: 'Mild Stiffness', description: 'Slight discomfort turning head', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Headaches, difficulty driving', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Radiating pain to arms, constant discomfort', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Severe headaches, numbness, tingling', icon: 'alert-octagon' }
+            },
+            wrist: {
+                mild: { title: 'Mild Ache', description: 'Slight discomfort with gripping', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Difficulty typing, writing, gripping', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Constant pain, weakness, numbness', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Unable to use hand, severe weakness', icon: 'alert-octagon' }
+            },
+            ankle: {
+                mild: { title: 'Mild Discomfort', description: 'Slight pain when walking', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Swelling, difficulty with stairs', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Significant swelling, limited mobility', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Cannot bear weight, severe instability', icon: 'alert-octagon' }
+            },
+            hip: {
+                mild: { title: 'Mild Ache', description: 'Occasional discomfort with movement', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Difficulty with stairs, getting up', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Constant pain, limping, limited range', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Unable to walk, severe stiffness', icon: 'alert-octagon' }
+            },
+            // Default for other body parts
+            default: {
+                mild: { title: 'Mild', description: 'Slightly annoying', icon: 'check-circle' },
+                moderate: { title: 'Moderate', description: 'Affects some activities', icon: 'alert-triangle' },
+                severe: { title: 'Severe', description: 'Significantly limits daily life', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Unable to perform basic tasks', icon: 'alert-octagon' }
+            }
+        };
+
         // API Configuration for OpenAI and TTS
         let API_CONFIG = {
             openai: {
@@ -3620,19 +3688,36 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
         }
 
         // BODY PART SELECTION
-        function selectBodyPart(part, save = true) {
+        function selectBodyPart(part, save = true, clickEvent = null) {
             assessmentData.bodyPart = part;
 
             const currentSvg = assessmentData.gender === 'male' ? 'maleSvg' : 'femaleSvg';
+
+            // Remove selected class from all body parts
             document.querySelectorAll(`#${currentSvg} .body-part`).forEach(p => p.classList.remove('selected'));
-            document.querySelectorAll(`#${currentSvg} [data-part="${part}"]`).forEach(p => p.classList.add('selected'));
+
+            // If we have a click event, select only the clicked element
+            // This fixes the issue with symmetrical parts (left/right shoulder, knee, etc.)
+            if (clickEvent && clickEvent.target) {
+                clickEvent.target.classList.add('selected');
+            } else {
+                // Fallback: select all matching parts (for programmatic selection)
+                // But only select the first one to avoid ambiguity
+                const matchingParts = document.querySelectorAll(`#${currentSvg} [data-part="${part}"]`);
+                if (matchingParts.length > 0) {
+                    matchingParts[0].classList.add('selected');
+                }
+            }
+
+            // Render dynamic sections for this body part
+            renderDynamicSections(part);
+
+            // Re-render impact options for this body part
+            renderImpactOptions();
 
             checkStep1Complete();
             if (save) saveSession();
             speak(`${part} selected`);
-
-            // Trigger dynamic section rendering for steps 2 and 3
-            renderDynamicSections(part);
         }
 
         // DYNAMIC SECTION RENDERING BASED ON BODY PART
@@ -4830,7 +4915,18 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
         // LANGUAGE SWITCHING (Simplified)
         // TRANSLATION HELPER FUNCTION
         function t(key) {
-            return TRANSLATIONS[assessmentData.currentLanguage]?.[key] || TRANSLATIONS.en[key] || key;
+            // Normalize language code (e.g., "mr-IN" → "mr")
+            const normalizedLang = assessmentData.currentLanguage.split('-')[0];
+
+            // Try current language, fallback to English, then return key
+            return TRANSLATIONS[normalizedLang]?.[key] || TRANSLATIONS.en?.[key] || key;
+        }
+
+        // Normalize language code helper
+        function normalizeLangCode(code) {
+            if (!code) return 'en';
+            // Extract base language code (mr-IN → mr, en-US → en)
+            return code.split('-')[0].toLowerCase();
         }
 
         function applyTranslations() {
@@ -4991,6 +5087,14 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         async function detectAndSetLanguage() {
             try {
+                // Ensure TRANSLATIONS is loaded
+                if (typeof TRANSLATIONS === 'undefined') {
+                    console.error('TRANSLATIONS not loaded from translations.js');
+                    assessmentData.currentLanguage = 'en';
+                    setupLanguages();
+                    return;
+                }
+
                 // Check cached region first
                 const cachedRegion = localStorage.getItem('regionLang');
                 const savedLang = localStorage.getItem('preferred_language');
@@ -5000,39 +5104,51 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
                 // Try to use cached region if available
                 if (cachedRegion) {
-                    regionalLanguage = cachedRegion;
-                    if (savedLang && savedLang === cachedRegion) {
-                        assessmentData.currentLanguage = savedLang;
+                    // Normalize cached region code
+                    regionalLanguage = normalizeLangCode(cachedRegion);
+
+                    if (savedLang) {
+                        const normalizedSaved = normalizeLangCode(savedLang);
+                        if (normalizedSaved === regionalLanguage) {
+                            assessmentData.currentLanguage = regionalLanguage;
+                        }
                     }
                 } else {
                     // Auto-detect regional language via IP
-                    const response = await fetch('https://ipapi.co/json/');
-                    if (response.ok) {
-                        const data = await response.json();
-                        const country = data.country_code;
-                        const region = data.region;
+                    try {
+                        const response = await fetch('https://ipapi.co/json/');
+                        if (response.ok) {
+                            const data = await response.json();
+                            const country = data.country_code;
+                            const region = data.region;
 
-                        // Regional language mapping for India
-                        if (country === 'IN') {
-                            const regionLangMap = {
-                                'Maharashtra': 'mr',
-                                'Tamil Nadu': 'ta',
-                                'Gujarat': 'gu'
-                            };
+                            // Regional language mapping for India
+                            if (country === 'IN') {
+                                const regionLangMap = {
+                                    'Maharashtra': 'mr',
+                                    'Tamil Nadu': 'ta',
+                                    'Gujarat': 'gu'
+                                };
 
-                            if (regionLangMap[region]) {
-                                regionalLanguage = regionLangMap[region];
-                                localStorage.setItem('regionLang', regionalLanguage);
+                                if (regionLangMap[region]) {
+                                    regionalLanguage = regionLangMap[region];
+                                    localStorage.setItem('regionLang', regionalLanguage);
+                                }
                             }
-                        }
 
-                        localStorage.setItem('detected_region', region || 'Unknown');
+                            localStorage.setItem('detected_region', region || 'Unknown');
+                        }
+                    } catch (fetchError) {
+                        console.log('IP detection failed, no regional language available');
                     }
                 }
 
                 // Restore saved language if valid
-                if (savedLang && (savedLang === 'en' || savedLang === 'hi' || savedLang === regionalLanguage)) {
-                    assessmentData.currentLanguage = savedLang;
+                if (savedLang) {
+                    const normalizedSaved = normalizeLangCode(savedLang);
+                    if (normalizedSaved === 'en' || normalizedSaved === 'hi' || normalizedSaved === regionalLanguage) {
+                        assessmentData.currentLanguage = normalizedSaved;
+                    }
                 }
 
                 // Setup language buttons (3 only)
@@ -5047,14 +5163,24 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
         }
 
         function switchLanguage(lang) {
-            assessmentData.currentLanguage = lang;
-            localStorage.setItem('preferred_language', lang);
+            // Normalize language code
+            assessmentData.currentLanguage = normalizeLangCode(lang);
+            localStorage.setItem('preferred_language', assessmentData.currentLanguage);
 
             // Rebuild language buttons to update active state
             setupLanguages();
 
             // Re-apply all translations globally
             applyTranslations();
+
+            // Re-render dynamic content with new language
+            if (assessmentData.bodyPart && CONTEXT_MATRIX[assessmentData.bodyPart]) {
+                renderDynamicSections(assessmentData.bodyPart);
+            }
+
+            // Re-render impact options
+            renderImpactOptions();
+
             saveSession();
 
             // Speak confirmation
@@ -5215,6 +5341,10 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const step3 = document.getElementById('step3');
             if (!step3) return;
 
+            // Determine which impact set to use based on body part
+            const bodyPart = assessmentData.bodyPart;
+            const impactSet = IMPACT_MATRIX[bodyPart] || IMPACT_MATRIX.default;
+
             // Find or create impact section
             let impactSection = step3.querySelector('.impact-section');
             if (!impactSection) {
@@ -5228,53 +5358,37 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 }
             }
 
+            // SVG icons for each impact level
+            const svgIcons = {
+                'check-circle': '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>',
+                'alert-triangle': '<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>',
+                'alert-circle': '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>',
+                'alert-octagon': '<path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2zm0-6h2v4h-2z"/>'
+            };
+
+            // Build impact cards dynamically
+            const impactLevels = ['mild', 'moderate', 'severe', 'critical'];
+            const cardsHTML = impactLevels.map(level => {
+                const data = impactSet[level];
+                return `
+                    <div class="impact-card" data-impact="${level}" onclick="handleImpactSelect('${level}')">
+                        <div class="impact-icon">
+                            <svg viewBox="0 0 24 24">
+                                ${svgIcons[data.icon]}
+                            </svg>
+                        </div>
+                        <div class="impact-content">
+                            <div class="impact-title">${data.title}</div>
+                            <div class="impact-description">${data.description}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
             impactSection.innerHTML = `
                 <h3 class="section-title" data-i18n="impactLabel">${t('impactLabel') || 'Impact on Daily Life'}</h3>
                 <div class="impact-options">
-                    <div class="impact-card" data-impact="mild" onclick="handleImpactSelect('mild')">
-                        <div class="impact-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                            </svg>
-                        </div>
-                        <div class="impact-content">
-                            <div class="impact-title" data-i18n="impactMild">${t('impactMild') || 'Mild'}</div>
-                            <div class="impact-description">${t('impactMildDesc') || 'Slightly annoying'}</div>
-                        </div>
-                    </div>
-                    <div class="impact-card" data-impact="moderate" onclick="handleImpactSelect('moderate')">
-                        <div class="impact-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
-                            </svg>
-                        </div>
-                        <div class="impact-content">
-                            <div class="impact-title" data-i18n="impactModerate">${t('impactModerate') || 'Moderate'}</div>
-                            <div class="impact-description">${t('impactModerateDesc') || 'Affects some activities'}</div>
-                        </div>
-                    </div>
-                    <div class="impact-card" data-impact="severe" onclick="handleImpactSelect('severe')">
-                        <div class="impact-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                            </svg>
-                        </div>
-                        <div class="impact-content">
-                            <div class="impact-title" data-i18n="impactSevere">${t('impactSevere') || 'Severe'}</div>
-                            <div class="impact-description">${t('impactSevereDesc') || 'Significantly limits daily life'}</div>
-                        </div>
-                    </div>
-                    <div class="impact-card" data-impact="critical" onclick="handleImpactSelect('critical')">
-                        <div class="impact-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2zm0-6h2v4h-2z"/>
-                            </svg>
-                        </div>
-                        <div class="impact-content">
-                            <div class="impact-title" data-i18n="impactCritical">${t('impactCritical') || 'Critical'}</div>
-                            <div class="impact-description">${t('impactCriticalDesc') || 'Unable to perform basic tasks'}</div>
-                        </div>
-                    </div>
+                    ${cardsHTML}
                 </div>
             `;
 
