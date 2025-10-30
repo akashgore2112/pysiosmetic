@@ -5084,12 +5084,24 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         // DURATION
         function selectDuration(duration) {
+            console.log('🕐 selectDuration() called with:', duration);
             assessmentData.duration = duration;
 
             document.querySelectorAll('[data-duration]').forEach(card => card.classList.remove('selected'));
-            document.querySelector(`[data-duration="${duration}"]`).classList.add('selected');
+            const selectedCard = document.querySelector(`[data-duration="${duration}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+                console.log('✅ Duration card selected:', duration);
+            } else {
+                console.error('❌ Duration card not found for:', duration);
+            }
 
-            document.getElementById('nextBtn').disabled = false;
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.disabled = false;
+                console.log('✅ Next button enabled');
+            }
+
             saveSession();
             speak(`${duration} selected`);
         }
@@ -6282,9 +6294,9 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             ];
             console.log('📝 Base languages added: EN, HI');
 
-            // Add regional language if detected (should ALWAYS be present with fallbacks)
-            if (regionalLanguage) {
-                console.log('✅ regionalLanguage is truthy:', regionalLanguage);
+            // Add regional language if detected and different from EN/HI
+            if (regionalLanguage && regionalLanguage !== 'en' && regionalLanguage !== 'hi') {
+                console.log('✅ regionalLanguage is truthy and unique:', regionalLanguage);
                 const regionalConfig = {
                     // Indian languages
                     'mr': { code: 'mr', name: 'मराठी', flag: '🇮🇳', fullName: 'Marathi' },
@@ -6324,16 +6336,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     console.log('✅ Added generic regional button for:', regionalLanguage, 'with label:', langName);
                 }
             } else {
-                console.error('❌ CRITICAL: regionalLanguage is falsy! This should never happen with fallbacks.');
-                // Emergency fallback - add Marathi button anyway
-                console.log('🚨 Emergency: Adding Marathi as fallback');
-                regionalLanguage = 'mr';
-                languages.push({
-                    code: 'mr',
-                    name: 'मर',
-                    flag: '🇮🇳',
-                    fullName: 'Marathi'
-                });
+                console.log('ℹ️ Regional language is same as EN or HI, showing only 2 buttons:', regionalLanguage);
             }
 
             console.log('📊 Total languages to render:', languages.length);
@@ -7054,6 +7057,30 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             originalDisplayAIChatResults();
             scrollToResults();
         };
+
+        // ==================== GLOBAL EXPORTS FOR INLINE ONCLICK HANDLERS ====================
+        // Make functions globally accessible for inline onclick handlers in HTML
+        window.selectBodyPart = selectBodyPart;
+        window.selectIntensity = selectIntensity;
+        window.toggleActivity = toggleActivity;
+        window.switchLanguage = switchLanguage;
+        window.saveConfig = saveConfig;
+        window.toggleVoice = toggleVoice;
+        window.openConfig = openConfig;
+        window.goToStep = goToStep;
+        window.showTooltip = showTooltip;
+        window.hideTooltip = hideTooltip;
+        window.nextStep = nextStep;
+        window.previousStep = previousStep;
+        window.downloadPDF = downloadPDF;
+        window.shareWithDoctor = shareWithDoctor;
+        window.askFollowUp = askFollowUp;
+        window.submitFeedback = submitFeedback;
+        window.selectContextOption = selectContextOption;
+        window.toggleActivityTrigger = toggleActivityTrigger;
+        window.speakQuestion = speakQuestion;
+        window.startVoiceAnswerInput = startVoiceAnswerInput;
+        console.log('✅ All onclick functions exported to window scope');
     </script>
 
     <!-- FLOATING ACTION BAR -->
