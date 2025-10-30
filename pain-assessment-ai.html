@@ -6176,11 +6176,16 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const headerTitle = document.getElementById('headerTitle');
             const headerSubtitle = document.getElementById('headerSubtitle');
             if (headerTitle) {
-                headerTitle.textContent = t('headerTitle');
-                console.log('  ✅ Updated headerTitle to:', headerTitle.textContent);
+                const newText = t('headerTitle');
+                console.log('  🔍 headerTitle translation: EN="' + TRANSLATIONS.en.headerTitle + '" → ' + normalizedLang + '="' + newText + '"');
+                headerTitle.textContent = newText;
+                console.log('  ✅ Updated headerTitle element to:', headerTitle.textContent);
+            } else {
+                console.error('  ❌ headerTitle element NOT FOUND!');
             }
             if (headerSubtitle) {
-                headerSubtitle.textContent = t('headerSubtitle');
+                const newText = t('headerSubtitle');
+                headerSubtitle.textContent = newText;
                 console.log('  ✅ Updated headerSubtitle to:', headerSubtitle.textContent);
             }
 
@@ -6192,7 +6197,10 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const step3Title = document.getElementById('step3Title');
             const step3Description = document.getElementById('step3Description');
 
-            if (step1Title) step1Title.textContent = t('step1Title');
+            if (step1Title) {
+                step1Title.textContent = t('step1Title');
+                console.log('  ✅ Updated step1Title to:', step1Title.textContent);
+            }
             if (step1Description) step1Description.textContent = t('step1Description');
             if (step2Title) step2Title.textContent = t('step2Title');
             if (step2Description) step2Description.textContent = t('step2Description');
@@ -6655,7 +6663,17 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             // Auto-scroll to current section
             autoScrollToCurrentSection();
 
+            // Visual confirmation - flash the header to show language changed
+            if (headerTitle) {
+                headerTitle.style.transition = 'all 0.3s ease';
+                headerTitle.style.backgroundColor = 'rgba(0, 242, 255, 0.3)';
+                setTimeout(() => {
+                    headerTitle.style.backgroundColor = 'transparent';
+                }, 300);
+            }
+
             console.log('✅ Language switch completed to:', normalizedLang);
+            console.log('🎯 FINAL CHECK - headerTitle.textContent is now:', document.getElementById('headerTitle')?.textContent);
             console.log('═══════════════════════════════════════════════════');
         }
 
