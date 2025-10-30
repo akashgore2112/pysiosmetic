@@ -6155,19 +6155,34 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
         }
 
         function applyTranslations(lang = null) {
+            console.log('🌐 applyTranslations() START');
+            console.log('  Input lang:', lang);
+
             // Use specified language or current language
             const targetLang = lang || assessmentData.currentLanguage;
             const normalizedLang = normalizeLangCode(targetLang);
+            console.log('  Target lang:', targetLang, '→ Normalized:', normalizedLang);
 
             // Ensure we're using the normalized language
             if (assessmentData.currentLanguage !== normalizedLang) {
                 assessmentData.currentLanguage = normalizedLang;
             }
+
+            // Test translation function
+            const testTranslation = t('headerTitle', normalizedLang);
+            console.log('  Test translation t("headerTitle"):', testTranslation);
+
             // Header
             const headerTitle = document.getElementById('headerTitle');
             const headerSubtitle = document.getElementById('headerSubtitle');
-            if (headerTitle) headerTitle.textContent = t('headerTitle');
-            if (headerSubtitle) headerSubtitle.textContent = t('headerSubtitle');
+            if (headerTitle) {
+                headerTitle.textContent = t('headerTitle');
+                console.log('  ✅ Updated headerTitle to:', headerTitle.textContent);
+            }
+            if (headerSubtitle) {
+                headerSubtitle.textContent = t('headerSubtitle');
+                console.log('  ✅ Updated headerSubtitle to:', headerSubtitle.textContent);
+            }
 
             // Step titles and descriptions
             const step1Title = document.getElementById('step1Title');
@@ -6266,6 +6281,16 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 durationValue.textContent = value === 1 ? `1 ${t('month')}` : `${value} ${t('months')}`;
                 console.log('🔄 Updated duration label for language change:', durationValue.textContent);
             }
+
+            // Update duration option cards in Step 2
+            const durationHours = document.getElementById('durationHours');
+            const durationDays = document.getElementById('durationDays');
+            const durationWeeks = document.getElementById('durationWeeks');
+            const durationMonthsText = document.getElementById('durationMonths');
+            if (durationHours) durationHours.textContent = 'Few Hours'; // TODO: Add translation key
+            if (durationDays) durationDays.textContent = 'Few Days'; // TODO: Add translation key
+            if (durationWeeks) durationWeeks.textContent = 'Few Weeks'; // TODO: Add translation key
+            if (durationMonthsText) durationMonthsText.textContent = 'Months+'; // TODO: Add translation key
 
             // Update next button text based on current step
             updateNextButton();
@@ -6547,22 +6572,37 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
         }
 
         async function switchLanguage(lang) {
-            console.log('🔄 switchLanguage() called with:', lang);
+            console.log('═══════════════════════════════════════════════════');
+            console.log('🔄 switchLanguage() START - called with:', lang);
+            console.log('📊 Current assessmentData.currentLanguage:', assessmentData.currentLanguage);
 
             // Normalize language code (e.g., ar-SA → ar, mr-IN → mr)
             const normalizedLang = normalizeLangCode(lang);
             console.log('✅ Normalized language code:', normalizedLang);
 
+            // Update current language
             assessmentData.currentLanguage = normalizedLang;
             localStorage.setItem('preferred_language', normalizedLang);
-            console.log('💾 Saved language preference:', normalizedLang);
+            console.log('💾 Saved language preference to localStorage:', normalizedLang);
+            console.log('💾 Updated assessmentData.currentLanguage to:', assessmentData.currentLanguage);
 
             // Check if translations exist for this language
-            if (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[normalizedLang]) {
-                console.log('✅ Translations available for:', normalizedLang);
-                console.log('📊 Sample translation keys:', Object.keys(TRANSLATIONS[normalizedLang]).slice(0, 5));
+            console.log('🔍 Checking if TRANSLATIONS object exists...');
+            if (typeof TRANSLATIONS !== 'undefined') {
+                console.log('✅ TRANSLATIONS object is loaded');
+                console.log('📚 Available languages in TRANSLATIONS:', Object.keys(TRANSLATIONS));
+
+                if (TRANSLATIONS[normalizedLang]) {
+                    console.log('✅ Translations available for:', normalizedLang);
+                    console.log('📊 Sample translation keys:', Object.keys(TRANSLATIONS[normalizedLang]).slice(0, 10));
+                    console.log('📊 Sample translations:');
+                    console.log('  - headerTitle:', TRANSLATIONS[normalizedLang].headerTitle);
+                    console.log('  - step1Title:', TRANSLATIONS[normalizedLang].step1Title);
+                } else {
+                    console.warn('⚠️ No translations found for:', normalizedLang);
+                }
             } else {
-                console.warn('⚠️ No translations found for:', normalizedLang);
+                console.error('❌ TRANSLATIONS object is NOT loaded!');
 
                 // If translation doesn't exist and it's not English, try to generate it
                 if (normalizedLang !== 'en' && normalizedLang !== 'hi' && normalizedLang !== 'mr') {
@@ -6579,16 +6619,19 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             }
 
             // Rebuild language buttons to update active state
-            console.log('🎨 Rebuilding language buttons...');
+            console.log('🎨 Rebuilding language buttons to update active state...');
             setupLanguages();
+            console.log('✅ Language buttons rebuilt');
 
             // Re-apply all translations globally (explicitly pass language for fallback)
             console.log('🌍 Applying translations for:', normalizedLang);
             applyTranslations(normalizedLang);
+            console.log('✅ Translations applied');
 
             // Update all UI text elements
             console.log('🔄 Updating UI text elements...');
             updateUIText();
+            console.log('✅ UI text updated');
 
             // Re-render dynamic content with new language
             if (assessmentData.selectedParts && assessmentData.selectedParts.length > 0) {
@@ -6613,6 +6656,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             autoScrollToCurrentSection();
 
             console.log('✅ Language switch completed to:', normalizedLang);
+            console.log('═══════════════════════════════════════════════════');
         }
 
         function updateUIText() {
