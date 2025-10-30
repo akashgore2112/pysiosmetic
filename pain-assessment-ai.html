@@ -517,6 +517,7 @@
             fill: rgba(243, 112, 33, 0.25);
             stroke: var(--primary);
             stroke-width: 3;
+            transition: all 0.15s ease;
             filter: drop-shadow(0 0 15px rgba(243, 112, 33, 1));
         }
 
@@ -551,17 +552,18 @@
         /* PAIN TOOLTIP */
         .pain-tooltip {
             position: absolute;
-            background: rgba(10, 15, 25, 0.98);
-            border: 2px solid var(--primary);
+            background: rgba(243, 112, 33, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 12px;
             padding: 1rem;
             pointer-events: none;
             opacity: 0;
             transform: translateY(-10px);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             z-index: 1000;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
             min-width: 200px;
+            backdrop-filter: blur(10px);
         }
 
         .pain-tooltip.show {
@@ -1810,6 +1812,12 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .impact-options {
+                grid-template-columns: 1fr;
+            }
         }
 
         .impact-card {
@@ -3820,7 +3828,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     : uniqueDescriptions[0];
 
                 return `
-                    <div class="impact-card" data-impact="${level}" onclick="handleImpactSelect('${level}')">
+                    <div class="impact-card" data-impact="${level}">
                         <div class="impact-icon">
                             <svg viewBox="0 0 24 24">
                                 ${svgIcons[firstImpact.icon]}
@@ -3840,6 +3848,25 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     ${cardsHTML}
                 </div>
             `;
+
+            // Add event delegation for impact card clicks
+            const impactOptions = impactSection.querySelector('.impact-options');
+            if (impactOptions) {
+                // Remove old listeners by cloning
+                const newImpactOptions = impactOptions.cloneNode(true);
+                impactOptions.parentNode.replaceChild(newImpactOptions, impactOptions);
+
+                // Add new event listener with delegation
+                newImpactOptions.addEventListener('click', (e) => {
+                    const card = e.target.closest('.impact-card');
+                    if (card) {
+                        const level = card.getAttribute('data-impact');
+                        if (level) {
+                            handleImpactSelect(level);
+                        }
+                    }
+                });
+            }
 
             // Highlight selected impact if exists
             if (assessmentData.impactLevel) {
@@ -5543,7 +5570,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const cardsHTML = impactLevels.map(level => {
                 const data = impactSet[level];
                 return `
-                    <div class="impact-card" data-impact="${level}" onclick="handleImpactSelect('${level}')">
+                    <div class="impact-card" data-impact="${level}">
                         <div class="impact-icon">
                             <svg viewBox="0 0 24 24">
                                 ${svgIcons[data.icon]}
@@ -5563,6 +5590,25 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     ${cardsHTML}
                 </div>
             `;
+
+            // Add event delegation for impact card clicks
+            const impactOptions = impactSection.querySelector('.impact-options');
+            if (impactOptions) {
+                // Remove old listeners by cloning
+                const newImpactOptions = impactOptions.cloneNode(true);
+                impactOptions.parentNode.replaceChild(newImpactOptions, impactOptions);
+
+                // Add new event listener with delegation
+                newImpactOptions.addEventListener('click', (e) => {
+                    const card = e.target.closest('.impact-card');
+                    if (card) {
+                        const level = card.getAttribute('data-impact');
+                        if (level) {
+                            handleImpactSelect(level);
+                        }
+                    }
+                });
+            }
 
             // Highlight selected impact if exists
             if (assessmentData.impactLevel) {
@@ -5604,6 +5650,9 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for translations.js to fully load (give it a moment)
+            await new Promise(resolve => setTimeout(resolve, 500));
+
             // Detect and set language first
             await detectAndSetLanguage();
 
