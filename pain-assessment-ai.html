@@ -1837,15 +1837,16 @@
         }
 
         .impact-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 1rem;
             margin-top: 1rem;
+            justify-content: center;
         }
 
         @media (max-width: 600px) {
             .impact-options {
-                grid-template-columns: 1fr;
+                flex-direction: column;
             }
         }
 
@@ -1861,6 +1862,9 @@
             align-items: center;
             text-align: center;
             gap: 1rem;
+            flex: 1 1 200px;
+            min-width: 200px;
+            max-width: 250px;
         }
 
         .impact-card:hover {
@@ -3739,8 +3743,13 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             // Determine which element was clicked or should be toggled
             if (clickEvent && clickEvent.target) {
                 clickedElement = clickEvent.target;
+            } else if (clickEvent && clickEvent.currentTarget) {
+                clickedElement = clickEvent.currentTarget;
+            } else if (window.event && window.event.target) {
+                // Fallback for inline onclick handlers
+                clickedElement = window.event.target;
             } else {
-                // Fallback: find first matching part for programmatic selection
+                // Last resort: find first matching part for programmatic selection
                 const matchingParts = document.querySelectorAll(`#${currentSvg} [data-part="${part}"]`);
                 if (matchingParts.length > 0) {
                     clickedElement = matchingParts[0];
@@ -3749,20 +3758,31 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
             if (!clickedElement) return;
 
+            // Ensure we're working with the body-part element
+            if (!clickedElement.classList.contains('body-part')) {
+                clickedElement = clickedElement.closest('.body-part');
+            }
+            if (!clickedElement) return;
+
             // Toggle selection
             const isCurrentlySelected = clickedElement.classList.contains('selected');
 
             if (isCurrentlySelected) {
                 // Deselect this part
                 clickedElement.classList.remove('selected');
-                assessmentData.selectedParts = assessmentData.selectedParts.filter(p => p !== part);
+                // Remove from selectedParts array - don't use part name, as multiple elements may have same name
+                const allSelected = document.querySelectorAll(`#${currentSvg} .body-part.selected`);
+                assessmentData.selectedParts = Array.from(allSelected).map(el => el.getAttribute('data-part'));
             } else {
                 // Select this part
                 clickedElement.classList.add('selected');
-                if (!assessmentData.selectedParts.includes(part)) {
-                    assessmentData.selectedParts.push(part);
-                }
+                // Rebuild selectedParts from all selected elements
+                const allSelected = document.querySelectorAll(`#${currentSvg} .body-part.selected`);
+                assessmentData.selectedParts = Array.from(allSelected).map(el => el.getAttribute('data-part'));
             }
+
+            // Remove duplicates from selectedParts
+            assessmentData.selectedParts = [...new Set(assessmentData.selectedParts)];
 
             // Update the main bodyPart to the first selected (for backward compatibility)
             assessmentData.bodyPart = assessmentData.selectedParts.length > 0 ? assessmentData.selectedParts[0] : null;
@@ -3913,17 +3933,26 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     return ''; // Skip this level if no impacts
                 }
 
-                // Deduplicate descriptions using Set
-                const uniqueDescriptions = [...new Set(impacts.map(i => i.description).filter(Boolean))];
+                // Deduplicate descriptions using Set with comprehensive validation
+                const validImpacts = impacts.filter(i =>
+                    i &&
+                    typeof i === 'object' &&
+                    i.description &&
+                    typeof i.description === 'string' &&
+                    i.description.trim() !== ''
+                );
 
-                // Use the first impact's data as fallback
-                const firstImpact = impacts[0];
-                if (!firstImpact) return '';
+                if (validImpacts.length === 0) return ''; // Skip if no valid impacts
+
+                const uniqueDescriptions = [...new Set(validImpacts.map(i => i.description))];
+
+                // Use the first valid impact's data
+                const firstImpact = validImpacts[0];
 
                 // Combine descriptions if multiple unique ones exist
                 const combinedDescription = uniqueDescriptions.length > 1
                     ? uniqueDescriptions.join('; ')
-                    : (uniqueDescriptions[0] || firstImpact.description || 'Impact varies by selected areas');
+                    : uniqueDescriptions[0];
 
                 return `
                     <div class="impact-card" data-impact="${level}" tabindex="0" role="button" aria-label="${firstImpact.title}: ${combinedDescription}">
@@ -5760,10 +5789,46 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             autoScrollToCurrentSection();
         }
 
+        // Initialize body part accessibility and event handling
+        function initializeBodyDiagram() {
+            const svgs = ['maleSvg', 'femaleSvg'];
+
+            svgs.forEach(svgId => {
+                const svg = document.getElementById(svgId);
+                if (!svg) return;
+
+                // Add accessibility attributes to all body parts
+                const bodyParts = svg.querySelectorAll('.body-part');
+                bodyParts.forEach((part, index) => {
+                    const partName = part.getAttribute('data-part');
+                    if (partName) {
+                        // Add tabindex for keyboard navigation
+                        part.setAttribute('tabindex', '0');
+
+                        // Add aria-label for screen readers
+                        const formattedName = partName.charAt(0).toUpperCase() + partName.slice(1);
+                        part.setAttribute('aria-label', `Select ${formattedName}`);
+                        part.setAttribute('role', 'button');
+
+                        // Add keyboard support
+                        part.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                selectBodyPart(partName, true, e);
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', async function() {
-            // Wait for translations.js to fully load (give it a moment)
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Wait for translations.js to fully load (increased delay for reliability)
+            await new Promise(resolve => setTimeout(resolve, 1200));
+
+            // Initialize body diagram with accessibility features
+            initializeBodyDiagram();
 
             // Detect and set language first
             await detectAndSetLanguage();
