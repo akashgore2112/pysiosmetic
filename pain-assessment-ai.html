@@ -1831,6 +1831,92 @@
             font-weight: 500;
         }
 
+        .selected-parts-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .part-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: linear-gradient(135deg, rgba(0, 242, 255, 0.2), rgba(0, 200, 255, 0.1));
+            border: 1px solid #00f2ff;
+            border-radius: 20px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #00f2ff;
+            animation: badgeFadeIn 0.3s ease-out;
+        }
+
+        /* Selected Parts Feedback Bar (Step 1) */
+        .selected-parts-bar {
+            margin: 1.5rem auto 0;
+            padding: 1rem 1.5rem;
+            max-width: 600px;
+            background: linear-gradient(135deg, rgba(0, 242, 255, 0.08), rgba(0, 200, 255, 0.04));
+            border: 2px solid rgba(0, 242, 255, 0.3);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            animation: fadeInUp 0.4s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        .selected-parts-bar:empty::before {
+            content: '👆 Click on body parts above to select them';
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+        }
+
+        .selected-parts-bar .feedback-label {
+            font-weight: 700;
+            color: #00f2ff;
+            margin-right: 0.5rem;
+        }
+
+        .selected-parts-bar .part-name {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: linear-gradient(135deg, rgba(0, 242, 255, 0.25), rgba(0, 200, 255, 0.15));
+            border: 1px solid #00f2ff;
+            border-radius: 16px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #00f2ff;
+            animation: badgeFadeIn 0.3s ease-out;
+        }
+
+        @keyframes badgeFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .selected-parts-empty {
+            color: var(--text-secondary);
+            font-style: italic;
+            text-align: center;
+            padding: 0.5rem;
+        }
+
         /* IMPACT OPTIONS */
         .impact-section {
             margin: 2rem 0;
@@ -1842,6 +1928,18 @@
             gap: 1rem;
             margin-top: 1rem;
             justify-content: center;
+            animation: impactFadeIn 0.4s ease-out;
+        }
+
+        @keyframes impactFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 600px) {
@@ -1928,6 +2026,194 @@
             .impact-options {
                 grid-template-columns: 1fr 1fr;
             }
+        }
+
+        /* AI-POWERED IMPACT SECTION */
+        .ai-impact-container {
+            margin: 2rem 0;
+        }
+
+        .ai-loading {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 242, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 1rem;
+            border: 4px solid rgba(0, 242, 255, 0.2);
+            border-top: 4px solid #00f2ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dynamic-impact {
+            background: linear-gradient(135deg, rgba(0, 242, 255, 0.05), rgba(0, 200, 255, 0.02));
+            border: 2px solid rgba(0, 242, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        .ai-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(135deg, #00f2ff, #0099cc);
+            color: #000;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 242, 255, 0.3);
+        }
+
+        .impact-section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #00f2ff;
+            margin: 1.5rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .impact-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .context-questions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .context-question {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .context-question.answered {
+            border-color: rgba(0, 242, 255, 0.5);
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .question-options {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: #00f2ff;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            background: linear-gradient(135deg, #00f2ff, #0099cc);
+            border-color: #00f2ff;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .trigger-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .trigger-btn {
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: pulseIn 0.5s ease-out forwards;
+        }
+
+        @keyframes pulseIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .trigger-btn:hover {
+            background: rgba(243, 112, 33, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(243, 112, 33, 0.3);
+        }
+
+        .trigger-btn.selected {
+            background: linear-gradient(135deg, var(--primary), #ff8c42);
+            border-color: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(243, 112, 33, 0.4);
         }
 
         /* CONTEXT SUMMARY CHIPS */
@@ -2627,6 +2913,9 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Selected Parts Feedback Bar -->
+                <div id="selectedPartsDisplay" class="selected-parts-bar"></div>
             </div>
 
             <!-- STEP 2: DURATION -->
@@ -2705,7 +2994,7 @@
                     <div class="input-group">
                         <label class="input-label">Duration in Months</label>
                         <div class="slider-container">
-                            <input type="range" id="durationMonths" min="1" max="12" value="3" class="input-slider">
+                            <input type="range" id="durationSlider" min="1" max="12" value="3" class="input-slider">
                             <div class="slider-value" id="durationValue">3 months</div>
                         </div>
                     </div>
@@ -2774,6 +3063,9 @@
                         <div class="option-text" id="activityDaily">Daily Tasks</div>
                     </div>
                 </div>
+
+                <!-- AI-POWERED IMPACT SECTION -->
+                <div id="aiImpactContainer" class="ai-impact-container"></div>
             </div>
 
             <!-- LOADING -->
@@ -2963,6 +3255,178 @@
         let regionalLanguage = null;  // Will be auto-detected (mr, ta, or gu)
         let regionalLanguageName = '';  // Display name for regional button
 
+        // Language names mapping for readable labels
+        const LANGUAGE_NAMES = {
+            'en': 'English',
+            'hi': 'हिंदी',
+            'mr': 'मराठी',
+            'ta': 'தமிழ்',
+            'gu': 'ગુજરાતી',
+            'kn': 'ಕನ್ನಡ',
+            'te': 'తెలుగు',
+            'bn': 'বাংলা',
+            'ml': 'മലയാളം',
+            'pa': 'ਪੰਜਾਬੀ',
+            'ar': 'العربية',
+            'es': 'Español',
+            'fr': 'Français',
+            'de': 'Deutsch',
+            'pt': 'Português',
+            'ru': 'Русский',
+            'zh': '中文',
+            'ja': '日本語',
+            'ko': '한국어'
+        };
+
+        // Dedicated IP-based language detection function
+        async function detectUserLanguage() {
+            console.log('🌍 detectUserLanguage() called - Exact IP-based detection');
+            try {
+                const res = await fetch("https://ipapi.co/json/");
+                if (!res.ok) {
+                    console.warn('⚠️ IP API returned status:', res.status);
+                    return 'en';
+                }
+                const data = await res.json();
+                console.log('📊 IP API data:', data);
+
+                // Extract language code from languages field
+                const langCode = data.languages?.split(',')[0]?.split('-')[0] || 'en';
+                console.log('🌍 Detected exact language:', langCode);
+
+                return langCode;
+            } catch (error) {
+                console.error('❌ IP detection failed:', error);
+                return 'en';
+            }
+        }
+
+        /**
+         * Generate exact translation for a language using OpenAI API
+         * This creates translations dynamically for any detected language
+         */
+        async function generateExactTranslation(langCode) {
+            console.log(`🧠 Generating AI translation for exact language: ${langCode}`);
+
+            // Check if API key is configured
+            if (!API_CONFIG.openai.key) {
+                console.error('❌ OpenAI API key not configured - cannot generate translation');
+                return null;
+            }
+
+            try {
+                // Get English translations as base
+                const englishTranslations = typeof TRANSLATIONS !== 'undefined' ? TRANSLATIONS.en : {};
+
+                if (!englishTranslations || Object.keys(englishTranslations).length === 0) {
+                    console.error('❌ No English translations found as base');
+                    return null;
+                }
+
+                const prompt = `You are a professional multilingual UI translator specializing in medical and physiotherapy terminology.
+
+Translate the following physiotherapy interface terms from English into ${LANGUAGE_NAMES[langCode] || langCode}:
+
+${JSON.stringify(englishTranslations, null, 2)}
+
+IMPORTANT:
+1. Maintain the EXACT same JSON key structure
+2. Translate ONLY the values, keep keys in English
+3. Use professional medical/physiotherapy terminology
+4. Keep the translations patient-friendly and clear
+5. Return ONLY valid JSON, no additional text
+
+Return the translated JSON now:`;
+
+                console.log('🤖 Sending translation request to OpenAI...');
+
+                const response = await fetch(API_CONFIG.openai.endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_CONFIG.openai.key}`
+                    },
+                    body: JSON.stringify({
+                        model: API_CONFIG.openai.model,
+                        messages: [{ role: "user", content: prompt }],
+                        temperature: 0.3,
+                        max_tokens: 2000
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('❌ OpenAI API error:', response.status, response.statusText);
+                    return null;
+                }
+
+                const data = await response.json();
+                const content = data.choices?.[0]?.message?.content;
+
+                if (!content) {
+                    console.error('❌ No content in OpenAI response');
+                    return null;
+                }
+
+                console.log('📝 Raw AI translation response:', content.substring(0, 200) + '...');
+
+                // Parse JSON response
+                const newTranslation = JSON.parse(content);
+                console.log('✅ Parsed AI translation successfully');
+                console.log('📊 Translated keys:', Object.keys(newTranslation).length);
+
+                // Store in TRANSLATIONS object
+                if (typeof TRANSLATIONS !== 'undefined') {
+                    TRANSLATIONS[langCode] = newTranslation;
+                    console.log(`✅ Stored translation for ${langCode} in TRANSLATIONS object`);
+                } else {
+                    console.warn('⚠️ TRANSLATIONS object not available');
+                }
+
+                return newTranslation;
+
+            } catch (error) {
+                console.error('❌ Translation generation failed:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Initialize language system with exact IP-based detection and AI translation
+         */
+        async function initializeLanguageSystem() {
+            console.log('🚀 Initializing AI-powered language system...');
+
+            // Detect user's exact language
+            const detectedLang = await detectUserLanguage();
+            console.log('🌍 User language detected:', detectedLang);
+
+            // Set as regional language
+            regionalLanguage = detectedLang;
+
+            // Check if translation exists
+            const hasTranslation = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[detectedLang];
+            console.log(`📚 Translation exists for ${detectedLang}:`, hasTranslation);
+
+            // If translation doesn't exist and it's not English, generate it with AI
+            if (!hasTranslation && detectedLang !== 'en') {
+                console.log(`🧠 Generating AI translation for ${detectedLang}...`);
+                const translation = await generateExactTranslation(detectedLang);
+
+                if (translation) {
+                    console.log(`✅ Successfully generated translation for ${detectedLang}`);
+                } else {
+                    console.warn(`⚠️ Could not generate translation for ${detectedLang}, using English`);
+                }
+            }
+
+            // Setup language buttons with detected language
+            const supportedLanguages = ['en', 'hi', detectedLang];
+            console.log('📊 Supported languages:', supportedLanguages);
+
+            setupLanguages();
+            console.log('✅ Language system initialized');
+        }
+
         // CONTEXT MATRIX - Comprehensive body-part specific configuration
         const CONTEXT_MATRIX = {
             knee: {
@@ -3088,6 +3552,42 @@
                 severe: { title: 'Severe Pain', description: 'Constant pain, limping, limited range', icon: 'alert-circle' },
                 critical: { title: 'Critical', description: 'Unable to walk, severe stiffness', icon: 'alert-octagon' }
             },
+            head: {
+                mild: { title: 'Mild Headache', description: 'Occasional discomfort, manageable', icon: 'check-circle' },
+                moderate: { title: 'Moderate Headache', description: 'Frequent pain, affects concentration', icon: 'alert-triangle' },
+                severe: { title: 'Severe Headache', description: 'Constant pain, light/sound sensitivity', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Debilitating migraines, vision changes', icon: 'alert-octagon' }
+            },
+            arm: {
+                mild: { title: 'Mild Discomfort', description: 'Slight ache during movement', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Difficulty lifting objects, reaching', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Constant pain, weakness, limited use', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Cannot use arm, severe weakness', icon: 'alert-octagon' }
+            },
+            elbow: {
+                mild: { title: 'Mild Stiffness', description: 'Slight discomfort bending arm', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Tennis/golfer elbow symptoms', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Constant pain, gripping difficulty', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Unable to bend arm, severe inflammation', icon: 'alert-octagon' }
+            },
+            leg: {
+                mild: { title: 'Mild Ache', description: 'Slight discomfort when walking', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Difficulty with stairs, running', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Walking is painful, frequent resting', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Cannot walk properly, severe weakness', icon: 'alert-octagon' }
+            },
+            hand: {
+                mild: { title: 'Mild Discomfort', description: 'Slight pain with fine movements', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Difficulty gripping, writing, typing', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Constant pain, swelling, numbness', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Cannot use hand, severe dysfunction', icon: 'alert-octagon' }
+            },
+            foot: {
+                mild: { title: 'Mild Discomfort', description: 'Slight pain when walking', icon: 'check-circle' },
+                moderate: { title: 'Moderate Pain', description: 'Difficulty standing, heel pain', icon: 'alert-triangle' },
+                severe: { title: 'Severe Pain', description: 'Walking is painful, swelling present', icon: 'alert-circle' },
+                critical: { title: 'Critical', description: 'Cannot bear weight, severe dysfunction', icon: 'alert-octagon' }
+            },
             // Default for other body parts
             default: {
                 mild: { title: 'Mild', description: 'Slightly annoying', icon: 'check-circle' },
@@ -3134,6 +3634,257 @@
 
         function generateSessionId() {
             return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // ==================== AI-POWERED IMPACT GENERATION ====================
+        /**
+         * Generate smart, context-aware impact questions and activity triggers
+         * using OpenAI GPT based on selected body parts
+         */
+        async function generateAIImpactContext(selectedParts) {
+            console.log('🧠 generateAIImpactContext() called with:', selectedParts);
+
+            if (!selectedParts || selectedParts.length === 0) {
+                console.log('ℹ️ No body parts selected, skipping AI generation');
+                return null;
+            }
+
+            // Check if API key is configured
+            if (!API_CONFIG.openai.key) {
+                console.warn('⚠️ OpenAI API key not configured, using fallback impact data');
+                return getFallbackImpactContext(selectedParts);
+            }
+
+            try {
+                const prompt = `
+You are a physiotherapy assistant. The user has reported pain in the following body parts: ${selectedParts.join(', ')}.
+
+Generate personalized assessment data in JSON format:
+1. 3-5 "contextQuestions" (yes/no/sometimes format) - specific to the affected body parts
+2. 4-6 "activityTriggers" - daily activities likely to be affected
+
+Use simple, patient-friendly language. Be specific to the body parts mentioned.
+
+Example format:
+{
+    "contextQuestions": [
+        "Does your pain increase while walking?",
+        "Do you feel stiffness in the morning?",
+        "Is there swelling in the affected area?"
+    ],
+    "activityTriggers": [
+        "Walking",
+        "Standing",
+        "Climbing stairs",
+        "Sitting for long periods"
+    ]
+}
+
+Respond ONLY with valid JSON, no additional text.
+                `.trim();
+
+                console.log('🤖 Sending request to OpenAI API...');
+                console.log('📝 Prompt:', prompt.substring(0, 150) + '...');
+
+                const response = await fetch(API_CONFIG.openai.endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_CONFIG.openai.key}`
+                    },
+                    body: JSON.stringify({
+                        model: API_CONFIG.openai.model,
+                        messages: [{ role: "user", content: prompt }],
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('❌ OpenAI API error:', response.status, response.statusText);
+                    return getFallbackImpactContext(selectedParts);
+                }
+
+                const data = await response.json();
+                console.log('✅ OpenAI API response received');
+
+                const content = data.choices?.[0]?.message?.content;
+                if (!content) {
+                    console.error('❌ No content in OpenAI response');
+                    return getFallbackImpactContext(selectedParts);
+                }
+
+                console.log('📊 Raw AI response:', content);
+
+                // Parse JSON response
+                const impactData = JSON.parse(content);
+                console.log('✅ Parsed AI impact data:', impactData);
+
+                // Validate structure
+                if (!impactData.contextQuestions || !impactData.activityTriggers) {
+                    console.error('❌ Invalid impact data structure');
+                    return getFallbackImpactContext(selectedParts);
+                }
+
+                console.log(`✅ AI generated ${impactData.contextQuestions.length} questions and ${impactData.activityTriggers.length} triggers`);
+                return impactData;
+
+            } catch (error) {
+                console.error('❌ AI Impact generation failed:', error);
+                return getFallbackImpactContext(selectedParts);
+            }
+        }
+
+        /**
+         * Fallback impact context when AI is unavailable
+         */
+        function getFallbackImpactContext(selectedParts) {
+            console.log('📦 Using fallback impact context');
+
+            const genericQuestions = [
+                "Does your pain increase with movement?",
+                "Do you experience stiffness in the morning?",
+                "Is there visible swelling or redness?",
+                "Does rest help reduce the pain?"
+            ];
+
+            const genericTriggers = [
+                "Walking",
+                "Standing",
+                "Sitting",
+                "Bending",
+                "Lifting objects",
+                "Sleeping"
+            ];
+
+            return {
+                contextQuestions: genericQuestions,
+                activityTriggers: genericTriggers
+            };
+        }
+
+        /**
+         * Render AI-generated impact section with animations
+         */
+        async function renderAIImpactSection() {
+            console.log('🎨 renderAIImpactSection() called');
+
+            const selected = assessmentData.selectedParts || [];
+            if (!selected.length) {
+                console.log('ℹ️ No body parts selected');
+                return;
+            }
+
+            // Show loading state
+            const impactContainer = document.getElementById('aiImpactContainer');
+            if (!impactContainer) {
+                console.error('❌ aiImpactContainer element not found');
+                return;
+            }
+
+            impactContainer.innerHTML = `
+                <div class="ai-loading">
+                    <div class="loading-spinner"></div>
+                    <p>🧠 Generating personalized questions...</p>
+                </div>
+            `;
+
+            // Generate AI context
+            const aiData = await generateAIImpactContext(selected);
+
+            if (!aiData) {
+                console.log('⚠️ No AI data generated');
+                impactContainer.innerHTML = '';
+                return;
+            }
+
+            const { contextQuestions, activityTriggers } = aiData;
+
+            // Build questions HTML
+            const questionsHTML = contextQuestions.map((q, idx) => `
+                <div class="context-question fade-in" style="animation-delay: ${idx * 0.1}s">
+                    <label class="question-label">${q}</label>
+                    <div class="question-options">
+                        <button class="option-btn" onclick="selectContextOption('${q}', 'Yes')">Yes</button>
+                        <button class="option-btn" onclick="selectContextOption('${q}', 'No')">No</button>
+                        <button class="option-btn" onclick="selectContextOption('${q}', 'Sometimes')">Sometimes</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Build triggers HTML
+            const triggersHTML = activityTriggers.map((t, idx) => `
+                <button class="trigger-btn pulse-btn" style="animation-delay: ${idx * 0.05}s" onclick="toggleActivityTrigger('${t}')">${t}</button>
+            `).join('');
+
+            // Render with animations
+            impactContainer.innerHTML = `
+                <div class="dynamic-impact ai-generated">
+                    <div class="ai-badge">🧠 AI-Generated</div>
+                    <h4 class="impact-section-title">📋 Additional Context Questions</h4>
+                    <div class="context-questions-container">
+                        ${questionsHTML}
+                    </div>
+                    <h4 class="impact-section-title">⚡ Activity Triggers</h4>
+                    <p class="impact-subtitle">Select activities that worsen your pain:</p>
+                    <div class="trigger-list">
+                        ${triggersHTML}
+                    </div>
+                </div>
+            `;
+
+            console.log('✅ AI impact section rendered');
+        }
+
+        /**
+         * Handle context option selection
+         */
+        function selectContextOption(question, answer) {
+            console.log(`📝 Context answer: "${question}" → ${answer}`);
+
+            if (!assessmentData.contextAnswers) {
+                assessmentData.contextAnswers = {};
+            }
+
+            assessmentData.contextAnswers[question] = answer;
+
+            // Visual feedback
+            const questionDiv = event.target.closest('.context-question');
+            if (questionDiv) {
+                questionDiv.classList.add('answered');
+                // Update button states
+                questionDiv.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                event.target.classList.add('selected');
+            }
+
+            saveSession();
+        }
+
+        /**
+         * Toggle activity trigger selection
+         */
+        function toggleActivityTrigger(trigger) {
+            console.log(`⚡ Toggle activity trigger: ${trigger}`);
+
+            if (!assessmentData.activityTriggers) {
+                assessmentData.activityTriggers = [];
+            }
+
+            const index = assessmentData.activityTriggers.indexOf(trigger);
+            if (index > -1) {
+                assessmentData.activityTriggers.splice(index, 1);
+                event.target.classList.remove('selected');
+                console.log('➖ Removed trigger');
+            } else {
+                assessmentData.activityTriggers.push(trigger);
+                event.target.classList.add('selected');
+                console.log('➕ Added trigger');
+            }
+
+            console.log('📊 Current triggers:', assessmentData.activityTriggers);
+            saveSession();
         }
 
         // LOCALSTORAGE MANAGEMENT
@@ -3225,14 +3976,7 @@
             }
         });
 
-        // Duration slider update
-        document.getElementById('durationMonths')?.addEventListener('input', function(e) {
-            const value = e.target.value;
-            const durationValue = document.getElementById('durationValue');
-            if (durationValue) {
-                durationValue.textContent = value === '1' ? `1 ${t('month')}` : `${value} ${t('months')}`;
-            }
-        });
+        // Duration slider is now initialized inside DOMContentLoaded event
 
         function saveConfig() {
             const openaiKey = document.getElementById('openaiKey').value.trim();
@@ -3736,33 +4480,53 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         // BODY PART SELECTION - Multi-selection with toggle support
         function selectBodyPart(part, save = true, clickEvent = null) {
-            const currentSvg = assessmentData.gender === 'male' ? 'maleSvg' : 'femaleSvg';
+            console.log('🔍 selectBodyPart called:', { part, hasClickEvent: !!clickEvent, hasWindowEvent: !!window.event });
 
+            const currentSvg = assessmentData.gender === 'male' ? 'maleSvg' : 'femaleSvg';
             let clickedElement = null;
 
-            // Determine which element was clicked or should be toggled
+            // Determine which element was clicked - IMPROVED EVENT DETECTION
             if (clickEvent && clickEvent.target) {
                 clickedElement = clickEvent.target;
+                console.log('✅ Got element from clickEvent.target');
             } else if (clickEvent && clickEvent.currentTarget) {
                 clickedElement = clickEvent.currentTarget;
-            } else if (window.event && window.event.target) {
+                console.log('✅ Got element from clickEvent.currentTarget');
+            } else if (typeof window !== 'undefined' && window.event && window.event.target) {
                 // Fallback for inline onclick handlers
                 clickedElement = window.event.target;
+                console.log('✅ Got element from window.event.target');
+            } else if (typeof window !== 'undefined' && window.event && window.event.srcElement) {
+                // IE fallback
+                clickedElement = window.event.srcElement;
+                console.log('✅ Got element from window.event.srcElement (IE fallback)');
             } else {
                 // Last resort: find first matching part for programmatic selection
+                console.log('⚠️ Using fallback: querying DOM for first matching part');
                 const matchingParts = document.querySelectorAll(`#${currentSvg} [data-part="${part}"]`);
                 if (matchingParts.length > 0) {
                     clickedElement = matchingParts[0];
                 }
             }
 
-            if (!clickedElement) return;
+            if (!clickedElement) {
+                console.error('❌ No clicked element found!');
+                return;
+            }
 
             // Ensure we're working with the body-part element
             if (!clickedElement.classList.contains('body-part')) {
                 clickedElement = clickedElement.closest('.body-part');
             }
-            if (!clickedElement) return;
+            if (!clickedElement) {
+                console.error('❌ Could not find .body-part element');
+                return;
+            }
+
+            console.log('✅ Found body-part element:', clickedElement.getAttribute('data-part'), 'at position:', {
+                cx: clickedElement.getAttribute('cx'),
+                x: clickedElement.getAttribute('x')
+            });
 
             // Toggle selection
             const isCurrentlySelected = clickedElement.classList.contains('selected');
@@ -3770,25 +4534,28 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             if (isCurrentlySelected) {
                 // Deselect this part
                 clickedElement.classList.remove('selected');
-                // Remove from selectedParts array - don't use part name, as multiple elements may have same name
-                const allSelected = document.querySelectorAll(`#${currentSvg} .body-part.selected`);
-                assessmentData.selectedParts = Array.from(allSelected).map(el => el.getAttribute('data-part'));
+                console.log('➖ Deselected:', clickedElement.getAttribute('data-part'));
             } else {
                 // Select this part
                 clickedElement.classList.add('selected');
-                // Rebuild selectedParts from all selected elements
-                const allSelected = document.querySelectorAll(`#${currentSvg} .body-part.selected`);
-                assessmentData.selectedParts = Array.from(allSelected).map(el => el.getAttribute('data-part'));
+                console.log('➕ Selected:', clickedElement.getAttribute('data-part'));
             }
+
+            // Rebuild selectedParts from all selected elements
+            const allSelected = document.querySelectorAll(`#${currentSvg} .body-part.selected`);
+            assessmentData.selectedParts = Array.from(allSelected).map(el => el.getAttribute('data-part'));
 
             // Remove duplicates from selectedParts
             assessmentData.selectedParts = [...new Set(assessmentData.selectedParts)];
+
+            console.log('📋 Selected parts:', assessmentData.selectedParts);
 
             // Update the main bodyPart to the first selected (for backward compatibility)
             assessmentData.bodyPart = assessmentData.selectedParts.length > 0 ? assessmentData.selectedParts[0] : null;
 
             // Update all dependent UI elements
             updateSelectedParts();
+            updateSelectedPartsFeedback();
 
             checkStep1Complete();
             if (save) saveSession();
@@ -3796,6 +4563,59 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             // Voice feedback
             const action = isCurrentlySelected ? 'deselected' : 'selected';
             speak(`${part} ${action}`);
+        }
+
+        // Update the selected parts feedback bar in Step 1
+        function updateSelectedPartsFeedback() {
+            console.log('🎨 updateSelectedPartsFeedback() called');
+
+            const feedbackBar = document.getElementById('selectedPartsDisplay');
+            if (!feedbackBar) {
+                console.error('❌ selectedPartsDisplay element not found');
+                return;
+            }
+
+            const selectedParts = assessmentData.selectedParts || [];
+            console.log('📍 Updating feedback bar with parts:', selectedParts);
+
+            // Emoji mapping for body parts
+            const emojiMap = {
+                'head': '🧠',
+                'neck': '🦴',
+                'shoulder': '💪',
+                'back': '🔙',
+                'arm': '💪',
+                'elbow': '🦾',
+                'wrist': '🤲',
+                'hand': '✋',
+                'hip': '🦵',
+                'leg': '🦵',
+                'knee': '🦵',
+                'ankle': '🦶',
+                'foot': '🦶'
+            };
+
+            if (selectedParts.length === 0) {
+                feedbackBar.innerHTML = '';
+                console.log('✅ Cleared feedback bar (no parts selected)');
+                return;
+            }
+
+            // Build feedback HTML
+            const partBadges = selectedParts.map(part => {
+                const emoji = emojiMap[part] || '📍';
+                const formattedName = part.split('-').map(word =>
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ');
+                return `<span class="part-name">${emoji} ${formattedName}</span>`;
+            }).join('');
+
+            feedbackBar.innerHTML = `
+                <span class="feedback-label">Selected:</span>
+                ${partBadges}
+            `;
+
+            console.log(`✅ Updated feedback bar with ${selectedParts.length} part(s)`);
         }
 
         // Update UI based on all selected parts
@@ -3821,37 +4641,63 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             }
         }
 
-        // Display selected parts names above impact section
+        // Display selected parts names above impact section WITH EMOJI BADGES
         function showSelectedPartsDisplay() {
+            console.log('🎨 showSelectedPartsDisplay called');
+
             const step3 = document.getElementById('step3');
-            if (!step3) return;
+            if (!step3) {
+                console.error('❌ Step3 element not found!');
+                return;
+            }
 
             const selectedParts = assessmentData.selectedParts;
+            console.log('📋 Displaying parts:', selectedParts);
 
             // Find or create selected parts display
             let selectedDisplay = step3.querySelector('.selected-parts-display');
             if (!selectedDisplay) {
                 selectedDisplay = document.createElement('div');
                 selectedDisplay.className = 'selected-parts-display';
-                const stepContent = step3.querySelector('.step-content');
-                if (stepContent) {
-                    stepContent.insertBefore(selectedDisplay, stepContent.firstChild);
-                }
+                // step3 IS the .step-content div, use it directly
+                step3.insertBefore(selectedDisplay, step3.firstChild);
+                console.log('✅ Created selected-parts-display element');
             }
 
             if (selectedParts.length === 0) {
                 selectedDisplay.style.display = 'none';
+                selectedDisplay.innerHTML = '<div class="selected-parts-empty">👆 Click on body parts above to select them</div>';
+                console.log('ℹ️ No parts selected, hiding display');
                 return;
             }
 
-            // Format part names (capitalize and clean)
-            const formatPartName = (part) => {
-                return part.split('-').map(word =>
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                ).join(' ');
+            // Emoji mapping for body parts
+            const emojiMap = {
+                'head': '🧠',
+                'neck': '🦴',
+                'shoulder': '💪',
+                'back': '🔙',
+                'arm': '💪',
+                'elbow': '🦾',
+                'wrist': '🤲',
+                'hand': '✋',
+                'hip': '🦵',
+                'leg': '🦵',
+                'knee': '🦵',
+                'ankle': '🦶',
+                'foot': '🦶'
             };
 
-            const partNames = selectedParts.map(formatPartName).join(', ');
+            // Format part names with emojis as badges
+            const formatPartName = (part) => {
+                const emoji = emojiMap[part] || '📍';
+                const name = part.split('-').map(word =>
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ');
+                return `<span class="part-badge">${emoji} ${name}</span>`;
+            };
+
+            const partBadges = selectedParts.map(formatPartName).join(' ');
 
             selectedDisplay.style.display = 'block';
             selectedDisplay.innerHTML = `
@@ -3859,16 +4705,35 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                     </svg>
-                    <span>Selected Parts:</span>
+                    <span>Selected Areas (${selectedParts.length}):</span>
                 </div>
-                <div class="selected-parts-list">${partNames}</div>
+                <div class="selected-parts-badges">${partBadges}</div>
             `;
+
+            console.log('✅ Display updated with', selectedParts.length, 'badges');
         }
 
-        // Render combined impact options for multiple body parts
+        // Render combined impact options for multiple body parts WITH EMOJIS
         function renderImpactForMultipleParts(selectedParts) {
+            console.log('💥 renderImpactForMultipleParts called with:', selectedParts);
+
             const step3 = document.getElementById('step3');
-            if (!step3 || !selectedParts || selectedParts.length === 0) return;
+            if (!step3) {
+                console.error('❌ Step3 not found!');
+                return;
+            }
+            if (!selectedParts || selectedParts.length === 0) {
+                console.log('ℹ️ No selected parts, skipping impact rendering');
+                return;
+            }
+
+            // Emoji icons for impact levels
+            const impactEmojis = {
+                'mild': '✅',
+                'moderate': '⚠️',
+                'severe': '🔴',
+                'critical': '🚨'
+            };
 
             // Collect all unique impact descriptions from all selected parts
             const allImpacts = {
@@ -3878,12 +4743,22 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 critical: []
             };
 
+            console.log('🔄 Gathering impacts from IMPACT_MATRIX...');
+
             // Gather impacts from all selected parts with validation
             selectedParts.forEach(part => {
-                if (!part) return; // Skip null/undefined parts
+                if (!part) {
+                    console.warn('⚠️ Skipping null/undefined part');
+                    return;
+                }
 
                 const impactSet = IMPACT_MATRIX[part] || IMPACT_MATRIX.default;
-                if (!impactSet) return; // Skip if no impact set found
+                if (!impactSet) {
+                    console.warn(`⚠️ No impact set found for part: ${part}`);
+                    return;
+                }
+
+                console.log(`✅ Found impact set for ${part}:`, Object.keys(impactSet));
 
                 Object.keys(allImpacts).forEach(level => {
                     const impactData = impactSet[level];
@@ -3898,20 +4773,27 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 });
             });
 
-            // Find or create impact section
+            console.log('📊 Collected impacts:', {
+                mild: allImpacts.mild.length,
+                moderate: allImpacts.moderate.length,
+                severe: allImpacts.severe.length,
+                critical: allImpacts.critical.length
+            });
+
+            // Find or create impact section with error handling
             let impactSection = step3.querySelector('.impact-section');
             if (!impactSection) {
                 impactSection = document.createElement('div');
                 impactSection.className = 'impact-section';
-                const stepContent = step3.querySelector('.step-content');
-                if (stepContent) {
-                    // Insert after selected parts display
-                    const selectedDisplay = step3.querySelector('.selected-parts-display');
-                    if (selectedDisplay) {
-                        selectedDisplay.parentNode.insertBefore(impactSection, selectedDisplay.nextSibling);
-                    } else {
-                        stepContent.insertBefore(impactSection, stepContent.firstChild);
-                    }
+                // step3 IS the .step-content div, use it directly
+                // Insert after selected parts display if it exists
+                const selectedDisplay = step3.querySelector('.selected-parts-display');
+                if (selectedDisplay) {
+                    step3.insertBefore(impactSection, selectedDisplay.nextSibling);
+                    console.log('✅ Impact section inserted after selected parts display');
+                } else {
+                    step3.insertBefore(impactSection, step3.firstChild);
+                    console.log('✅ Impact section inserted at beginning of step3');
                 }
             }
 
@@ -3954,20 +4836,24 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     ? uniqueDescriptions.join('; ')
                     : uniqueDescriptions[0];
 
+                const emoji = impactEmojis[level] || '📍';
+
                 return `
-                    <div class="impact-card" data-impact="${level}" tabindex="0" role="button" aria-label="${firstImpact.title}: ${combinedDescription}">
+                    <div class="impact-card" data-impact="${level}" tabindex="0" role="button" aria-label="${emoji} ${firstImpact.title}: ${combinedDescription}">
                         <div class="impact-icon">
                             <svg viewBox="0 0 24 24">
                                 ${svgIcons[firstImpact.icon] || svgIcons['check-circle']}
                             </svg>
                         </div>
                         <div class="impact-content">
-                            <div class="impact-title">${firstImpact.title || level}</div>
+                            <div class="impact-title">${emoji} ${firstImpact.title || level}</div>
                             <div class="impact-description">${combinedDescription}</div>
                         </div>
                     </div>
                 `;
             }).filter(Boolean).join(''); // Remove empty cards
+
+            console.log('🎨 Generated', cardsHTML.split('impact-card').length - 1, 'impact cards');
 
             impactSection.innerHTML = `
                 <h3 class="section-title" data-i18n="impactLabel">${t('impactLabel') || 'Impact on Daily Life'}</h3>
@@ -3975,6 +4861,8 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     ${cardsHTML}
                 </div>
             `;
+
+            console.log('✅ Impact section HTML updated');
 
             // Add event delegation for impact card clicks
             const impactOptions = impactSection.querySelector('.impact-options');
@@ -4231,7 +5119,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 // Collect enhanced input fields before AI analysis
                 const painFrequency = document.getElementById('painFrequency')?.value || '';
                 const painType = document.querySelector('input[name="painType"]:checked')?.value || '';
-                const durationMonths = document.getElementById('durationMonths')?.value || 3;
+                const durationMonths = document.getElementById('durationSlider')?.value || 3;
                 const activityTriggers = Array.from(document.querySelectorAll('input[name="activityTrigger"]:checked'))
                     .map(el => el.value);
                 const additionalNotes = document.getElementById('additionalNotes')?.value || '';
@@ -4288,6 +5176,24 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const titleElement = document.getElementById(`step${step}Title`);
             if (titleElement) {
                 speak(titleElement.textContent);
+            }
+
+            // Render AI-powered impact section when entering Step 3
+            if (step === 3) {
+                // Handle both multi-part and single-part selection
+                const hasMultiParts = assessmentData.selectedParts && assessmentData.selectedParts.length > 0;
+                const hasSinglePart = assessmentData.bodyPart;
+
+                if (hasMultiParts || hasSinglePart) {
+                    console.log('📍 Entering Step 3, rendering AI impact section...');
+
+                    // If using single part system, convert to array for AI generation
+                    if (hasSinglePart && !hasMultiParts) {
+                        assessmentData.selectedParts = [assessmentData.bodyPart];
+                    }
+
+                    renderAIImpactSection();
+                }
             }
         }
 
@@ -5340,12 +6246,13 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             if (followUpTitle) followUpTitle.textContent = t('followUpTitle');
             if (followUpInput) followUpInput.placeholder = t('followUpPlaceholder');
 
-            // Update duration slider display
+            // Update duration slider display with current language
             const durationValue = document.getElementById('durationValue');
-            const durationMonths = document.getElementById('durationMonths');
-            if (durationValue && durationMonths) {
-                const value = durationMonths.value;
-                durationValue.textContent = value === '1' ? `1 ${t('month')}` : `${value} ${t('months')}`;
+            const durationSlider = document.getElementById('durationSlider');
+            if (durationValue && durationSlider) {
+                const value = parseInt(durationSlider.value) || assessmentData.durationMonths || 3;
+                durationValue.textContent = value === 1 ? `1 ${t('month')}` : `${value} ${t('months')}`;
+                console.log('🔄 Updated duration label for language change:', durationValue.textContent);
             }
 
             // Update next button text based on current step
@@ -5354,39 +6261,91 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         // ==================== LANGUAGE SYSTEM (3 Languages) ====================
         function setupLanguages() {
+            console.log('🎨 setupLanguages() called');
+            console.log('🌏 Current regionalLanguage value:', regionalLanguage);
             // Build 3-language buttons: EN, HI, Regional (if detected)
             const stickyLangBar = document.getElementById('stickyLangBar');
-            if (!stickyLangBar) return;
+            if (!stickyLangBar) {
+                console.error('❌ stickyLangBar element not found!');
+                return;
+            }
+            console.log('✅ Found stickyLangBar element');
 
             // Clear existing buttons
             stickyLangBar.innerHTML = '';
+            console.log('🗑️ Cleared existing language buttons');
 
             // Language configurations with flag emojis
             const languages = [
                 { code: 'en', name: 'EN', flag: '🇬🇧', fullName: 'English' },
                 { code: 'hi', name: 'हिं', flag: '🇮🇳', fullName: 'Hindi' }
             ];
+            console.log('📝 Base languages added: EN, HI');
 
-            // Add regional language if detected
+            // Add regional language if detected (should ALWAYS be present with fallbacks)
             if (regionalLanguage) {
+                console.log('✅ regionalLanguage is truthy:', regionalLanguage);
                 const regionalConfig = {
-                    'mr': { code: 'mr', name: 'मर', flag: '🇮🇳', fullName: 'Marathi' },
-                    'ta': { code: 'ta', name: 'த', flag: '🇮🇳', fullName: 'Tamil' },
-                    'gu': { code: 'gu', name: 'ગુ', flag: '🇮🇳', fullName: 'Gujarati' }
+                    // Indian languages
+                    'mr': { code: 'mr', name: 'मराठी', flag: '🇮🇳', fullName: 'Marathi' },
+                    'ta': { code: 'ta', name: 'தமிழ்', flag: '🇮🇳', fullName: 'Tamil' },
+                    'gu': { code: 'gu', name: 'ગુજરાતી', flag: '🇮🇳', fullName: 'Gujarati' },
+                    'kn': { code: 'kn', name: 'ಕನ್ನಡ', flag: '🇮🇳', fullName: 'Kannada' },
+                    'te': { code: 'te', name: 'తెలుగు', flag: '🇮🇳', fullName: 'Telugu' },
+                    'bn': { code: 'bn', name: 'বাংলা', flag: '🇮🇳', fullName: 'Bengali' },
+                    'ml': { code: 'ml', name: 'മലയാളം', flag: '🇮🇳', fullName: 'Malayalam' },
+                    'pa': { code: 'pa', name: 'ਪੰਜਾਬੀ', flag: '🇮🇳', fullName: 'Punjabi' },
+                    // International languages
+                    'ar': { code: 'ar', name: 'العربية', flag: '🇸🇦', fullName: 'Arabic' },
+                    'es': { code: 'es', name: 'Español', flag: '🇪🇸', fullName: 'Spanish' },
+                    'fr': { code: 'fr', name: 'Français', flag: '🇫🇷', fullName: 'French' },
+                    'de': { code: 'de', name: 'Deutsch', flag: '🇩🇪', fullName: 'German' },
+                    'pt': { code: 'pt', name: 'Português', flag: '🇵🇹', fullName: 'Portuguese' },
+                    'ru': { code: 'ru', name: 'Русский', flag: '🇷🇺', fullName: 'Russian' },
+                    'zh': { code: 'zh', name: '中文', flag: '🇨🇳', fullName: 'Chinese' },
+                    'ja': { code: 'ja', name: '日本語', flag: '🇯🇵', fullName: 'Japanese' },
+                    'ko': { code: 'ko', name: '한국어', flag: '🇰🇷', fullName: 'Korean' }
                 };
 
                 if (regionalConfig[regionalLanguage]) {
+                    console.log('✅ Found regional config for:', regionalLanguage);
                     languages.push(regionalConfig[regionalLanguage]);
+                    console.log('✅ Added third language button:', regionalConfig[regionalLanguage].fullName, 'with label:', regionalConfig[regionalLanguage].name);
+                } else {
+                    console.warn('⚠️ No regional config found for:', regionalLanguage, '- adding generic button');
+                    // Fallback: add a generic regional button with visible label
+                    const langName = regionalLanguage.toUpperCase();
+                    languages.push({
+                        code: regionalLanguage,
+                        name: langName,
+                        flag: '🌏',
+                        fullName: langName
+                    });
+                    console.log('✅ Added generic regional button for:', regionalLanguage, 'with label:', langName);
                 }
+            } else {
+                console.error('❌ CRITICAL: regionalLanguage is falsy! This should never happen with fallbacks.');
+                // Emergency fallback - add Marathi button anyway
+                console.log('🚨 Emergency: Adding Marathi as fallback');
+                regionalLanguage = 'mr';
+                languages.push({
+                    code: 'mr',
+                    name: 'मर',
+                    flag: '🇮🇳',
+                    fullName: 'Marathi'
+                });
             }
 
+            console.log('📊 Total languages to render:', languages.length);
+            console.log('🔤 Languages array:', languages);
+
             // Create buttons
-            languages.forEach(lang => {
+            languages.forEach((lang, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'sticky-lang-btn';
                 btn.setAttribute('data-lang', lang.code);
                 btn.setAttribute('title', lang.fullName);
-                btn.onclick = () => switchLanguage(lang.code);
+                btn.onclick = async () => await switchLanguage(lang.code);
 
                 // Add flag and name
                 btn.innerHTML = `<span class="lang-flag">${lang.flag}</span> ${lang.name}`;
@@ -5397,125 +6356,246 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 }
 
                 stickyLangBar.appendChild(btn);
+                console.log(`✅ Created button ${index + 1}:`, lang.fullName, '| Active:', lang.code === assessmentData.currentLanguage);
             });
+            console.log('✅ setupLanguages() completed. Total buttons created:', languages.length);
         }
 
         async function detectAndSetLanguage() {
+            console.log('🌍 detectAndSetLanguage() called');
             try {
                 // Ensure TRANSLATIONS is loaded
+                console.log('🔍 Checking if TRANSLATIONS is loaded...');
                 if (typeof TRANSLATIONS === 'undefined') {
-                    console.error('TRANSLATIONS not loaded from translations.js');
+                    console.error('❌ TRANSLATIONS not loaded from translations.js');
                     assessmentData.currentLanguage = 'en';
                     setupLanguages();
                     return;
                 }
+                console.log('✅ TRANSLATIONS is loaded');
 
                 // Check cached region first
                 const cachedRegion = localStorage.getItem('regionLang');
                 const savedLang = localStorage.getItem('preferred_language');
+                console.log('💾 Cache check:', { cachedRegion, savedLang });
 
                 // Always default to English first
                 assessmentData.currentLanguage = 'en';
+                console.log('🔤 Default language set to: en');
 
                 // Try to use cached region if available
                 if (cachedRegion) {
+                    console.log('📦 Using cached region:', cachedRegion);
                     // Normalize cached region code
                     regionalLanguage = normalizeLangCode(cachedRegion);
+                    console.log('🔄 Normalized cached region to:', regionalLanguage);
 
                     if (savedLang) {
                         const normalizedSaved = normalizeLangCode(savedLang);
+                        console.log('✅ Saved language matches regional:', normalizedSaved === regionalLanguage);
                         if (normalizedSaved === regionalLanguage) {
                             assessmentData.currentLanguage = regionalLanguage;
                         }
                     }
                 } else {
+                    console.log('🌐 No cached region found, fetching from IP API...');
                     // Auto-detect regional language via IP
+                    let detectedLang = null;
+
                     try {
-                        const response = await fetch('https://ipapi.co/json/');
+                        const response = await fetch('https://ipapi.co/json/', { timeout: 5000 });
+                        console.log('📡 IP API response status:', response.status, response.ok);
                         if (response.ok) {
                             const data = await response.json();
+                            console.log('📊 IP API data:', data);
                             const country = data.country_code;
                             const region = data.region;
-
-                            // Extract language from API response if available
-                            let detectedLang = null;
+                            console.log('🗺️ Detected location:', { country, region });
 
                             // Check if API provides language code
+                            console.log('🔍 Checking for language data in API response...');
                             if (data.languages) {
+                                console.log('📝 API provides languages field:', data.languages);
                                 // languages might be a string like "en-US,mr-IN"
                                 const langCodes = typeof data.languages === 'string'
                                     ? data.languages.split(',')
                                     : data.languages;
+                                console.log('🔤 Parsed language codes:', langCodes);
 
                                 // Get first non-English language and normalize it
                                 const nonEnglishLang = Array.isArray(langCodes)
                                     ? langCodes.find(l => !l.startsWith('en'))
                                     : langCodes;
+                                console.log('🌏 Non-English language found:', nonEnglishLang);
 
                                 if (nonEnglishLang) {
                                     detectedLang = normalizeLangCode(nonEnglishLang);
+                                    console.log('✅ Normalized to:', detectedLang);
                                 }
+                            } else {
+                                console.log('⚠️ No languages field in API response');
                             }
 
                             // Fallback to region-based mapping for India
                             if (!detectedLang && country === 'IN') {
+                                console.log('🇮🇳 Using region-based mapping for India');
                                 const regionLangMap = {
                                     'Maharashtra': 'mr',
                                     'Tamil Nadu': 'ta',
-                                    'Gujarat': 'gu'
+                                    'Gujarat': 'gu',
+                                    'Karnataka': 'kn',
+                                    'Andhra Pradesh': 'te',
+                                    'Telangana': 'te',
+                                    'West Bengal': 'bn',
+                                    'Kerala': 'ml',
+                                    'Rajasthan': 'hi',
+                                    'Punjab': 'pa'
                                 };
 
                                 detectedLang = regionLangMap[region];
+                                console.log('🗺️ Region mapping result:', detectedLang);
                             }
 
-                            // Store detected language if found
-                            if (detectedLang) {
-                                regionalLanguage = detectedLang;
-                                localStorage.setItem('regionLang', regionalLanguage);
+                            // If still no language but country is India, default to Marathi
+                            if (!detectedLang && country === 'IN') {
+                                console.log('🇮🇳 Defaulting to Marathi for India');
+                                detectedLang = 'mr';
                             }
 
                             localStorage.setItem('detected_region', region || 'Unknown');
                         }
                     } catch (fetchError) {
-                        console.log('IP detection failed, no regional language available');
+                        console.error('❌ IP detection fetch error:', fetchError);
+                        console.log('⚠️ IP detection failed, trying browser language fallback...');
+                    }
+
+                    // FALLBACK 1: Try browser language if IP detection failed
+                    if (!detectedLang && typeof navigator !== 'undefined' && navigator.language) {
+                        console.log('🌐 Trying browser language:', navigator.language);
+                        const browserLang = normalizeLangCode(navigator.language);
+                        console.log('🔄 Normalized browser language:', browserLang);
+
+                        // Only use if it's one of our supported regional languages
+                        if (['mr', 'ta', 'gu', 'kn', 'te', 'bn', 'ml', 'pa'].includes(browserLang)) {
+                            detectedLang = browserLang;
+                            console.log('✅ Using browser language:', browserLang);
+                        }
+                    }
+
+                    // FALLBACK 2: Default to Marathi as the regional language
+                    if (!detectedLang) {
+                        console.log('🎯 Using default fallback: Marathi (mr)');
+                        detectedLang = 'mr';
+                    }
+
+                    // Always set and cache the detected language
+                    if (detectedLang) {
+                        console.log('💾 Storing detected language:', detectedLang);
+                        regionalLanguage = detectedLang;
+                        localStorage.setItem('regionLang', regionalLanguage);
+                        console.log('✅ regionalLanguage variable set to:', regionalLanguage);
                     }
                 }
+
+                // FINAL SAFETY CHECK: Ensure regionalLanguage is ALWAYS set
+                if (!regionalLanguage) {
+                    console.error('🚨 CRITICAL: regionalLanguage is still null after all detection attempts!');
+                    console.log('🛡️ Applying ultimate fallback: Marathi (mr)');
+                    regionalLanguage = 'mr';
+                    localStorage.setItem('regionLang', 'mr');
+                }
+                console.log('✅ GUARANTEED regionalLanguage value:', regionalLanguage);
 
                 // Restore saved language if valid
+                console.log('🔄 Checking for saved language preference...');
                 if (savedLang) {
                     const normalizedSaved = normalizeLangCode(savedLang);
+                    console.log('💾 Saved language normalized to:', normalizedSaved);
+                    console.log('✅ Validating against: en, hi, regionalLanguage =', regionalLanguage);
                     if (normalizedSaved === 'en' || normalizedSaved === 'hi' || normalizedSaved === regionalLanguage) {
                         assessmentData.currentLanguage = normalizedSaved;
+                        console.log('✅ Language set to saved preference:', normalizedSaved);
                     }
+                } else {
+                    console.log('ℹ️ No saved language preference found');
                 }
 
-                // Setup language buttons (3 only)
+                // Setup language buttons (3 only) - regionalLanguage is GUARANTEED to be set
+                console.log('🔧 Calling setupLanguages() with GUARANTEED regionalLanguage =', regionalLanguage);
                 setupLanguages();
+                console.log('🌍 Calling applyTranslations()');
                 applyTranslations();
+                console.log('✅ detectAndSetLanguage() completed successfully - 3 language buttons should now be visible');
             } catch (error) {
-                console.log('Language auto-detection failed, using default (English)');
+                console.error('❌ Language auto-detection error:', error);
+                console.log('⚠️ Language auto-detection failed, using defaults');
+
+                // Ensure regionalLanguage is set even in error case
+                if (!regionalLanguage) {
+                    console.log('🛡️ Error handler: Setting regionalLanguage to Marathi (mr)');
+                    regionalLanguage = 'mr';
+                    localStorage.setItem('regionLang', 'mr');
+                }
+
                 assessmentData.currentLanguage = 'en';
-                setupLanguages();
+                setupLanguages();  // Will now always have 3 buttons
                 applyTranslations();
             }
         }
 
-        function switchLanguage(lang) {
-            // Normalize language code
-            assessmentData.currentLanguage = normalizeLangCode(lang);
-            localStorage.setItem('preferred_language', assessmentData.currentLanguage);
+        async function switchLanguage(lang) {
+            console.log('🔄 switchLanguage() called with:', lang);
+
+            // Normalize language code (e.g., ar-SA → ar, mr-IN → mr)
+            const normalizedLang = normalizeLangCode(lang);
+            console.log('✅ Normalized language code:', normalizedLang);
+
+            assessmentData.currentLanguage = normalizedLang;
+            localStorage.setItem('preferred_language', normalizedLang);
+            console.log('💾 Saved language preference:', normalizedLang);
+
+            // Check if translations exist for this language
+            if (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[normalizedLang]) {
+                console.log('✅ Translations available for:', normalizedLang);
+                console.log('📊 Sample translation keys:', Object.keys(TRANSLATIONS[normalizedLang]).slice(0, 5));
+            } else {
+                console.warn('⚠️ No translations found for:', normalizedLang);
+
+                // If translation doesn't exist and it's not English, try to generate it
+                if (normalizedLang !== 'en' && normalizedLang !== 'hi' && normalizedLang !== 'mr') {
+                    console.log('🧠 Attempting to generate AI translation for:', normalizedLang);
+                    const newTranslation = await generateExactTranslation(normalizedLang);
+
+                    if (newTranslation) {
+                        console.log('✅ Successfully generated translation for:', normalizedLang);
+                    } else {
+                        console.warn('⚠️ Translation generation failed, will fall back to English');
+                        speak('Translation not available. Please configure OpenAI API key in settings.');
+                    }
+                }
+            }
 
             // Rebuild language buttons to update active state
+            console.log('🎨 Rebuilding language buttons...');
             setupLanguages();
 
             // Re-apply all translations globally (explicitly pass language for fallback)
-            applyTranslations(assessmentData.currentLanguage);
+            console.log('🌍 Applying translations for:', normalizedLang);
+            applyTranslations(normalizedLang);
+
+            // Update all UI text elements
+            console.log('🔄 Updating UI text elements...');
+            updateUIText();
 
             // Re-render dynamic content with new language
             if (assessmentData.selectedParts && assessmentData.selectedParts.length > 0) {
+                console.log('📍 Re-rendering multi-part selection UI');
                 // Multi-part or single-part selection
                 updateSelectedParts();
+                showSelectedPartsDisplay();
+                renderImpactForMultipleParts(assessmentData.selectedParts);
             } else if (assessmentData.bodyPart && CONTEXT_MATRIX[assessmentData.bodyPart]) {
+                console.log('📍 Re-rendering single part UI');
                 // Legacy single part
                 renderDynamicSections(assessmentData.bodyPart);
                 renderImpactOptions();
@@ -5528,6 +6608,55 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
             // Auto-scroll to current section
             autoScrollToCurrentSection();
+
+            console.log('✅ Language switch completed to:', normalizedLang);
+        }
+
+        function updateUIText() {
+            console.log('🔄 updateUIText() called');
+            console.log('🌍 Current language:', assessmentData.currentLanguage);
+
+            // Force re-translation of all visible text
+            // This is called after language switch to ensure everything updates
+
+            // Update all elements with data-i18n attribute
+            const translatableElements = document.querySelectorAll('[data-i18n]');
+            console.log(`📝 Found ${translatableElements.length} elements with data-i18n`);
+
+            translatableElements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (key) {
+                    const translation = t(key);
+                    if (translation !== key) { // Only update if translation exists
+                        el.textContent = translation;
+                        console.log(`✅ Translated [${key}] to: ${translation.substring(0, 30)}...`);
+                    }
+                }
+            });
+
+            // Update navigation buttons
+            const prevButtons = document.querySelectorAll('.prev-button, .btn-prev');
+            const nextButtons = document.querySelectorAll('.next-button, .btn-next');
+            prevButtons.forEach(btn => {
+                if (btn.textContent && !btn.querySelector('svg')) {
+                    btn.textContent = t('prevButton') || 'Previous';
+                }
+            });
+            nextButtons.forEach(btn => {
+                if (btn.textContent && !btn.querySelector('svg')) {
+                    btn.textContent = t('nextButton') || 'Next';
+                }
+            });
+
+            // Update any other dynamic UI elements
+            const submitButtons = document.querySelectorAll('[type="submit"], .submit-button');
+            submitButtons.forEach(btn => {
+                if (btn.dataset.translateKey) {
+                    btn.textContent = t(btn.dataset.translateKey);
+                }
+            });
+
+            console.log('✅ UI text updated for language:', assessmentData.currentLanguage);
         }
 
         // ==================== AUTO-SCROLL ====================
@@ -5690,12 +6819,9 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             if (!impactSection) {
                 impactSection = document.createElement('div');
                 impactSection.className = 'impact-section';
-
-                // Insert at the beginning of step3
-                const stepContent = step3.querySelector('.step-content');
-                if (stepContent) {
-                    stepContent.insertBefore(impactSection, stepContent.firstChild);
-                }
+                // step3 IS the .step-content div, use it directly
+                step3.insertBefore(impactSection, step3.firstChild);
+                console.log('✅ Impact section inserted into step3');
             }
 
             // SVG icons for each impact level
@@ -5824,14 +6950,26 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 DOMContentLoaded fired - Starting initialization...');
             // Wait for translations.js to fully load (increased delay for reliability)
+            console.log('⏳ Waiting 1200ms for translations.js to load...');
             await new Promise(resolve => setTimeout(resolve, 1200));
+            console.log('✅ 1200ms delay completed');
 
             // Initialize body diagram with accessibility features
+            console.log('🎨 Initializing body diagram...');
             initializeBodyDiagram();
 
-            // Detect and set language first
-            await detectAndSetLanguage();
+            // Initialize AI-powered language system (exact IP-based detection + AI translation)
+            console.log('🚀 Initializing AI-powered language system...');
+            await initializeLanguageSystem();
+            console.log('✅ AI language system initialized');
+
+            // Fallback: If initialization didn't set regionalLanguage, use detectAndSetLanguage
+            if (!regionalLanguage) {
+                console.log('⚠️ Regional language not set, using fallback detection...');
+                await detectAndSetLanguage();
+            }
 
             updateProgress();
             checkNextButtonState();
@@ -5839,6 +6977,41 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
             // Apply translations after loading session
             applyTranslations();
+
+            // Initialize duration slider with proper event handling
+            console.log('🎚️ Initializing duration slider...');
+            const durationSlider = document.getElementById('durationSlider');
+            const durationLabel = document.getElementById('durationValue');
+
+            if (durationSlider && durationLabel) {
+                console.log('✅ Duration slider found');
+
+                // Initialize with current value or default
+                const initialValue = parseInt(durationSlider.value) || 3;
+                assessmentData.durationMonths = initialValue;
+                durationLabel.textContent = initialValue === 1 ? `1 ${t('month')}` : `${initialValue} ${t('months')}`;
+                console.log('📊 Initialized duration slider with value:', initialValue, '→', durationLabel.textContent);
+
+                durationSlider.addEventListener('input', function(e) {
+                    const value = parseInt(e.target.value);
+                    console.log('🔄 Duration slider changed to:', value);
+
+                    // Update assessmentData
+                    assessmentData.durationMonths = value;
+                    console.log('💾 Stored in assessmentData.durationMonths:', assessmentData.durationMonths);
+
+                    // Update display label with current language
+                    durationLabel.textContent = value === 1 ? `1 ${t('month')}` : `${value} ${t('months')}`;
+                    console.log('✅ Updated label to:', durationLabel.textContent);
+
+                    // Save session
+                    saveSession();
+                });
+
+                console.log('✅ Duration slider event listener attached');
+            } else {
+                console.error('❌ Duration slider or label not found!');
+            }
 
             // Start mutation observer for dynamic content
             startTranslationObserver();
