@@ -6328,8 +6328,21 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             console.log('📝 Base languages added: EN, HI');
 
             // Add regional language if detected and different from EN/HI
+            // IMPORTANT: Only add if we actually have translations for it!
             if (regionalLanguage && regionalLanguage !== 'en' && regionalLanguage !== 'hi') {
                 console.log('✅ regionalLanguage is truthy and unique:', regionalLanguage);
+
+                // Check if translations exist for this language
+                const hasTranslations = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[regionalLanguage];
+                console.log('📚 Does TRANSLATIONS have', regionalLanguage, '?', hasTranslations);
+
+                if (!hasTranslations) {
+                    console.warn('⚠️⚠️⚠️ CRITICAL: No translations loaded for', regionalLanguage);
+                    console.log('   Available languages in TRANSLATIONS:', typeof TRANSLATIONS !== 'undefined' ? Object.keys(TRANSLATIONS) : 'TRANSLATIONS not loaded');
+                    console.log('   The third button will appear but WON\'T work because translations don\'t exist!');
+                    console.log('   Solution: Add', regionalLanguage, 'to translations.js OR configure OpenAI API key');
+                }
+
                 const regionalConfig = {
                     // Indian languages
                     'mr': { code: 'mr', name: 'मराठी', flag: '🇮🇳', fullName: 'Marathi' },
@@ -6352,13 +6365,17 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     'ko': { code: 'ko', name: '한국어', flag: '🇰🇷', fullName: 'Korean' }
                 };
 
-                if (regionalConfig[regionalLanguage]) {
+                // Only add button if translations actually exist
+                if (!hasTranslations) {
+                    console.error('❌ SKIPPING third button - no translations for', regionalLanguage);
+                    console.log('   Button would appear but not work, so not adding it');
+                } else if (regionalConfig[regionalLanguage]) {
                     console.log('✅ Found regional config for:', regionalLanguage);
                     languages.push(regionalConfig[regionalLanguage]);
                     console.log('✅ Added third language button:', regionalConfig[regionalLanguage].fullName, 'with label:', regionalConfig[regionalLanguage].name);
-                } else {
+                } else if (hasTranslations) {
+                    // Has translations but no config - add generic button
                     console.warn('⚠️ No regional config found for:', regionalLanguage, '- adding generic button');
-                    // Fallback: add a generic regional button with visible label
                     const langName = regionalLanguage.toUpperCase();
                     languages.push({
                         code: regionalLanguage,
@@ -6368,6 +6385,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     });
                     console.log('✅ Added generic regional button for:', regionalLanguage, 'with label:', langName);
                 }
+                // If no translations, button was already skipped above
             } else {
                 console.log('ℹ️ Regional language is same as EN or HI, showing only 2 buttons:', regionalLanguage);
             }
