@@ -6637,19 +6637,47 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     // Try to generate translations if not English
                     if (normalizedLang !== 'en') {
                         console.log('🧠 Attempting to generate AI translation for:', normalizedLang);
+
+                        // Show loading indicator
+                        const headerTitle = document.getElementById('headerTitle');
+                        if (headerTitle) {
+                            headerTitle.textContent = '⏳ Generating ' + normalizedLang.toUpperCase() + ' translation...';
+                        }
+
                         const newTranslation = await generateExactTranslation(normalizedLang);
 
                         if (newTranslation) {
                             console.log('✅ Successfully generated translation for:', normalizedLang);
+                            console.log('🎉 Translation is now available! Applying to UI...');
+
+                            // NOW translations exist in TRANSLATIONS[normalizedLang]
+                            // Continue to apply them below
                         } else {
-                            console.warn('⚠️ Translation generation failed, will fall back to English');
-                            console.log('💡 To enable AI translations: Click ⚙️ settings and add OpenAI API key');
-                            alert('Translation not available for ' + normalizedLang + '.\n\nTo enable AI translations:\n1. Click the ⚙️ settings icon\n2. Enter your OpenAI API key\n3. Try again');
+                            console.warn('⚠️ Translation generation failed - no OpenAI API key configured');
+                            console.log('💡 Falling back to English display');
+
+                            // Create a simple fallback - just show English with a note
+                            if (headerTitle) {
+                                headerTitle.textContent = 'AI-Powered Pain Assessment (Translation unavailable for ' + normalizedLang + ')';
+                                setTimeout(() => {
+                                    headerTitle.textContent = 'AI-Powered Pain Assessment';
+                                }, 3000);
+                            }
+
+                            // Show friendly toast instead of alert
+                            console.log('📢 To enable ' + normalizedLang + ' translations:');
+                            console.log('   1. Click the ⚙️ settings icon (top right)');
+                            console.log('   2. Enter your OpenAI API key');
+                            console.log('   3. Click this language button again');
+
+                            // Don't continue - stay in current language
+                            return;
                         }
                     }
                 }
             } else {
                 console.error('❌ TRANSLATIONS object is NOT loaded!');
+                return;
             }
 
             // Rebuild language buttons to update active state
