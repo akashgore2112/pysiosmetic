@@ -7144,6 +7144,84 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
         window.speakQuestion = speakQuestion;
         window.startVoiceAnswerInput = startVoiceAnswerInput;
         console.log('✅ All onclick functions exported to window scope');
+
+        // ==================== DIAGNOSTIC TEST FUNCTION ====================
+        window.testLanguageSwitch = function(langCode) {
+            console.clear();
+            console.log('🧪 DIAGNOSTIC TEST START');
+            console.log('Testing language switch to:', langCode);
+            console.log('');
+
+            console.log('1️⃣ Checking TRANSLATIONS object...');
+            if (typeof TRANSLATIONS === 'undefined') {
+                console.error('❌ TRANSLATIONS is UNDEFINED!');
+                return;
+            }
+            console.log('✅ TRANSLATIONS exists');
+            console.log('   Available languages:', Object.keys(TRANSLATIONS));
+
+            console.log('');
+            console.log('2️⃣ Checking if translations exist for', langCode);
+            if (!TRANSLATIONS[langCode]) {
+                console.error('❌ No translations for ' + langCode);
+                console.log('   Available:', Object.keys(TRANSLATIONS));
+                return;
+            }
+            console.log('✅ Translations found for', langCode);
+            console.log('   Sample keys:', Object.keys(TRANSLATIONS[langCode]).slice(0, 5));
+
+            console.log('');
+            console.log('3️⃣ Testing translation values...');
+            const headerEN = TRANSLATIONS.en.headerTitle;
+            const headerTarget = TRANSLATIONS[langCode].headerTitle;
+            console.log('   EN headerTitle:', headerEN);
+            console.log('   ' + langCode + ' headerTitle:', headerTarget);
+
+            console.log('');
+            console.log('4️⃣ Checking DOM elements...');
+            const headerElement = document.getElementById('headerTitle');
+            if (!headerElement) {
+                console.error('❌ headerTitle element NOT FOUND in DOM!');
+                return;
+            }
+            console.log('✅ headerTitle element found');
+            console.log('   Current text:', headerElement.textContent);
+
+            console.log('');
+            console.log('5️⃣ Testing switchLanguage() function...');
+            if (typeof switchLanguage !== 'function') {
+                console.error('❌ switchLanguage is not a function!');
+                return;
+            }
+            console.log('✅ switchLanguage is a function');
+            console.log('   Calling switchLanguage("' + langCode + '")...');
+            switchLanguage(langCode);
+
+            console.log('');
+            console.log('6️⃣ Checking result after 1 second...');
+            setTimeout(function() {
+                const newText = document.getElementById('headerTitle')?.textContent;
+                console.log('   Header text NOW:', newText);
+                if (newText === headerTarget) {
+                    console.log('✅✅✅ SUCCESS! Language switched to', langCode);
+                } else if (newText === headerEN) {
+                    console.error('❌❌❌ FAILED! Text is still in English');
+                } else {
+                    console.warn('⚠️⚠️⚠️ UNEXPECTED! Text is:', newText);
+                }
+                console.log('🧪 DIAGNOSTIC TEST END');
+            }, 1000);
+        };
+
+        // Export shortcuts for easy testing
+        window.testHindi = function() { testLanguageSwitch('hi'); };
+        window.testMarathi = function() { testLanguageSwitch('mr'); };
+
+        console.log('');
+        console.log('🧪 DIAGNOSTIC FUNCTIONS AVAILABLE:');
+        console.log('   Type: testHindi()    - to test Hindi translation');
+        console.log('   Type: testMarathi()  - to test Marathi translation');
+        console.log('   Type: testLanguageSwitch("ar") - to test any language');
     </script>
 
     <!-- FLOATING ACTION BAR -->
