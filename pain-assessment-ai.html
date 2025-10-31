@@ -7119,8 +7119,9 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     assessmentData.durationMonths = value;
                     console.log('💾 Stored in assessmentData.durationMonths:', assessmentData.durationMonths);
 
-                    // Update display label with current language
-                    durationLabel.textContent = value === 1 ? `1 ${t('month')}` : `${value} ${t('months')}`;
+                    // Update display label with current language (with fallback)
+                    const monthText = value === 1 ? (t('month') || 'month') : (t('months') || 'months');
+                    durationLabel.textContent = `${value} ${monthText}`;
                     console.log('✅ Updated label to:', durationLabel.textContent);
 
                     // Save session

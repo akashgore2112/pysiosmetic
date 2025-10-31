@@ -2,6 +2,48 @@
 // Supports: English (default), Hindi (manual), and Regional (auto-detected)
 
 const TRANSLATIONS = {
+    ta: {
+        // Tamil translations
+        headerTitle: 'AI-இயக்கப்படும் வலி மதிப்பீடு',
+        headerSubtitle: 'இயற்பியல் சிகிச்சை உதவி',
+        step1Title: 'எங்கே வலிக்கிறது?',
+        step1Description: 'பாதிக்கப்பட்ட பகுதியைத் தேர்ந்தெடுக்கவும்',
+        step2Title: 'இது எவ்வளவு காலமாக உள்ளது?',
+        step2Description: 'கால அளவை தேர்ந்தெடுக்கவும்',
+        step3Title: 'இது உங்கள் அன்றாட வாழ்க்கையை எவ்வாறு பாதிக்கிறது?',
+        step3Description: 'உங்கள் வலி பற்றி விரிவாக தகவல் அளிக்கவும்',
+        nextButton: 'அடுத்தது',
+        prevButton: 'முந்தைய',
+        backBtn: 'மீண்டும்',
+        month: 'மாதம்',
+        months: 'மாதங்கள்',
+        painFrequencyLabel: 'வலி அதிர்வெண்',
+        painTypeLabel: 'வலி வகை',
+        durationMonthsLabel: 'மாதங்களில் கால அளவு',
+        activityTriggersLabel: 'செயல்பாடு தூண்டிகள்',
+        additionalNotesLabel: 'கூடுதல் குறிப்புகள்'
+    },
+    gu: {
+        // Gujarati translations
+        headerTitle: 'AI-સંચાલિત પીડા મૂલ્યાંકન',
+        headerSubtitle: 'ફિઝિયોથેરાપી સહાયક',
+        step1Title: 'ક્યાં દુખાવો છે?',
+        step1Description: 'અસરગ્રસ્ત વિસ્તાર પસંદ કરો',
+        step2Title: 'આ કેટલા સમયથી છે?',
+        step2Description: 'સમયગાળો પસંદ કરો',
+        step3Title: 'તે તમારા રોજિંદા જીવનને કેવી રીતે અસર કરે છે?',
+        step3Description: 'તમારા પીડા વિશે વિગતવાર માહિતી આપો',
+        nextButton: 'આગળ',
+        prevButton: 'પાછળ',
+        backBtn: 'પાછા',
+        month: 'મહિનો',
+        months: 'મહિનાઓ',
+        painFrequencyLabel: 'પીડા આવર્તન',
+        painTypeLabel: 'પીડા પ્રકાર',
+        durationMonthsLabel: 'મહિનામાં સમયગાળો',
+        activityTriggersLabel: 'પ્રવૃત્તિ ટ્રિગર્સ',
+        additionalNotesLabel: 'વધારાની નોંધો'
+    },
     en: {
         // Header
         headerTitle: 'AI-Powered Pain Assessment',
