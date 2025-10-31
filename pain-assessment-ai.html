@@ -3306,40 +3306,93 @@
          * This creates translations dynamically for any detected language
          */
         /**
-         * Translate a single text using LibreTranslate API (FREE!)
+         * Translate a single text using MyMemory API (FAST & FREE!)
+         * MyMemory is faster and more reliable than LibreTranslate
          */
-        async function translateTextLibre(text, targetLang) {
+        async function translateTextMyMemory(text, targetLang, retries = 2) {
             try {
-                const response = await fetch("https://libretranslate.com/translate", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        q: text,
-                        source: "en",
-                        target: targetLang,
-                        format: "text"
-                    })
-                });
+                // URL encode the text
+                const encodedText = encodeURIComponent(text);
+                const url = `https://api.mymemory.translated.net/get?q=${encodedText}&langpair=en|${targetLang}`;
+
+                const response = await fetch(url);
+
+                // Handle rate limiting (429)
+                if (response.status === 429 && retries > 0) {
+                    console.warn(`⚠️ Rate limited, retrying in 100ms... (${retries} retries left)`);
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    return translateTextMyMemory(text, targetLang, retries - 1);
+                }
 
                 if (!response.ok) {
-                    console.warn(`⚠️ LibreTranslate error for "${text}":`, response.status);
+                    console.warn(`⚠️ MyMemory API error for "${text.substring(0, 30)}...":`, response.status);
                     return text; // Return original on error
                 }
 
                 const data = await response.json();
-                return data.translatedText || text;
+
+                // MyMemory returns: { responseData: { translatedText: "..." } }
+                if (data.responseData && data.responseData.translatedText) {
+                    return data.responseData.translatedText;
+                }
+
+                return text; // Return original if no translation
             } catch (error) {
-                console.error('LibreTranslate request failed:', error);
+                console.error('MyMemory request failed:', error);
+
+                // Retry on network error
+                if (retries > 0) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    return translateTextMyMemory(text, targetLang, retries - 1);
+                }
+
                 return text; // Return original on error
             }
         }
 
         /**
-         * Generate complete translation for a language using LibreTranslate (FREE!)
-         * No API key needed!
+         * Fallback to DeepL API if user has configured it (optional)
+         */
+        async function translateTextDeepL(text, targetLang) {
+            const deeplKey = localStorage.getItem('deepl_api_key');
+            if (!deeplKey) {
+                return null; // No DeepL key configured
+            }
+
+            try {
+                const response = await fetch('https://api-free.deepl.com/v2/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `DeepL-Auth-Key ${deeplKey}`,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `text=${encodeURIComponent(text)}&target_lang=${targetLang.toUpperCase()}`
+                });
+
+                if (!response.ok) {
+                    return null;
+                }
+
+                const data = await response.json();
+                if (data.translations && data.translations[0]) {
+                    return data.translations[0].text;
+                }
+
+                return null;
+            } catch (error) {
+                console.error('DeepL translation failed:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Generate complete translation for a language using MyMemory API (FAST & FREE!)
+         * Falls back to DeepL if user has API key configured
+         * No API key needed for MyMemory!
          */
         async function generateDynamicTranslation(langCode) {
-            console.log(`🌍 Generating FREE translation using LibreTranslate for: ${langCode}`);
+            console.log(`🌍 Fast translation using MyMemory API for: ${langCode}`);
+            console.log('⚡ MyMemory is faster and more reliable than LibreTranslate');
             console.log('💸 No API key required - completely free!');
 
             try {
@@ -3356,6 +3409,14 @@
 
                 const translated = {};
                 let completed = 0;
+                let myMemorySuccess = 0;
+                let deeplSuccess = 0;
+
+                // Check if DeepL is available as fallback
+                const hasDeepL = localStorage.getItem('deepl_api_key');
+                if (hasDeepL) {
+                    console.log('🔑 DeepL API key detected - will use as fallback if needed');
+                }
 
                 // Translate each string one by one
                 for (const key in englishTranslations) {
@@ -3367,8 +3428,21 @@
                         continue;
                     }
 
-                    // Translate
-                    translated[key] = await translateTextLibre(englishText, langCode);
+                    // Try MyMemory first (free and fast)
+                    let translatedText = await translateTextMyMemory(englishText, langCode);
+
+                    // If MyMemory failed and DeepL is available, try DeepL
+                    if (translatedText === englishText && hasDeepL) {
+                        const deeplText = await translateTextDeepL(englishText, langCode);
+                        if (deeplText) {
+                            translatedText = deeplText;
+                            deeplSuccess++;
+                        }
+                    } else if (translatedText !== englishText) {
+                        myMemorySuccess++;
+                    }
+
+                    translated[key] = translatedText;
                     completed++;
 
                     // Show progress every 10 items
@@ -3376,12 +3450,17 @@
                         console.log(`⏳ Progress: ${completed}/${totalKeys} strings translated...`);
                     }
 
-                    // Small delay to avoid rate limiting (50ms between requests)
-                    await new Promise(resolve => setTimeout(resolve, 50));
+                    // Minimal delay to avoid rate limiting (30ms between requests - MyMemory is faster!)
+                    await new Promise(resolve => setTimeout(resolve, 30));
                 }
 
-                console.log(`✅ LibreTranslate translation completed for ${langCode}!`);
-                console.log(`📊 Translated ${completed} strings`);
+                console.log(`✅ Fast translation completed for ${langCode}!`);
+                console.log(`📊 Total: ${completed} strings`);
+                console.log(`🌍 MyMemory: ${myMemorySuccess} strings`);
+                if (deeplSuccess > 0) {
+                    console.log(`🔑 DeepL: ${deeplSuccess} strings`);
+                }
+                console.log(`🌍 Fast translation successful for ${langCode}`);
 
                 // Store in TRANSLATIONS object
                 if (typeof TRANSLATIONS !== 'undefined') {
@@ -6653,7 +6732,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                             headerTitle.textContent = '⏳ Translating to ' + normalizedLang.toUpperCase() + ' (FREE!)...';
                         }
 
-                        console.log('🌍 Using LibreTranslate API - completely FREE!');
+                        console.log('⚡ Using MyMemory API - FAST & FREE!');
                         const newTranslation = await generateDynamicTranslation(normalizedLang);
 
                         if (newTranslation) {
