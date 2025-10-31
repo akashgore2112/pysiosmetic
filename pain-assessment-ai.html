@@ -6365,17 +6365,21 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     'ko': { code: 'ko', name: '한국어', flag: '🇰🇷', fullName: 'Korean' }
                 };
 
-                // Only add button if translations actually exist
-                if (!hasTranslations) {
-                    console.error('❌ SKIPPING third button - no translations for', regionalLanguage);
-                    console.log('   Button would appear but not work, so not adding it');
-                } else if (regionalConfig[regionalLanguage]) {
+                // ALWAYS add the button - translations will be generated on click if needed
+                if (regionalConfig[regionalLanguage]) {
                     console.log('✅ Found regional config for:', regionalLanguage);
                     languages.push(regionalConfig[regionalLanguage]);
                     console.log('✅ Added third language button:', regionalConfig[regionalLanguage].fullName, 'with label:', regionalConfig[regionalLanguage].name);
-                } else if (hasTranslations) {
-                    // Has translations but no config - add generic button
-                    console.warn('⚠️ No regional config found for:', regionalLanguage, '- adding generic button');
+
+                    if (!hasTranslations) {
+                        console.warn('⚠️ Note: Translations for', regionalLanguage, 'will be generated when button is clicked');
+                        console.log('   AI will generate translations if OpenAI API key is configured');
+                    } else {
+                        console.log('✅ Translations already available for', regionalLanguage);
+                    }
+                } else {
+                    // No config - add generic button
+                    console.warn('⚠️ No predefined config for:', regionalLanguage, '- adding generic button');
                     const langName = regionalLanguage.toUpperCase();
                     languages.push({
                         code: regionalLanguage,
@@ -6383,9 +6387,12 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                         flag: '🌏',
                         fullName: langName
                     });
-                    console.log('✅ Added generic regional button for:', regionalLanguage, 'with label:', langName);
+                    console.log('✅ Added generic third language button:', langName);
+
+                    if (!hasTranslations) {
+                        console.warn('⚠️ Note: Translations will be generated when button is clicked');
+                    }
                 }
-                // If no translations, button was already skipped above
             } else {
                 console.log('ℹ️ Regional language is same as EN or HI, showing only 2 buttons:', regionalLanguage);
             }
@@ -6626,22 +6633,23 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     console.log('  - step1Title:', TRANSLATIONS[normalizedLang].step1Title);
                 } else {
                     console.warn('⚠️ No translations found for:', normalizedLang);
+
+                    // Try to generate translations if not English
+                    if (normalizedLang !== 'en') {
+                        console.log('🧠 Attempting to generate AI translation for:', normalizedLang);
+                        const newTranslation = await generateExactTranslation(normalizedLang);
+
+                        if (newTranslation) {
+                            console.log('✅ Successfully generated translation for:', normalizedLang);
+                        } else {
+                            console.warn('⚠️ Translation generation failed, will fall back to English');
+                            console.log('💡 To enable AI translations: Click ⚙️ settings and add OpenAI API key');
+                            alert('Translation not available for ' + normalizedLang + '.\n\nTo enable AI translations:\n1. Click the ⚙️ settings icon\n2. Enter your OpenAI API key\n3. Try again');
+                        }
+                    }
                 }
             } else {
                 console.error('❌ TRANSLATIONS object is NOT loaded!');
-
-                // If translation doesn't exist and it's not English, try to generate it
-                if (normalizedLang !== 'en' && normalizedLang !== 'hi' && normalizedLang !== 'mr') {
-                    console.log('🧠 Attempting to generate AI translation for:', normalizedLang);
-                    const newTranslation = await generateExactTranslation(normalizedLang);
-
-                    if (newTranslation) {
-                        console.log('✅ Successfully generated translation for:', normalizedLang);
-                    } else {
-                        console.warn('⚠️ Translation generation failed, will fall back to English');
-                        speak('Translation not available. Please configure OpenAI API key in settings.');
-                    }
-                }
             }
 
             // Rebuild language buttons to update active state
