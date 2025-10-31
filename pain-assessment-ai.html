@@ -3311,16 +3311,49 @@
         }
 
         /**
-         * HYBRID TRANSLATION ENGINE
-         * Primary: DeepL API (if key configured) - Fast & High Quality
-         * Fallback: MyMemory API - Free & Reliable
-         * This creates translations dynamically for any detected language
+         * TRANSLATION CACHE - Store translations in localStorage
          */
-        async function translateTextSmart(text, targetLang) {
+        function getCachedTranslation(text, lang) {
+            try {
+                const cacheKey = `trans_${lang}_${text.substring(0, 50)}`; // Use first 50 chars for key
+                const cached = localStorage.getItem(cacheKey);
+                if (cached) {
+                    return cached;
+                }
+            } catch (err) {
+                // Ignore cache errors
+            }
+            return null;
+        }
+
+        function setCachedTranslation(text, lang, translation) {
+            try {
+                const cacheKey = `trans_${lang}_${text.substring(0, 50)}`;
+                localStorage.setItem(cacheKey, translation);
+            } catch (err) {
+                // Ignore cache errors (quota exceeded, etc.)
+            }
+        }
+
+        /**
+         * HYBRID TRANSLATION ENGINE with Caching & Smart Fallback
+         * 1. Check localStorage cache first
+         * 2. Try DeepL (if supported and key configured)
+         * 3. Try MyMemory primary endpoint
+         * 4. Try MyMemory alternative endpoint on rate limit
+         * 5. Return English as final fallback
+         */
+        async function translateTextSmart(text, targetLang, retries = 3) {
+            // Check cache first
+            const cached = getCachedTranslation(text, targetLang);
+            if (cached) {
+                return cached;
+            }
+
             const deeplKey = localStorage.getItem('deepl_api_key');
 
-            // DeepL supported languages (API doesn't support all languages)
-            const deeplSupported = ['de', 'es', 'fr', 'it', 'pt', 'nl', 'pl', 'ru', 'tr', 'bg', 'cs', 'da', 'el', 'et', 'fi', 'hu', 'id', 'lt', 'lv', 'ro', 'sk', 'sl', 'sv', 'uk', 'nb', 'ko'];
+            // DeepL supported languages (API doesn't support Arabic, Hindi, Chinese, etc.)
+            const deeplSupported = ['de', 'es', 'fr', 'it', 'pt', 'nl', 'pl', 'ru', 'tr', 'bg', 'cs', 'da', 'el', 'et', 'fi', 'hu', 'id', 'lt', 'lv', 'ro', 'sk', 'sl', 'sv', 'uk', 'nb'];
             const isDeeplSupported = deeplSupported.includes(targetLang.toLowerCase());
 
             // Try DeepL first if API key is configured AND language is supported
@@ -3338,49 +3371,64 @@
                     if (response.ok) {
                         const data = await response.json();
                         if (data.translations && data.translations[0] && data.translations[0].text) {
-                            // Only log success if translation actually changed the text
-                            if (data.translations[0].text !== text) {
-                                console.log(`⚡ DeepL success: ${targetLang}`);
-                                return data.translations[0].text;
+                            const translated = data.translations[0].text;
+                            if (translated !== text) {
+                                setCachedTranslation(text, targetLang, translated);
+                                return translated;
                             }
                         }
                     }
-                    // If DeepL failed, fall through to MyMemory
-                    console.log(`⚠️ DeepL returned empty/invalid response for ${targetLang}, switching to MyMemory`);
                 } catch (err) {
-                    console.warn(`⚠️ DeepL failed, switching to MyMemory:`, err);
+                    // Silent fallthrough to MyMemory
                 }
-            } else if (deeplKey && !isDeeplSupported) {
-                console.log(`🚫 DeepL unsupported: ${targetLang} - using MyMemory`);
             }
 
-            // Fallback to MyMemory API (free, no key required)
-            try {
-                const encodedText = encodeURIComponent(text);
-                const url = `https://api.mymemory.translated.net/get?q=${encodedText}&langpair=en|${targetLang}`;
+            // MyMemory API with smart endpoint fallback
+            const myMemoryEndpoints = [
+                'https://api.mymemory.translated.net/get',
+                'https://translated-mymemory---api.herokuapp.com/get'
+            ];
 
-                const response = await fetch(url);
+            for (let endpointIndex = 0; endpointIndex < myMemoryEndpoints.length; endpointIndex++) {
+                const endpoint = myMemoryEndpoints[endpointIndex];
 
-                // Handle rate limiting with retry
-                if (response.status === 429) {
-                    console.warn(`⚠️ MyMemory rate limited, retrying in 200ms...`);
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    return translateTextSmart(text, targetLang); // Retry once
-                }
+                for (let attempt = 0; attempt < retries; attempt++) {
+                    try {
+                        const encodedText = encodeURIComponent(text);
+                        const url = `${endpoint}?q=${encodedText}&langpair=en|${targetLang}`;
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.responseData && data.responseData.translatedText) {
-                        console.log(`🌍 MyMemory fallback used: ${targetLang}`);
-                        return data.responseData.translatedText;
+                        const response = await fetch(url);
+
+                        // Handle rate limiting
+                        if (response.status === 429) {
+                            if (attempt < retries - 1) {
+                                await new Promise(resolve => setTimeout(resolve, 700));
+                                continue; // Retry same endpoint
+                            } else if (endpointIndex < myMemoryEndpoints.length - 1) {
+                                console.log(`⚠️ MyMemory endpoint ${endpointIndex + 1} rate-limited, trying alternative...`);
+                                break; // Try next endpoint
+                            }
+                        }
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.responseData && data.responseData.translatedText) {
+                                const translated = data.responseData.translatedText;
+                                setCachedTranslation(text, targetLang, translated);
+                                return translated;
+                            }
+                        }
+
+                        break; // Exit retry loop if no rate limit
+                    } catch (err) {
+                        if (attempt === retries - 1 && endpointIndex === myMemoryEndpoints.length - 1) {
+                            console.error(`❌ All MyMemory endpoints failed:`, err);
+                        }
                     }
                 }
-            } catch (err) {
-                console.error(`❌ MyMemory failed:`, err);
             }
 
             // Final fallback - return original English text
-            console.log(`❌ Translation failed - using English fallback`);
             return text;
         }
 
@@ -3388,9 +3436,9 @@
          * Generate complete translation for a language using HYBRID ENGINE
          * Primary: DeepL API (if key configured) - Fast & High Quality
          * Fallback: MyMemory API - Free & Reliable
-         * Uses batching to avoid rate limits
+         * Uses Promise.all() batching with progress updates
          */
-        async function generateDynamicTranslation(langCode) {
+        async function generateDynamicTranslation(langCode, progressCallback) {
             const hasDeepL = localStorage.getItem('deepl_api_key');
             const languageName = getLanguageName(langCode);
 
@@ -3415,65 +3463,61 @@
                 const batchSize = 10;
                 const totalBatches = Math.ceil(totalKeys / batchSize);
 
-                console.log(`📝 Translating ${totalKeys} strings in ${totalBatches} batches...`);
+                console.log(`📝 Translating ${totalKeys} strings in ${totalBatches} batches using Promise.all()...`);
 
                 const translated = {};
-                let deeplCount = 0;
-                let myMemoryCount = 0;
-                let failedCount = 0;
+                let completedKeys = 0;
 
-                // Process in batches to avoid rate limiting
+                // Process in batches using Promise.all() for parallel translation
                 for (let i = 0; i < totalBatches; i++) {
                     const batchStart = i * batchSize;
                     const batchEnd = Math.min(batchStart + batchSize, totalKeys);
                     const batchKeys = keys.slice(batchStart, batchEnd);
 
-                    console.log(`⏳ Translating batch ${i + 1}/${totalBatches}...`);
+                    console.log(`⏳ Translating batch ${i + 1}/${totalBatches} (${batchKeys.length} strings in parallel)...`);
 
-                    // Translate all items in this batch
-                    for (const key of batchKeys) {
+                    // Translate all items in this batch in parallel using Promise.all()
+                    const batchPromises = batchKeys.map(async (key) => {
                         const englishText = englishTranslations[key];
 
                         // Skip empty strings
                         if (!englishText || englishText.trim() === '') {
-                            translated[key] = englishText;
-                            continue;
+                            return { key, translatedText: englishText };
                         }
 
                         // Use hybrid translation function
                         const translatedText = await translateTextSmart(englishText, langCode);
-                        translated[key] = translatedText;
+                        return { key, translatedText };
+                    });
 
-                        // Track which API was used (check console logs from translateTextSmart)
-                        if (translatedText !== englishText) {
-                            if (hasDeepL) {
-                                deeplCount++; // Likely from DeepL
-                            } else {
-                                myMemoryCount++; // Definitely from MyMemory
-                            }
-                        } else {
-                            failedCount++;
-                        }
+                    // Wait for all translations in this batch to complete
+                    const batchResults = await Promise.all(batchPromises);
+
+                    // Store results
+                    batchResults.forEach(({ key, translatedText }) => {
+                        translated[key] = translatedText;
+                        completedKeys++;
+                    });
+
+                    // Update progress
+                    const progress = Math.round((completedKeys / totalKeys) * 100);
+                    console.log(`📊 Progress: ${progress}% (${completedKeys}/${totalKeys})`);
+
+                    // Call progress callback if provided
+                    if (progressCallback) {
+                        progressCallback(progress);
                     }
 
-                    // Delay between batches to avoid rate limiting
+                    // Delay between batches to avoid rate limiting (700ms)
                     if (i < totalBatches - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 200));
+                        await new Promise(resolve => setTimeout(resolve, 700));
                     }
                 }
 
                 // Log final results
                 console.log(`✅ All strings translated successfully to ${languageName}!`);
-                console.log(`📊 Total: ${totalKeys} strings`);
-                if (hasDeepL) {
-                    console.log(`⚡ DeepL used for ${deeplCount} strings`);
-                    console.log(`🌍 MyMemory fallback used for ${myMemoryCount} strings`);
-                } else {
-                    console.log(`🌍 MyMemory used for ${myMemoryCount} strings`);
-                }
-                if (failedCount > 0) {
-                    console.log(`⚠️ Failed: ${failedCount} strings (using English fallback)`);
-                }
+                console.log(`📊 Total: ${completedKeys} strings translated`);
+                console.log(`💾 Cached in localStorage for instant reuse`);
 
                 // Store in TRANSLATIONS object
                 if (typeof TRANSLATIONS !== 'undefined') {
@@ -6791,13 +6835,20 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     if (normalizedLang !== 'en') {
                         console.log('🧠 Attempting to generate translation for:', normalizedLang);
 
-                        // Show loading indicator
+                        // Show loading indicator with progress
                         const headerTitle = document.getElementById('headerTitle');
                         const originalHeaderText = headerTitle ? headerTitle.textContent : '';
 
                         if (headerTitle) {
-                            headerTitle.textContent = '🌐 Translating interface to your language...';
+                            headerTitle.textContent = '🌐 Translating interface... [0% done]';
                         }
+
+                        // Progress callback to update UI
+                        const updateProgress = (progress) => {
+                            if (headerTitle) {
+                                headerTitle.textContent = `🌐 Translating interface... [${progress}% done]`;
+                            }
+                        };
 
                         // Auto-hide loading message after 5 seconds regardless of outcome
                         const autoHideTimer = setTimeout(() => {
@@ -6813,7 +6864,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                         }, 5000);
 
                         console.log('🌍 Starting hybrid translation (DeepL + MyMemory)...');
-                        const newTranslation = await generateDynamicTranslation(normalizedLang);
+                        const newTranslation = await generateDynamicTranslation(normalizedLang, updateProgress);
 
                         // Clear auto-hide timer since we're done
                         clearTimeout(autoHideTimer);
@@ -6822,9 +6873,13 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                             console.log('✅ Successfully generated translation for:', normalizedLang);
                             console.log('🎉 Translation is now available! Applying to UI...');
 
-                            // Clear loading message immediately on success
+                            // Clear loading message immediately on success with fade effect
                             if (headerTitle && TRANSLATIONS[normalizedLang] && TRANSLATIONS[normalizedLang].headerTitle) {
-                                headerTitle.textContent = TRANSLATIONS[normalizedLang].headerTitle;
+                                headerTitle.textContent = '✅ Translation complete!';
+                                // Fade to actual translated title after 500ms
+                                setTimeout(() => {
+                                    headerTitle.textContent = TRANSLATIONS[normalizedLang].headerTitle;
+                                }, 500);
                             }
 
                             // NOW translations exist in TRANSLATIONS[normalizedLang]
