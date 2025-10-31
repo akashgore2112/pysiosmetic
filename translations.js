@@ -21,7 +21,13 @@ const TRANSLATIONS = {
         painTypeLabel: 'வலி வகை',
         durationMonthsLabel: 'மாதங்களில் கால அளவு',
         activityTriggersLabel: 'செயல்பாடு தூண்டிகள்',
-        additionalNotesLabel: 'கூடுதல் குறிப்புகள்'
+        additionalNotesLabel: 'கூடுதல் குறிப்புகள்',
+
+        // Duration Options
+        durationHours: 'சில மணிநேரங்கள்',
+        durationDays: 'சில நாட்கள்',
+        durationWeeks: 'சில வாரங்கள்',
+        durationMonths: 'மாதங்கள்+'
     },
     gu: {
         // Gujarati translations
@@ -42,7 +48,13 @@ const TRANSLATIONS = {
         painTypeLabel: 'પીડા પ્રકાર',
         durationMonthsLabel: 'મહિનામાં સમયગાળો',
         activityTriggersLabel: 'પ્રવૃત્તિ ટ્રિગર્સ',
-        additionalNotesLabel: 'વધારાની નોંધો'
+        additionalNotesLabel: 'વધારાની નોંધો',
+
+        // Duration Options
+        durationHours: 'થોડા કલાકો',
+        durationDays: 'થોડા દિવસો',
+        durationWeeks: 'થોડા અઠવાડિયા',
+        durationMonths: 'મહિનાઓ+'
     },
     en: {
         // Header
@@ -143,6 +155,12 @@ const TRANSLATIONS = {
         week: 'week',
         days: 'days',
         day: 'day',
+
+        // Duration Options
+        durationHours: 'Few Hours',
+        durationDays: 'Few Days',
+        durationWeeks: 'Few Weeks',
+        durationMonths: 'Months+',
 
         // Configuration
         configSaved: 'Configuration saved successfully',
@@ -329,6 +347,12 @@ const TRANSLATIONS = {
         days: 'दिन',
         day: 'दिन',
 
+        // Duration Options
+        durationHours: 'कुछ घंटे',
+        durationDays: 'कुछ दिन',
+        durationWeeks: 'कुछ सप्ताह',
+        durationMonths: 'महीने+',
+
         // Configuration
         configSaved: 'कॉन्फ़िगरेशन सफलतापूर्वक सहेजा गया',
 
@@ -513,6 +537,12 @@ const TRANSLATIONS = {
         week: 'आठवडा',
         days: 'दिवस',
         day: 'दिवस',
+
+        // Duration Options
+        durationHours: 'काही तास',
+        durationDays: 'काही दिवस',
+        durationWeeks: 'काही आठवडे',
+        durationMonths: 'महिने+',
 
         // Configuration
         configSaved: 'कॉन्फिगरेशन यशस्वीरित्या जतन केले',

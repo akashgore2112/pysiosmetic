@@ -6383,10 +6383,10 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const durationDays = document.getElementById('durationDays');
             const durationWeeks = document.getElementById('durationWeeks');
             const durationMonthsText = document.getElementById('durationMonths');
-            if (durationHours) durationHours.textContent = 'Few Hours'; // TODO: Add translation key
-            if (durationDays) durationDays.textContent = 'Few Days'; // TODO: Add translation key
-            if (durationWeeks) durationWeeks.textContent = 'Few Weeks'; // TODO: Add translation key
-            if (durationMonthsText) durationMonthsText.textContent = 'Months+'; // TODO: Add translation key
+            if (durationHours) durationHours.textContent = t('durationHours');
+            if (durationDays) durationDays.textContent = t('durationDays');
+            if (durationWeeks) durationWeeks.textContent = t('durationWeeks');
+            if (durationMonthsText) durationMonthsText.textContent = t('durationMonths');
 
             // Update next button text based on current step
             updateNextButton();
