@@ -3296,9 +3296,9 @@
             'ko': '한국어'
         };
 
-        // Dedicated IP-based language detection function
+        // IP-based language detection with country mapping
         async function detectUserLanguage() {
-            console.log('🌍 detectUserLanguage() called - Exact IP-based detection');
+            console.log('🌍 detectUserLanguage() called - IP-based country detection');
             try {
                 const res = await fetch("https://ipapi.co/json/");
                 if (!res.ok) {
@@ -3307,12 +3307,46 @@
                 }
                 const data = await res.json();
                 console.log('📊 IP API data:', data);
+                console.log('🌍 Country:', data.country_name, '| Country Code:', data.country, '| Region:', data.region);
 
-                // Extract language code from languages field
-                const langCode = data.languages?.split(',')[0]?.split('-')[0] || 'en';
-                console.log('🌍 Detected exact language:', langCode);
+                // Map country/region to language
+                const country = data.country?.toLowerCase();
+                const region = data.region?.toLowerCase();
 
-                return langCode;
+                // India - Regional language mapping
+                if (country === 'in') {
+                    // Maharashtra → Marathi
+                    if (region && (region.includes('maharashtra') || region.includes('mumbai'))) {
+                        console.log('✅ Detected Maharashtra → Marathi (mr)');
+                        return 'mr';
+                    }
+                    // Tamil Nadu → Tamil
+                    else if (region && (region.includes('tamil') || region.includes('chennai'))) {
+                        console.log('✅ Detected Tamil Nadu → Tamil (ta)');
+                        return 'ta';
+                    }
+                    // Gujarat → Gujarati
+                    else if (region && (region.includes('gujarat') || region.includes('ahmedabad'))) {
+                        console.log('✅ Detected Gujarat → Gujarati (gu)');
+                        return 'gu';
+                    }
+                    // Default India → Hindi
+                    else {
+                        console.log('✅ Detected India → Hindi (hi)');
+                        return 'hi';
+                    }
+                }
+                // UAE / Saudi / Egypt → Arabic
+                else if (country === 'ae' || country === 'sa' || country === 'eg' ||
+                         country === 'qa' || country === 'kw' || country === 'bh' || country === 'om') {
+                    console.log('✅ Detected Arabic-speaking country → Arabic (ar)');
+                    return 'ar';
+                }
+                // Default to English
+                else {
+                    console.log('ℹ️ Country not in mapping, defaulting to English');
+                    return 'en';
+                }
             } catch (error) {
                 console.error('❌ IP detection failed:', error);
                 return 'en';
@@ -3480,10 +3514,35 @@
         }
 
         /**
-         * FULLY PARALLEL TRANSLATION ENGINE - ALL BATCHES FIRE AT ONCE!
-         * - Uses Promise.allSettled() for true parallel execution
-         * - NO sequential delays - all batches start immediately
-         * - Real-time progress updates as each string completes
+         * TASK POOL LIMITER - Manages max 5 concurrent API calls
+         * Prevents browser throttling and keeps UI responsive
+         */
+        async function runTranslationPool(tasks, limit = 5) {
+            const results = [];
+            const executing = [];
+
+            for (const task of tasks) {
+                const p = Promise.resolve().then(() => task());
+                results.push(p);
+
+                if (limit <= tasks.length) {
+                    const e = p.then(() => executing.splice(executing.indexOf(e), 1));
+                    executing.push(e);
+
+                    if (executing.length >= limit) {
+                        await Promise.race(executing);
+                    }
+                }
+            }
+
+            return Promise.all(results);
+        }
+
+        /**
+         * NON-BLOCKING PARALLEL TRANSLATION ENGINE
+         * - Task pool with max 5 concurrent API calls
+         * - Prevents browser freezing
+         * - Real-time progress updates
          * - Completes in <5 seconds for ~130 strings
          */
         async function generateDynamicTranslation(langCode, progressCallback) {
@@ -3492,7 +3551,7 @@
             const hasDeepL = localStorage.getItem('deepl_api_key');
             const languageName = getLanguageName(langCode);
 
-            console.log(`🚀 FULLY PARALLEL translation for: ${languageName} (${langCode})`);
+            console.log(`🚀 NON-BLOCKING parallel translation for: ${languageName} (${langCode})`);
             if (hasGoogle) {
                 console.log('⚡ Using Google Translate API (fastest!)');
             } else if (hasDeepL) {
@@ -3512,10 +3571,9 @@
 
                 const keys = Object.keys(englishTranslations);
                 const totalKeys = keys.length;
-                const batchSize = 10; // 10 strings per batch for parallel processing
-                const totalBatches = Math.ceil(totalKeys / batchSize);
 
-                console.log(`⚡ Firing ${totalBatches} batches in FULL PARALLEL (${batchSize} strings each)...`);
+                console.log(`⚡ Running translation pool with max 5 concurrent API calls...`);
+                console.log(`📝 Total: ${totalKeys} strings to translate`);
 
                 const translated = {};
                 let completedKeys = 0;
@@ -3528,63 +3586,41 @@
                     }
                 };
 
-                // Create ALL batch promises at once (no delays!)
-                const allBatchPromises = [];
+                // Create translation tasks
+                const tasks = keys.map(key => async () => {
+                    const englishText = englishTranslations[key];
 
-                for (let i = 0; i < totalBatches; i++) {
-                    const batchStart = i * batchSize;
-                    const batchEnd = Math.min(batchStart + batchSize, totalKeys);
-                    const batchKeys = keys.slice(batchStart, batchEnd);
+                    // Skip empty strings
+                    if (!englishText || englishText.trim() === '') {
+                        completedKeys++;
+                        updateProgress();
+                        return { key, translatedText: englishText };
+                    }
 
-                    // NO AWAIT HERE - just create the promise and push it!
-                    const batchPromise = (async () => {
-                        console.log(`⚡ Batch ${i + 1}/${totalBatches} starting NOW (${batchKeys.length} strings)...`);
+                    // Use hybrid translation function
+                    try {
+                        const translatedText = await translateTextSmart(englishText, langCode);
+                        completedKeys++;
+                        updateProgress(); // Update progress immediately after each string
+                        return { key, translatedText };
+                    } catch (err) {
+                        completedKeys++;
+                        updateProgress();
+                        return { key, translatedText: englishText };
+                    }
+                });
 
-                        // Translate all items in this batch in parallel
-                        const translations = batchKeys.map(async (key) => {
-                            const englishText = englishTranslations[key];
+                // Run tasks through pool with max 5 concurrent
+                console.log(`⚡ Starting task pool (max 5 concurrent)...`);
+                const results = await runTranslationPool(tasks, 5);
 
-                            // Skip empty strings
-                            if (!englishText || englishText.trim() === '') {
-                                completedKeys++;
-                                updateProgress();
-                                return { key, translatedText: englishText };
-                            }
-
-                            // Use hybrid translation function
-                            try {
-                                const translatedText = await translateTextSmart(englishText, langCode);
-                                completedKeys++;
-                                updateProgress(); // Update progress immediately after each string
-                                return { key, translatedText };
-                            } catch (err) {
-                                completedKeys++;
-                                updateProgress();
-                                return { key, translatedText: englishText };
-                            }
-                        });
-
-                        // Wait for all translations in this batch
-                        const results = await Promise.allSettled(translations);
-
-                        // Process results
-                        for (const result of results) {
-                            if (result.status === 'fulfilled' && result.value) {
-                                const { key, translatedText } = result.value;
-                                translated[key] = translatedText;
-                            }
-                        }
-
-                        console.log(`✅ Batch ${i + 1}/${totalBatches} complete`);
-                    })();
-
-                    allBatchPromises.push(batchPromise);
+                // Process results
+                for (const result of results) {
+                    if (result) {
+                        const { key, translatedText } = result;
+                        translated[key] = translatedText;
+                    }
                 }
-
-                console.log(`⚡ All ${totalBatches} batches fired! Waiting for completion...`);
-
-                // Wait for ALL batches to complete (they're already running in parallel!)
-                await Promise.allSettled(allBatchPromises);
 
                 // Final progress update
                 if (progressCallback) {
@@ -3592,7 +3628,7 @@
                 }
 
                 const duration = ((Date.now() - startTime) / 1000).toFixed(1);
-                console.log(`✅ PARALLEL translation complete in ${duration}s for ${languageName}!`);
+                console.log(`✅ NON-BLOCKING translation complete in ${duration}s for ${languageName}!`);
                 console.log(`📊 Total: ${completedKeys}/${totalKeys} strings translated`);
                 console.log(`💾 All cached in localStorage for instant reuse`);
 
