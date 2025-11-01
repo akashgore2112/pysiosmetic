@@ -3269,44 +3269,15 @@
         // TRANSLATIONS SYSTEM - Loaded from external translations.js file
         // TRANSLATIONS object is now available globally
 
-        // Enhanced state to track regional language
-        let regionalLanguage = null;  // Will be auto-detected (mr, ta, or gu)
-        let regionalLanguageName = '';  // Display name for regional button
-
         /**
-         * RACE CONDITION GUARD
-         * - Ensures IP detection completes before translation starts
-         * - Prevents race conditions when users click language buttons quickly
-         * - Provides promise-based synchronization
+         * SIMPLIFIED LANGUAGE SYSTEM
+         * - Three fixed languages: English, Hindi, Marathi
+         * - No complex IP detection
+         * - Translations generated on-demand when user switches language
+         * - Clean and reliable
          */
-        let ipDetectionPromise = null;
-        let ipDetectionComplete = false;
-
-        function initIPDetectionGuard() {
-            ipDetectionPromise = new Promise((resolve) => {
-                window.__resolveIPDetection = resolve;
-            });
-        }
-
-        async function waitForIPDetection() {
-            if (ipDetectionComplete) {
-                return;
-            }
-            console.log('⏳ Waiting for IP detection to complete...');
-            await ipDetectionPromise;
-            console.log('✅ IP detection complete, proceeding...');
-        }
-
-        function markIPDetectionComplete() {
-            ipDetectionComplete = true;
-            if (window.__resolveIPDetection) {
-                window.__resolveIPDetection();
-                console.log('✅ IP detection marked as complete');
-            }
-        }
-
-        // Initialize the guard immediately
-        initIPDetectionGuard();
+        let regionalLanguage = 'mr';  // Default to Marathi as third language
+        let regionalLanguageName = 'Marathi';  // Display name for regional button
 
         // Language names mapping for readable labels
         const LANGUAGE_NAMES = {
@@ -3331,70 +3302,11 @@
             'ko': '한국어'
         };
 
-        // IP-based language detection with country mapping
-        async function detectUserLanguage() {
-            console.log('🌍 detectUserLanguage() called - IP-based country detection');
-            let detectedLang = 'en';
-
-            try {
-                const res = await fetch("https://ipapi.co/json/");
-                if (!res.ok) {
-                    console.warn('⚠️ IP API returned status:', res.status);
-                    detectedLang = 'en';
-                } else {
-                    const data = await res.json();
-                    console.log('📊 IP API data:', data);
-                    console.log('🌍 Country:', data.country_name, '| Country Code:', data.country, '| Region:', data.region);
-
-                    // Map country/region to language
-                    const country = data.country?.toLowerCase();
-                    const region = data.region?.toLowerCase();
-
-                    // India - Regional language mapping
-                    if (country === 'in') {
-                        // Maharashtra → Marathi
-                        if (region && (region.includes('maharashtra') || region.includes('mumbai'))) {
-                            console.log('✅ Detected Maharashtra → Marathi (mr)');
-                            detectedLang = 'mr';
-                        }
-                        // Tamil Nadu → Tamil
-                        else if (region && (region.includes('tamil') || region.includes('chennai'))) {
-                            console.log('✅ Detected Tamil Nadu → Tamil (ta)');
-                            detectedLang = 'ta';
-                        }
-                        // Gujarat → Gujarati
-                        else if (region && (region.includes('gujarat') || region.includes('ahmedabad'))) {
-                            console.log('✅ Detected Gujarat → Gujarati (gu)');
-                            detectedLang = 'gu';
-                        }
-                        // Default India → Hindi
-                        else {
-                            console.log('✅ Detected India → Hindi (hi)');
-                            detectedLang = 'hi';
-                        }
-                    }
-                    // UAE / Saudi / Egypt → Arabic
-                    else if (country === 'ae' || country === 'sa' || country === 'eg' ||
-                             country === 'qa' || country === 'kw' || country === 'bh' || country === 'om') {
-                        console.log('✅ Detected Arabic-speaking country → Arabic (ar)');
-                        detectedLang = 'ar';
-                    }
-                    // Default to English
-                    else {
-                        console.log('ℹ️ Country not in mapping, defaulting to English');
-                        detectedLang = 'en';
-                    }
-                }
-            } catch (error) {
-                console.error('❌ IP detection failed:', error);
-                detectedLang = 'en';
-            } finally {
-                // Always mark IP detection as complete, even on error
-                markIPDetectionComplete();
-            }
-
-            return detectedLang;
-        }
+        /**
+         * REMOVED: Complex IP-based language detection
+         * Now using simple fixed languages: EN, HI, MR
+         * Users can manually switch between them as needed
+         */
 
         /**
          * TRANSLATION CACHE - Store translations in localStorage
@@ -3674,9 +3586,6 @@
          * - Completes in <5 seconds for ~130 strings
          */
         async function generateDynamicTranslation(langCode, progressCallback) {
-            // RACE CONDITION GUARD: Ensure IP detection completes first
-            await waitForIPDetection();
-
             const startTime = Date.now();
             const hasGoogle = localStorage.getItem('google_translate_api_key');
             const hasDeepL = localStorage.getItem('deepl_api_key');
@@ -3823,40 +3732,29 @@
         }
 
         /**
-         * Initialize language system with exact IP-based detection and AI translation
+         * SIMPLIFIED: Initialize language system without IP detection
+         * Three fixed languages: English, Hindi, Marathi
+         * Translations generated on-demand when user switches
          */
         async function initializeLanguageSystem() {
-            console.log('🚀 Initializing AI-powered language system...');
+            console.log('🚀 Initializing simplified language system...');
+            console.log('📊 Fixed languages: English (en), Hindi (hi), Marathi (mr)');
 
-            // Detect user's exact language
-            const detectedLang = await detectUserLanguage();
-            console.log('🌍 User language detected:', detectedLang);
-
-            // Set as regional language
-            regionalLanguage = detectedLang;
-
-            // Check if translation exists
-            const hasTranslation = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[detectedLang];
-            console.log(`📚 Translation exists for ${detectedLang}:`, hasTranslation);
-
-            // If translation doesn't exist and it's not English, generate it with FREE API
-            if (!hasTranslation && detectedLang !== 'en') {
-                console.log(`🌍 Generating FREE translation for ${detectedLang}...`);
-                const translation = await generateDynamicTranslation(detectedLang);
-
-                if (translation) {
-                    console.log(`✅ Successfully generated translation for ${detectedLang}`);
-                } else {
-                    console.warn(`⚠️ Could not generate translation for ${detectedLang}, using English`);
-                }
+            // Set default language to English
+            if (!assessmentData.currentLanguage) {
+                assessmentData.currentLanguage = 'en';
             }
 
-            // Setup language buttons with detected language
-            const supportedLanguages = ['en', 'hi', detectedLang];
-            console.log('📊 Supported languages:', supportedLanguages);
+            // Check saved preference
+            const savedLang = localStorage.getItem('preferred_language');
+            if (savedLang && ['en', 'hi', 'mr'].includes(savedLang)) {
+                assessmentData.currentLanguage = savedLang;
+                console.log('✅ Loaded saved language preference:', savedLang);
+            }
 
+            // Setup language buttons
             setupLanguages();
-            console.log('✅ Language system initialized');
+            console.log('✅ Language system initialized successfully');
         }
 
         // CONTEXT MATRIX - Comprehensive body-part specific configuration
@@ -7059,9 +6957,6 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             console.log('🔄 switchLanguage() START - called with:', lang);
             console.log('📊 Current assessmentData.currentLanguage:', assessmentData.currentLanguage);
 
-            // RACE CONDITION GUARD: Wait for IP detection to complete first
-            await waitForIPDetection();
-
             // Normalize language code (e.g., ar-SA → ar, mr-IN → mr)
             const normalizedLang = normalizeLangCode(lang);
             console.log('✅ Normalized language code:', normalizedLang);
@@ -7561,16 +7456,10 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             console.log('🎨 Initializing body diagram...');
             initializeBodyDiagram();
 
-            // Initialize AI-powered language system (exact IP-based detection + AI translation)
-            console.log('🚀 Initializing AI-powered language system...');
+            // Initialize simplified language system (EN, HI, MR)
+            console.log('🚀 Initializing language system...');
             await initializeLanguageSystem();
-            console.log('✅ AI language system initialized');
-
-            // Fallback: If initialization didn't set regionalLanguage, use detectAndSetLanguage
-            if (!regionalLanguage) {
-                console.log('⚠️ Regional language not set, using fallback detection...');
-                await detectAndSetLanguage();
-            }
+            console.log('✅ Language system initialized successfully');
 
             updateProgress();
             checkNextButtonState();
