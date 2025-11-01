@@ -3271,13 +3271,13 @@
 
         /**
          * SIMPLIFIED LANGUAGE SYSTEM
-         * - Three fixed languages: English, Hindi, Marathi
-         * - No complex IP detection
+         * - Two fixed languages: English, Hindi
+         * - No third regional language
          * - Translations generated on-demand when user switches language
          * - Clean and reliable
          */
-        let regionalLanguage = 'mr';  // Default to Marathi as third language
-        let regionalLanguageName = 'Marathi';  // Display name for regional button
+        let regionalLanguage = null;  // No third language
+        let regionalLanguageName = '';  // No regional button
 
         // Language names mapping for readable labels
         const LANGUAGE_NAMES = {
@@ -3732,27 +3732,32 @@
         }
 
         /**
-         * SIMPLIFIED: Initialize language system without IP detection
-         * Three fixed languages: English, Hindi, Marathi
+         * SIMPLIFIED: Initialize language system
+         * Two fixed languages: English, Hindi
          * Translations generated on-demand when user switches
          */
         async function initializeLanguageSystem() {
             console.log('🚀 Initializing simplified language system...');
-            console.log('📊 Fixed languages: English (en), Hindi (hi), Marathi (mr)');
+            console.log('📊 Fixed languages: English (en), Hindi (hi)');
 
             // Set default language to English
             if (!assessmentData.currentLanguage) {
                 assessmentData.currentLanguage = 'en';
             }
 
-            // Check saved preference
+            // Check saved preference (only en or hi)
             const savedLang = localStorage.getItem('preferred_language');
-            if (savedLang && ['en', 'hi', 'mr'].includes(savedLang)) {
+            if (savedLang && ['en', 'hi'].includes(savedLang)) {
                 assessmentData.currentLanguage = savedLang;
                 console.log('✅ Loaded saved language preference:', savedLang);
+            } else if (savedLang) {
+                // Reset any other language to English
+                console.log('⚠️ Saved language was:', savedLang, '- resetting to English');
+                assessmentData.currentLanguage = 'en';
+                localStorage.setItem('preferred_language', 'en');
             }
 
-            // Setup language buttons
+            // Setup language buttons (will show EN and HI only)
             setupLanguages();
             console.log('✅ Language system initialized successfully');
         }
@@ -6652,11 +6657,11 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             updateNextButton();
         }
 
-        // ==================== LANGUAGE SYSTEM (3 Languages) ====================
+        // ==================== LANGUAGE SYSTEM (2 Languages) ====================
         function setupLanguages() {
             console.log('🎨 setupLanguages() called');
             console.log('🌏 Current regionalLanguage value:', regionalLanguage);
-            // Build 3-language buttons: EN, HI, Regional (if detected)
+            // Build 2-language buttons: EN, HI only
             const stickyLangBar = document.getElementById('stickyLangBar');
             if (!stickyLangBar) {
                 console.error('❌ stickyLangBar element not found!');
@@ -6742,7 +6747,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     }
                 }
             } else {
-                console.log('ℹ️ Regional language is same as EN or HI, showing only 2 buttons:', regionalLanguage);
+                console.log('ℹ️ No regional language configured, showing only 2 buttons (EN, HI)');
             }
 
             console.log('📊 Total languages to render:', languages.length);
