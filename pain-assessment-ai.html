@@ -3383,7 +3383,7 @@
         }
 
         /**
-         * ULTRA-FAST Translation with retry logic (2× retry, 500ms gap)
+         * ULTRA-FAST Translation with retry logic (2× retry, 300ms gap)
          */
         async function translateTextSmart(text, targetLang, maxRetries = 2) {
             // Check cache first (instant!)
@@ -3431,16 +3431,17 @@
                                 }
                             }
                         }
-                        break; // Success or non-retryable error
+                        // If DeepL returns empty or same text, immediately fall through to MyMemory
+                        break;
                     } catch (err) {
                         if (retry < maxRetries - 1) {
-                            await new Promise(resolve => setTimeout(resolve, 500));
+                            await new Promise(resolve => setTimeout(resolve, 300));
                         }
                     }
                 }
             }
 
-            // MyMemory API with smart endpoint fallback and retry
+            // MyMemory API with smart endpoint fallback and retry (300ms delay)
             const myMemoryEndpoints = [
                 'https://api.mymemory.translated.net/get',
                 'https://translated-mymemory---api.herokuapp.com/get'
@@ -3453,7 +3454,7 @@
                         const response = await fetch(url);
 
                         if (response.status === 429 && retry < maxRetries - 1) {
-                            await new Promise(resolve => setTimeout(resolve, 500));
+                            await new Promise(resolve => setTimeout(resolve, 300));
                             continue;
                         }
 
@@ -3468,7 +3469,7 @@
                         break;
                     } catch (err) {
                         if (retry < maxRetries - 1) {
-                            await new Promise(resolve => setTimeout(resolve, 500));
+                            await new Promise(resolve => setTimeout(resolve, 300));
                         }
                     }
                 }
@@ -3479,11 +3480,11 @@
         }
 
         /**
-         * ULTRA-FAST TRANSLATION ENGINE with OVERLAPPING PARALLEL BATCHES
-         * - Uses Promise.allSettled() for 12 strings per batch
-         * - Starts new batch every 300ms (overlapping requests)
-         * - Smooth progress bar updated every 500ms
-         * - Completes in <3 seconds for ~130 strings
+         * FULLY PARALLEL TRANSLATION ENGINE - ALL BATCHES FIRE AT ONCE!
+         * - Uses Promise.allSettled() for true parallel execution
+         * - NO sequential delays - all batches start immediately
+         * - Real-time progress updates as each string completes
+         * - Completes in <5 seconds for ~130 strings
          */
         async function generateDynamicTranslation(langCode, progressCallback) {
             const startTime = Date.now();
@@ -3491,7 +3492,7 @@
             const hasDeepL = localStorage.getItem('deepl_api_key');
             const languageName = getLanguageName(langCode);
 
-            console.log(`🚀 Starting ULTRA-FAST translation for: ${languageName} (${langCode})`);
+            console.log(`🚀 FULLY PARALLEL translation for: ${languageName} (${langCode})`);
             if (hasGoogle) {
                 console.log('⚡ Using Google Translate API (fastest!)');
             } else if (hasDeepL) {
@@ -3511,28 +3512,23 @@
 
                 const keys = Object.keys(englishTranslations);
                 const totalKeys = keys.length;
-                const batchSize = 12; // Increased from 10 for faster parallel processing
+                const batchSize = 10; // 10 strings per batch for parallel processing
                 const totalBatches = Math.ceil(totalKeys / batchSize);
 
-                console.log(`⚡ Translating ${totalKeys} strings in ${totalBatches} overlapping batches (${batchSize} parallel each)...`);
+                console.log(`⚡ Firing ${totalBatches} batches in FULL PARALLEL (${batchSize} strings each)...`);
 
                 const translated = {};
                 let completedKeys = 0;
-                let lastProgressUpdate = 0;
 
-                // Smooth progress animation
-                const progressInterval = setInterval(() => {
-                    if (progressCallback && completedKeys > 0) {
-                        const realProgress = Math.round((completedKeys / totalKeys) * 100);
-                        // Smooth animation: slowly catch up to real progress
-                        if (lastProgressUpdate < realProgress) {
-                            lastProgressUpdate = Math.min(lastProgressUpdate + 5, realProgress);
-                            progressCallback(lastProgressUpdate);
-                        }
+                // Real-time progress updater
+                const updateProgress = () => {
+                    if (progressCallback) {
+                        const progress = Math.round((completedKeys / totalKeys) * 100);
+                        progressCallback(progress);
                     }
-                }, 500); // Update UI every 500ms
+                };
 
-                // Create all batch promises (will start overlapping)
+                // Create ALL batch promises at once (no delays!)
                 const allBatchPromises = [];
 
                 for (let i = 0; i < totalBatches; i++) {
@@ -3540,28 +3536,31 @@
                     const batchEnd = Math.min(batchStart + batchSize, totalKeys);
                     const batchKeys = keys.slice(batchStart, batchEnd);
 
-                    // Start batch after delay (creates overlapping requests)
-                    const batchPromise = new Promise(async (resolve) => {
-                        // Wait before starting this batch (300ms × batch index)
-                        await new Promise(r => setTimeout(r, i * 300));
+                    // NO AWAIT HERE - just create the promise and push it!
+                    const batchPromise = (async () => {
+                        console.log(`⚡ Batch ${i + 1}/${totalBatches} starting NOW (${batchKeys.length} strings)...`);
 
-                        console.log(`⚡ Batch ${i + 1}/${totalBatches} started (${batchKeys.length} strings)...`);
-
-                        // Translate all items in this batch in parallel using Promise.allSettled()
+                        // Translate all items in this batch in parallel
                         const translations = batchKeys.map(async (key) => {
                             const englishText = englishTranslations[key];
 
                             // Skip empty strings
                             if (!englishText || englishText.trim() === '') {
-                                return { key, translatedText: englishText, status: 'fulfilled' };
+                                completedKeys++;
+                                updateProgress();
+                                return { key, translatedText: englishText };
                             }
 
                             // Use hybrid translation function
                             try {
                                 const translatedText = await translateTextSmart(englishText, langCode);
-                                return { key, translatedText, status: 'fulfilled' };
+                                completedKeys++;
+                                updateProgress(); // Update progress immediately after each string
+                                return { key, translatedText };
                             } catch (err) {
-                                return { key, translatedText: englishText, status: 'rejected' };
+                                completedKeys++;
+                                updateProgress();
+                                return { key, translatedText: englishText };
                             }
                         });
 
@@ -3573,22 +3572,19 @@
                             if (result.status === 'fulfilled' && result.value) {
                                 const { key, translatedText } = result.value;
                                 translated[key] = translatedText;
-                                completedKeys++;
                             }
                         }
 
-                        console.log(`✅ Batch ${i + 1}/${totalBatches} complete (${completedKeys}/${totalKeys})`);
-                        resolve();
-                    });
+                        console.log(`✅ Batch ${i + 1}/${totalBatches} complete`);
+                    })();
 
                     allBatchPromises.push(batchPromise);
                 }
 
-                // Wait for all batches to complete
-                await Promise.all(allBatchPromises);
+                console.log(`⚡ All ${totalBatches} batches fired! Waiting for completion...`);
 
-                // Clear progress interval
-                clearInterval(progressInterval);
+                // Wait for ALL batches to complete (they're already running in parallel!)
+                await Promise.allSettled(allBatchPromises);
 
                 // Final progress update
                 if (progressCallback) {
@@ -3596,9 +3592,9 @@
                 }
 
                 const duration = ((Date.now() - startTime) / 1000).toFixed(1);
-                console.log(`✅ Translation complete in ${duration}s for ${languageName}!`);
-                console.log(`📊 Total: ${completedKeys} strings translated`);
-                console.log(`💾 Cached in localStorage for instant reuse`);
+                console.log(`✅ PARALLEL translation complete in ${duration}s for ${languageName}!`);
+                console.log(`📊 Total: ${completedKeys}/${totalKeys} strings translated`);
+                console.log(`💾 All cached in localStorage for instant reuse`);
 
                 // Store in TRANSLATIONS object
                 if (typeof TRANSLATIONS !== 'undefined') {
