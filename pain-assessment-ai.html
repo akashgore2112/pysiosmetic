@@ -3525,13 +3525,15 @@
                 const p = Promise.resolve().then(() => task());
                 results.push(p);
 
-                if (limit <= tasks.length) {
-                    const e = p.then(() => executing.splice(executing.indexOf(e), 1));
-                    executing.push(e);
+                // Track executing promise and remove it when done
+                const e = p.then(() => {
+                    executing.splice(executing.indexOf(e), 1);
+                });
+                executing.push(e);
 
-                    if (executing.length >= limit) {
-                        await Promise.race(executing);
-                    }
+                // Wait for any task to complete if we hit the limit
+                if (executing.length >= limit) {
+                    await Promise.race(executing);
                 }
             }
 
