@@ -5023,7 +5023,7 @@
                     <h2 class="step-title" id="step1Title">Where does it hurt?</h2>
                     <p class="step-description" id="step1Description">Click on your body to select the pain area and intensity</p>
 
-                    <div class="body-diagram-container">
+                    <div class="body-diagram-container" id="body-map">
                         <div class="body-svg-wrapper">
                             <!-- Pain Tooltip -->
                             <div class="pain-tooltip" id="painTooltip">
@@ -5179,7 +5179,7 @@
                     <p class="step-description" id="step3Description">Provide detailed information about your pain</p>
 
                     <!-- ENHANCED INPUT FIELDS -->
-                    <div class="enhanced-inputs">
+                    <div class="enhanced-inputs" id="impact-section">
                         <div class="input-row">
                             <div class="input-group">
                                 <label class="input-label">Pain Frequency</label>
@@ -5216,7 +5216,7 @@
 
                         <div class="input-group">
                             <label class="input-label">Duration in Months</label>
-                            <div class="slider-container">
+                            <div class="slider-container" id="duration-slider">
                                 <input type="range" id="durationSlider" min="1" max="12" value="3" class="input-slider">
                                 <div class="slider-value" id="durationValue">3 months</div>
                             </div>
@@ -6466,35 +6466,23 @@
     <!-- End of hero-scripts section -->
 
 
-    <!-- Pain Assessment AI - Modular Imports -->
-    <!-- Load translations first (sets window.TRANSLATIONS) -->
-    <script src="./js/translations.js"></script>
-
-    <!-- Load pain assessment module and initialize -->
+    <!-- Pain Assessment AI - Module Imports -->
     <script type="module">
-        // Import core functions from pain-assessment module
+        import './js/translations.js';
         import {
             initPainAssessment,
             selectBodyPart,
             showTooltip,
             hideTooltip,
             switchLanguage
-        } from "./js/pain-assessment.js";
+        } from './js/pain-assessment.js';
 
-        // Initialize on window load
-        window.addEventListener("load", () => {
-            console.log("✅ Pain Assessment AI: Initializing...");
-
-            // Initialize the module (this also exposes all functions to window internally)
+        window.addEventListener('DOMContentLoaded', () => {
             initPainAssessment();
-
-            // Attach core functions to window for inline onclick handlers
             window.selectBodyPart = selectBodyPart;
             window.showTooltip = showTooltip;
             window.hideTooltip = hideTooltip;
             window.switchLanguage = switchLanguage;
-
-            console.log("✅ Pain Assessment AI loaded successfully");
         });
     </script>
 

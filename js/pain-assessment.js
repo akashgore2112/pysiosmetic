@@ -4286,3 +4286,12 @@ export {
     speakQuestion,
     startVoiceAnswerInput
 };
+
+// Attach core functions to window for global access
+if (typeof window !== 'undefined') {
+    window.selectBodyPart = selectBodyPart;
+    window.showTooltip = showTooltip;
+    window.hideTooltip = hideTooltip;
+    window.switchLanguage = switchLanguage;
+    window.initPainAssessment = initPainAssessment;
+}
