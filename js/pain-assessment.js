@@ -19,6 +19,33 @@ export function initPainAssessment() {
     // Initialize language system
     initializeLanguageSystem();
 
+
+    // ==================== GLOBAL EXPORTS FOR INLINE ONCLICK HANDLERS ====================
+    // Make functions globally accessible for inline onclick handlers in HTML
+    window.selectBodyPart = selectBodyPart;
+    window.selectIntensity = selectIntensity;
+    window.selectDuration = selectDuration;
+    window.toggleActivity = toggleActivity;
+    window.switchLanguage = switchLanguage;
+    window.saveConfig = saveConfig;
+    window.toggleVoice = toggleVoice;
+    window.openConfig = openConfig;
+    window.closeConfig = closeConfig;
+    window.goToStep = goToStep;
+    window.showTooltip = showTooltip;
+    window.hideTooltip = hideTooltip;
+    window.nextStep = nextStep;
+    window.previousStep = previousStep;
+    window.downloadPDF = downloadPDF;
+    window.shareWithDoctor = shareWithDoctor;
+    window.askFollowUp = askFollowUp;
+    window.submitFeedback = submitFeedback;
+    window.selectContextOption = selectContextOption;
+    window.toggleActivityTrigger = toggleActivityTrigger;
+    window.speakQuestion = speakQuestion;
+    window.startVoiceAnswerInput = startVoiceAnswerInput;
+    console.log('✅ All onclick functions exported to window scope');
+
     console.log('✅ Pain Assessment AI Module initialized successfully');
 }
 
@@ -382,7 +409,7 @@ export function initPainAssessment() {
 
             try {
                 // Get English translations as base
-                const englishTranslations = typeof TRANSLATIONS !== 'undefined' ? TRANSLATIONS.en : {};
+                const englishTranslations = typeof window.TRANSLATIONS !== 'undefined' ? window.TRANSLATIONS.en : {};
 
                 if (!englishTranslations || Object.keys(englishTranslations).length === 0) {
                     console.error('❌ No English translations found as base');
@@ -453,8 +480,8 @@ export function initPainAssessment() {
                 console.log(`💾 All cached in localStorage for instant reuse`);
 
                 // Store in TRANSLATIONS object
-                if (typeof TRANSLATIONS !== 'undefined') {
-                    TRANSLATIONS[langCode] = translated;
+                if (typeof window.TRANSLATIONS !== 'undefined') {
+                    window.TRANSLATIONS[langCode] = translated;
                     console.log(`✅ Stored ${langCode} translations in TRANSLATIONS object`);
                 } else {
                     console.warn('⚠️ TRANSLATIONS object not available');
@@ -3271,13 +3298,13 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const normalizedLang = normalizeLangCode(targetLang);
 
             // Ensure TRANSLATIONS is loaded
-            if (typeof TRANSLATIONS === 'undefined') {
+            if (typeof window.TRANSLATIONS === 'undefined') {
                 console.warn('TRANSLATIONS not loaded');
                 return key;
             }
 
             // Try current language, fallback to English, then return key
-            return TRANSLATIONS[normalizedLang]?.[key] || TRANSLATIONS.en?.[key] || key;
+            return window.TRANSLATIONS[normalizedLang]?.[key] || window.TRANSLATIONS.en?.[key] || key;
         }
 
         // Normalize language code helper
@@ -3310,7 +3337,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const headerSubtitle = document.getElementById('headerSubtitle');
             if (headerTitle) {
                 const newText = t('headerTitle');
-                console.log('  🔍 headerTitle translation: EN="' + TRANSLATIONS.en.headerTitle + '" → ' + normalizedLang + '="' + newText + '"');
+                console.log('  🔍 headerTitle translation: EN="' + window.TRANSLATIONS.en.headerTitle + '" → ' + normalizedLang + '="' + newText + '"');
                 headerTitle.textContent = newText;
                 console.log('  ✅ Updated headerTitle element to:', headerTitle.textContent);
             } else {
@@ -3466,12 +3493,12 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                 console.log('✅ regionalLanguage is truthy and unique:', regionalLanguage);
 
                 // Check if translations exist for this language
-                const hasTranslations = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[regionalLanguage];
+                const hasTranslations = typeof window.TRANSLATIONS !== 'undefined' && window.TRANSLATIONS[regionalLanguage];
                 console.log('📚 Does TRANSLATIONS have', regionalLanguage, '?', hasTranslations);
 
                 if (!hasTranslations) {
                     console.warn('⚠️⚠️⚠️ CRITICAL: No translations loaded for', regionalLanguage);
-                    console.log('   Available languages in TRANSLATIONS:', typeof TRANSLATIONS !== 'undefined' ? Object.keys(TRANSLATIONS) : 'TRANSLATIONS not loaded');
+                    console.log('   Available languages in TRANSLATIONS:', typeof window.TRANSLATIONS !== 'undefined' ? Object.keys(window.TRANSLATIONS) : 'TRANSLATIONS not loaded');
                     console.log('   The third button will appear but WON\'T work because translations don\'t exist!');
                     console.log('   Solution: Add', regionalLanguage, 'to translations.js OR configure OpenAI API key');
                 }
@@ -3572,16 +3599,16 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
             // Check if translations exist for this language
             console.log('🔍 Checking if TRANSLATIONS object exists...');
-            if (typeof TRANSLATIONS !== 'undefined') {
+            if (typeof window.TRANSLATIONS !== 'undefined') {
                 console.log('✅ TRANSLATIONS object is loaded');
-                console.log('📚 Available languages in TRANSLATIONS:', Object.keys(TRANSLATIONS));
+                console.log('📚 Available languages in TRANSLATIONS:', Object.keys(window.TRANSLATIONS));
 
-                if (TRANSLATIONS[normalizedLang]) {
+                if (window.TRANSLATIONS[normalizedLang]) {
                     console.log('✅ Translations available for:', normalizedLang);
-                    console.log('📊 Sample translation keys:', Object.keys(TRANSLATIONS[normalizedLang]).slice(0, 10));
+                    console.log('📊 Sample translation keys:', Object.keys(window.TRANSLATIONS[normalizedLang]).slice(0, 10));
                     console.log('📊 Sample translations:');
-                    console.log('  - headerTitle:', TRANSLATIONS[normalizedLang].headerTitle);
-                    console.log('  - step1Title:', TRANSLATIONS[normalizedLang].step1Title);
+                    console.log('  - headerTitle:', window.TRANSLATIONS[normalizedLang].headerTitle);
+                    console.log('  - step1Title:', window.TRANSLATIONS[normalizedLang].step1Title);
                 } else {
                     console.warn('⚠️ No translations found for:', normalizedLang);
 
@@ -3609,8 +3636,8 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                             if (headerTitle && headerTitle.textContent.includes('Translating interface')) {
                                 console.log('⏰ Auto-hiding translation banner after 5 seconds');
                                 // Try to get the translated title, or fall back to English
-                                if (TRANSLATIONS[normalizedLang] && TRANSLATIONS[normalizedLang].headerTitle) {
-                                    headerTitle.textContent = TRANSLATIONS[normalizedLang].headerTitle;
+                                if (window.TRANSLATIONS[normalizedLang] && window.TRANSLATIONS[normalizedLang].headerTitle) {
+                                    headerTitle.textContent = window.TRANSLATIONS[normalizedLang].headerTitle;
                                 } else {
                                     headerTitle.textContent = 'AI-Powered Pain Assessment';
                                 }
@@ -3628,15 +3655,15 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                             console.log('🎉 Translation is now available! Applying to UI...');
 
                             // Clear loading message immediately on success with fade effect
-                            if (headerTitle && TRANSLATIONS[normalizedLang] && TRANSLATIONS[normalizedLang].headerTitle) {
+                            if (headerTitle && window.TRANSLATIONS[normalizedLang] && window.TRANSLATIONS[normalizedLang].headerTitle) {
                                 headerTitle.textContent = '✅ Translation complete!';
                                 // Fade to actual translated title after 500ms
                                 setTimeout(() => {
-                                    headerTitle.textContent = TRANSLATIONS[normalizedLang].headerTitle;
+                                    headerTitle.textContent = window.TRANSLATIONS[normalizedLang].headerTitle;
                                 }, 500);
                             }
 
-                            // NOW translations exist in TRANSLATIONS[normalizedLang]
+                            // NOW translations exist in window.TRANSLATIONS[normalizedLang]
                             // Continue to apply them below
                         } else {
                             console.warn('⚠️ Translation generation failed');
@@ -4149,30 +4176,7 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             scrollToResults();
         };
 
-        // ==================== GLOBAL EXPORTS FOR INLINE ONCLICK HANDLERS ====================
-        // Make functions globally accessible for inline onclick handlers in HTML
-        window.selectBodyPart = selectBodyPart;
-        window.selectIntensity = selectIntensity;
-        window.selectDuration = selectDuration;
-        window.toggleActivity = toggleActivity;
-        window.switchLanguage = switchLanguage;
-        window.saveConfig = saveConfig;
-        window.toggleVoice = toggleVoice;
-        window.openConfig = openConfig;
-        window.goToStep = goToStep;
-        window.showTooltip = showTooltip;
-        window.hideTooltip = hideTooltip;
-        window.nextStep = nextStep;
-        window.previousStep = previousStep;
-        window.downloadPDF = downloadPDF;
-        window.shareWithDoctor = shareWithDoctor;
-        window.askFollowUp = askFollowUp;
-        window.submitFeedback = submitFeedback;
-        window.selectContextOption = selectContextOption;
-        window.toggleActivityTrigger = toggleActivityTrigger;
-        window.speakQuestion = speakQuestion;
-        window.startVoiceAnswerInput = startVoiceAnswerInput;
-        console.log('✅ All onclick functions exported to window scope');
+        // Window assignments moved into initPainAssessment function
 
         // ==================== DIAGNOSTIC TEST FUNCTION ====================
         window.testLanguageSwitch = function(langCode) {
@@ -4182,27 +4186,27 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             console.log('');
 
             console.log('1️⃣ Checking TRANSLATIONS object...');
-            if (typeof TRANSLATIONS === 'undefined') {
+            if (typeof window.TRANSLATIONS === 'undefined') {
                 console.error('❌ TRANSLATIONS is UNDEFINED!');
                 return;
             }
             console.log('✅ TRANSLATIONS exists');
-            console.log('   Available languages:', Object.keys(TRANSLATIONS));
+            console.log('   Available languages:', Object.keys(window.TRANSLATIONS));
 
             console.log('');
             console.log('2️⃣ Checking if translations exist for', langCode);
-            if (!TRANSLATIONS[langCode]) {
+            if (!window.TRANSLATIONS[langCode]) {
                 console.error('❌ No translations for ' + langCode);
-                console.log('   Available:', Object.keys(TRANSLATIONS));
+                console.log('   Available:', Object.keys(window.TRANSLATIONS));
                 return;
             }
             console.log('✅ Translations found for', langCode);
-            console.log('   Sample keys:', Object.keys(TRANSLATIONS[langCode]).slice(0, 5));
+            console.log('   Sample keys:', Object.keys(window.TRANSLATIONS[langCode]).slice(0, 5));
 
             console.log('');
             console.log('3️⃣ Testing translation values...');
-            const headerEN = TRANSLATIONS.en.headerTitle;
-            const headerTarget = TRANSLATIONS[langCode].headerTitle;
+            const headerEN = window.TRANSLATIONS.en.headerTitle;
+            const headerTarget = window.TRANSLATIONS[langCode].headerTitle;
             console.log('   EN headerTitle:', headerEN);
             console.log('   ' + langCode + ' headerTitle:', headerTarget);
 
