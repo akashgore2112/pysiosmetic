@@ -6468,12 +6468,66 @@
 
     <!-- Load pain assessment module and initialize -->
     <script type="module">
-        import { initPainAssessment } from "./js/pain-assessment.js";
+        import {
+            initPainAssessment,
+            selectBodyPart,
+            showTooltip,
+            hideTooltip,
+            switchLanguage,
+            selectIntensity,
+            selectDuration,
+            toggleActivity,
+            nextStep,
+            previousStep,
+            goToStep,
+            openConfig,
+            closeConfig,
+            saveConfig,
+            toggleVoice,
+            downloadPDF,
+            shareWithDoctor,
+            askFollowUp,
+            submitFeedback,
+            selectContextOption,
+            toggleActivityTrigger,
+            speakQuestion,
+            startVoiceAnswerInput
+        } from "./js/pain-assessment.js";
 
         // Initialize on window load to ensure all resources are ready
         window.addEventListener("load", () => {
-            console.log("🚀 Window Loaded - Initializing Pain Assessment...");
+            console.log("✅ Pain Assessment AI: Initializing from main page...");
+
+            // Initialize the module first
             initPainAssessment();
+
+            // Expose functions globally for inline onclick handlers
+            // These are already exposed inside initPainAssessment(), but we double-check here
+            window.selectBodyPart = selectBodyPart;
+            window.showTooltip = showTooltip;
+            window.hideTooltip = hideTooltip;
+            window.switchLanguage = switchLanguage;
+            window.selectIntensity = selectIntensity;
+            window.selectDuration = selectDuration;
+            window.toggleActivity = toggleActivity;
+            window.nextStep = nextStep;
+            window.previousStep = previousStep;
+            window.goToStep = goToStep;
+            window.openConfig = openConfig;
+            window.closeConfig = closeConfig;
+            window.saveConfig = saveConfig;
+            window.toggleVoice = toggleVoice;
+            window.downloadPDF = downloadPDF;
+            window.shareWithDoctor = shareWithDoctor;
+            window.askFollowUp = askFollowUp;
+            window.submitFeedback = submitFeedback;
+            window.selectContextOption = selectContextOption;
+            window.toggleActivityTrigger = toggleActivityTrigger;
+            window.speakQuestion = speakQuestion;
+            window.startVoiceAnswerInput = startVoiceAnswerInput;
+
+            console.log("✅ All Pain Assessment functions exposed globally");
+            console.log("Pain Assessment module loaded:", Object.keys(window).filter(k => k.includes('select') || k.includes('toggle') || k.includes('show')));
         });
     </script>
 

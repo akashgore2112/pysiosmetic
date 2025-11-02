@@ -4262,6 +4262,8 @@ export {
     assessmentData,
     switchLanguage,
     selectBodyPart,
+    showTooltip,
+    hideTooltip,
     updateIntensity,
     selectDuration,
     selectActivity,
@@ -4271,5 +4273,16 @@ export {
     openConfig,
     closeConfig,
     saveConfig,
-    toggleVoice
+    toggleVoice,
+    goToStep,
+    selectIntensity,
+    toggleActivity,
+    downloadPDF,
+    shareWithDoctor,
+    askFollowUp,
+    submitFeedback,
+    selectContextOption,
+    toggleActivityTrigger,
+    speakQuestion,
+    startVoiceAnswerInput
 };
