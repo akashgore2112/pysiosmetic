@@ -634,7 +634,12 @@ const TRANSLATIONS = {
     }
 };
 
-// Export for use in HTML file
+// Make globally available for browser
+if (typeof window !== 'undefined') {
+    window.TRANSLATIONS = TRANSLATIONS;
+}
+
+// Export for use in Node.js
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = TRANSLATIONS;
 }
