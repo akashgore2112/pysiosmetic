@@ -6463,7 +6463,8 @@
 
     <!-- Pain Assessment AI - Modular Imports -->
     <!-- Load translations first (sets window.TRANSLATIONS) -->
-    <script src="./js/translations.js" type="module"></script>
+    <!-- NOTE: translations.js is NOT a module - it sets window.TRANSLATIONS directly -->
+    <script src="./js/translations.js"></script>
 
     <!-- Load pain assessment module and initialize -->
     <script type="module">
