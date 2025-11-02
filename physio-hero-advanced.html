@@ -6463,20 +6463,16 @@
 
     <!-- Pain Assessment AI - Modular Imports -->
     <!-- Load translations first (sets window.TRANSLATIONS) -->
-    <script src="./js/translations.js"></script>
+    <script src="./js/translations.js" type="module"></script>
 
     <!-- Load pain assessment module and initialize -->
     <script type="module">
         import { initPainAssessment } from "./js/pain-assessment.js";
 
-        // Initialize on DOMContentLoaded
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("🚀 DOM Content Loaded - Initializing Pain Assessment...");
-
-            // Small delay to ensure translations are loaded
-            setTimeout(() => {
-                initPainAssessment();
-            }, 100);
+        // Initialize on window load to ensure all resources are ready
+        window.addEventListener("load", () => {
+            console.log("🚀 Window Loaded - Initializing Pain Assessment...");
+            initPainAssessment();
         });
     </script>
 
