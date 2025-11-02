@@ -5561,6 +5561,12 @@
             </form>
         </div>
 
+    </section>
+    <!-- End of Pain Assessment AI section -->
+
+
+    <!-- Main page scripts (Hero section, animations, modals, etc.) -->
+    <section class="hero-scripts">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script>
             // REMOVE LOADER
@@ -6456,78 +6462,39 @@
             });
         </script>
 
-
     </section>
-
+    <!-- End of hero-scripts section -->
 
 
     <!-- Pain Assessment AI - Modular Imports -->
     <!-- Load translations first (sets window.TRANSLATIONS) -->
-    <!-- NOTE: translations.js is NOT a module - it sets window.TRANSLATIONS directly -->
     <script src="./js/translations.js"></script>
 
     <!-- Load pain assessment module and initialize -->
     <script type="module">
+        // Import core functions from pain-assessment module
         import {
             initPainAssessment,
             selectBodyPart,
             showTooltip,
             hideTooltip,
-            switchLanguage,
-            selectIntensity,
-            selectDuration,
-            toggleActivity,
-            nextStep,
-            previousStep,
-            goToStep,
-            openConfig,
-            closeConfig,
-            saveConfig,
-            toggleVoice,
-            downloadPDF,
-            shareWithDoctor,
-            askFollowUp,
-            submitFeedback,
-            selectContextOption,
-            toggleActivityTrigger,
-            speakQuestion,
-            startVoiceAnswerInput
+            switchLanguage
         } from "./js/pain-assessment.js";
 
-        // Initialize on window load to ensure all resources are ready
+        // Initialize on window load
         window.addEventListener("load", () => {
-            console.log("✅ Pain Assessment AI: Initializing from main page...");
+            console.log("✅ Pain Assessment AI: Initializing...");
 
-            // Initialize the module first
+            // Initialize the module (this also exposes all functions to window internally)
             initPainAssessment();
 
-            // Expose functions globally for inline onclick handlers
-            // These are already exposed inside initPainAssessment(), but we double-check here
+            // Attach core functions to window for inline onclick handlers
             window.selectBodyPart = selectBodyPart;
             window.showTooltip = showTooltip;
             window.hideTooltip = hideTooltip;
             window.switchLanguage = switchLanguage;
-            window.selectIntensity = selectIntensity;
-            window.selectDuration = selectDuration;
-            window.toggleActivity = toggleActivity;
-            window.nextStep = nextStep;
-            window.previousStep = previousStep;
-            window.goToStep = goToStep;
-            window.openConfig = openConfig;
-            window.closeConfig = closeConfig;
-            window.saveConfig = saveConfig;
-            window.toggleVoice = toggleVoice;
-            window.downloadPDF = downloadPDF;
-            window.shareWithDoctor = shareWithDoctor;
-            window.askFollowUp = askFollowUp;
-            window.submitFeedback = submitFeedback;
-            window.selectContextOption = selectContextOption;
-            window.toggleActivityTrigger = toggleActivityTrigger;
-            window.speakQuestion = speakQuestion;
-            window.startVoiceAnswerInput = startVoiceAnswerInput;
 
-            console.log("✅ All Pain Assessment functions exposed globally");
-            console.log("Pain Assessment module loaded:", Object.keys(window).filter(k => k.includes('select') || k.includes('toggle') || k.includes('show')));
+            console.log("✅ Pain Assessment AI loaded successfully");
         });
     </script>
 
