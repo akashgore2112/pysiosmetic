@@ -30,7 +30,6 @@ function initPainAssessment() {
     window.saveConfig = saveConfig;
     window.toggleVoice = toggleVoice;
     window.openConfig = openConfig;
-    window.closeConfig = closeConfig;
     window.goToStep = goToStep;
     window.showTooltip = showTooltip;
     window.hideTooltip = hideTooltip;
@@ -4292,7 +4291,6 @@ if (typeof window !== 'undefined') {
 
     // Configuration
     window.openConfig = openConfig;
-    window.closeConfig = closeConfig;
     window.saveConfig = saveConfig;
     window.toggleVoice = toggleVoice;
 
