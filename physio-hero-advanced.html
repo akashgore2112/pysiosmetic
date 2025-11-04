@@ -6466,18 +6466,40 @@
     <!-- End of hero-scripts section -->
 
 
-    <!-- Pain Assessment AI - Script Imports -->
+    <!-- Pain Assessment AI - Script Imports (matching standalone pattern) -->
     <script src="./js/translations.js"></script>
     <script src="./js/pain-assessment.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('✅ Pain Assessment AI Initialized');
-            if (typeof initPainAssessment === 'function') {
-                initPainAssessment();
-                console.log('✅ Functions bound to window');
-            } else {
-                console.error('❌ initPainAssessment not found');
+        // Initialize Pain Assessment AI (matching standalone version's DOMContentLoaded pattern)
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Pain Assessment AI: DOM ready, starting initialization...');
+
+            // Verify TRANSLATIONS loaded from translations.js
+            if (typeof window.TRANSLATIONS === 'undefined') {
+                console.error('❌ TRANSLATIONS not loaded! Make sure translations.js loaded before pain-assessment.js');
+                return;
             }
+            console.log('✅ TRANSLATIONS loaded successfully');
+            console.log('✅ Available languages:', Object.keys(window.TRANSLATIONS));
+
+            // Verify critical functions are attached to window
+            const criticalFunctions = ['selectBodyPart', 'showTooltip', 'hideTooltip', 'switchLanguage', 'nextStep', 'previousStep', 'goToStep'];
+            const missingFunctions = criticalFunctions.filter(fn => typeof window[fn] !== 'function');
+
+            if (missingFunctions.length > 0) {
+                console.error('❌ Missing functions:', missingFunctions);
+                console.error('❌ Pain Assessment interactivity may not work');
+                return;
+            }
+            console.log('✅ All critical functions globally accessible');
+
+            // Call initPainAssessment if it exists (for language system initialization)
+            if (typeof window.initPainAssessment === 'function') {
+                window.initPainAssessment();
+                console.log('✅ Pain Assessment AI initialized successfully');
+            }
+
+            console.log('✅ Interactive features ready: body selection, tooltips, navigation, language switching');
         });
     </script>
 
