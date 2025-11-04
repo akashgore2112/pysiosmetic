@@ -6466,40 +6466,91 @@
     <!-- End of hero-scripts section -->
 
 
-    <!-- Pain Assessment AI - Script Imports (matching standalone pattern) -->
+    <!-- Pain Assessment AI - Script Imports -->
     <script src="./js/translations.js"></script>
     <script src="./js/pain-assessment.js"></script>
     <script>
-        // Initialize Pain Assessment AI (matching standalone version's DOMContentLoaded pattern)
+        // Pain Assessment AI Initialization (matching standalone version pattern)
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log('🚀 Pain Assessment AI: DOM ready, starting initialization...');
+            console.log('🚀 Pain Assessment AI: DOMContentLoaded fired - Starting initialization...');
 
-            // Verify TRANSLATIONS loaded from translations.js
+            // Step 1: Verify TRANSLATIONS loaded from translations.js
             if (typeof window.TRANSLATIONS === 'undefined') {
-                console.error('❌ TRANSLATIONS not loaded! Make sure translations.js loaded before pain-assessment.js');
+                console.error('❌ CRITICAL ERROR: TRANSLATIONS not loaded!');
+                console.error('   Make sure translations.js loaded successfully before pain-assessment.js');
                 return;
             }
             console.log('✅ TRANSLATIONS loaded successfully');
-            console.log('✅ Available languages:', Object.keys(window.TRANSLATIONS));
+            console.log('   Available languages:', Object.keys(window.TRANSLATIONS));
 
-            // Verify critical functions are attached to window
-            const criticalFunctions = ['selectBodyPart', 'showTooltip', 'hideTooltip', 'switchLanguage', 'nextStep', 'previousStep', 'goToStep'];
-            const missingFunctions = criticalFunctions.filter(fn => typeof window[fn] !== 'function');
+            // Step 2: Verify ALL required functions are globally accessible
+            const allRequiredFunctions = [
+                // Body map interaction
+                'selectBodyPart', 'showTooltip', 'hideTooltip',
+                // Assessment inputs (including setIntensity alias)
+                'selectIntensity', 'selectDuration', 'toggleActivity',
+                // Navigation
+                'nextStep', 'previousStep', 'goToStep',
+                // Language
+                'switchLanguage',
+                // Configuration
+                'openConfig', 'saveConfig', 'toggleVoice',
+                // Advanced features
+                'downloadPDF', 'shareWithDoctor', 'askFollowUp', 'submitFeedback'
+            ];
+
+            const missingFunctions = allRequiredFunctions.filter(fn => typeof window[fn] !== 'function');
 
             if (missingFunctions.length > 0) {
-                console.error('❌ Missing functions:', missingFunctions);
-                console.error('❌ Pain Assessment interactivity may not work');
+                console.error('❌ CRITICAL ERROR: Missing functions:', missingFunctions);
+                console.error('   These functions are called from HTML but not defined globally');
+                console.error('   Pain Assessment interactivity WILL NOT WORK');
                 return;
             }
-            console.log('✅ All critical functions globally accessible');
+            console.log('✅ All ' + allRequiredFunctions.length + ' required functions are globally accessible');
 
-            // Call initPainAssessment if it exists (for language system initialization)
+            // Step 3: Wait for translations to be fully available (small delay for reliability)
+            console.log('⏳ Waiting 100ms for scripts to settle...');
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // Step 4: Initialize language system (if initPainAssessment exists, call it)
             if (typeof window.initPainAssessment === 'function') {
-                window.initPainAssessment();
-                console.log('✅ Pain Assessment AI initialized successfully');
+                try {
+                    window.initPainAssessment();
+                    console.log('✅ Language system initialized via initPainAssessment()');
+                } catch (error) {
+                    console.error('❌ Error during initPainAssessment():', error);
+                }
             }
 
-            console.log('✅ Interactive features ready: body selection, tooltips, navigation, language switching');
+            // Step 5: Verify interactive elements exist in DOM
+            const criticalElements = [
+                'painTooltip',
+                'maleSvg',
+                'femaleSvg'
+            ];
+
+            const missingElements = criticalElements.filter(id => !document.getElementById(id));
+            if (missingElements.length > 0) {
+                console.warn('⚠️ Warning: Some DOM elements not found:', missingElements);
+                console.warn('   Some features may not work properly');
+            } else {
+                console.log('✅ All critical DOM elements present');
+            }
+
+            // Step 6: Final success message
+            console.log('');
+            console.log('✅✅✅ Pain Assessment AI Initialization Complete!');
+            console.log('');
+            console.log('Interactive features ready:');
+            console.log('  ✅ Body part selection (click body diagram)');
+            console.log('  ✅ Tooltips on hover');
+            console.log('  ✅ Intensity selection (selectIntensity)');
+            console.log('  ✅ Navigation (next/previous/go to step)');
+            console.log('  ✅ Language switching');
+            console.log('  ✅ Configuration panel');
+            console.log('  ✅ PDF export and sharing');
+            console.log('');
         });
     </script>
 
