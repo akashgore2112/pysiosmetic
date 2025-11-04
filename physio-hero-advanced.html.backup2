@@ -5023,7 +5023,7 @@
                     <h2 class="step-title" id="step1Title">Where does it hurt?</h2>
                     <p class="step-description" id="step1Description">Click on your body to select the pain area and intensity</p>
 
-                    <div class="body-diagram-container" id="body-map">
+                    <div class="body-diagram-container">
                         <div class="body-svg-wrapper">
                             <!-- Pain Tooltip -->
                             <div class="pain-tooltip" id="painTooltip">
@@ -5179,7 +5179,7 @@
                     <p class="step-description" id="step3Description">Provide detailed information about your pain</p>
 
                     <!-- ENHANCED INPUT FIELDS -->
-                    <div class="enhanced-inputs" id="impact-section">
+                    <div class="enhanced-inputs">
                         <div class="input-row">
                             <div class="input-group">
                                 <label class="input-label">Pain Frequency</label>
@@ -5216,7 +5216,7 @@
 
                         <div class="input-group">
                             <label class="input-label">Duration in Months</label>
-                            <div class="slider-container" id="duration-slider">
+                            <div class="slider-container">
                                 <input type="range" id="durationSlider" min="1" max="12" value="3" class="input-slider">
                                 <div class="slider-value" id="durationValue">3 months</div>
                             </div>
@@ -5561,12 +5561,6 @@
             </form>
         </div>
 
-    </section>
-    <!-- End of Pain Assessment AI section -->
-
-
-    <!-- Main page scripts (Hero section, animations, modals, etc.) -->
-    <section class="hero-scripts">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script>
             // REMOVE LOADER
@@ -6462,22 +6456,20 @@
             });
         </script>
 
+
     </section>
-    <!-- End of hero-scripts section -->
 
 
-    <!-- Pain Assessment AI - Script Imports -->
+
+    <!-- Pain Assessment AI - Modular Imports -->
     <script src="./js/translations.js"></script>
-    <script src="./js/pain-assessment.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('✅ Pain Assessment AI Initialized');
-            if (typeof initPainAssessment === 'function') {
-                initPainAssessment();
-                console.log('✅ Functions bound to window');
-            } else {
-                console.error('❌ initPainAssessment not found');
-            }
+    <script type="module">
+        import { initPainAssessment } from "./js/pain-assessment.js";
+
+        // Initialize on DOMContentLoaded
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("🚀 DOM Content Loaded - Initializing Pain Assessment...");
+            initPainAssessment();
         });
     </script>
 
