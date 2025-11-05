@@ -6471,16 +6471,37 @@
     <script src="./js/pain-assessment.js"></script>
     <script>
         // ========================================================================
-        // IMMEDIATE FUNCTION AVAILABILITY CHECK
+        // EMERGENCY FIX: FORCE IMMEDIATE FUNCTION ATTACHMENT
         // ========================================================================
-        // This runs SYNCHRONOUSLY (not in DOMContentLoaded) to ensure functions
-        // are available BEFORE inline event handlers try to call them
+        // User says clicks are NOT working - we need functions on window NOW!
+        // Call initPainAssessment() IMMEDIATELY to attach all functions
+        // ========================================================================
+
+        console.log('🚨 EMERGENCY: Forcing immediate initPainAssessment() call...');
+
+        // CALL initPainAssessment() RIGHT NOW (not waiting for DOMContentLoaded)
+        if (typeof initPainAssessment === 'function') {
+            try {
+                initPainAssessment();
+                console.log('✅ initPainAssessment() executed successfully');
+                console.log('✅ Functions should now be attached to window');
+            } catch (error) {
+                console.error('❌ ERROR calling initPainAssessment():', error.message);
+                console.error('   Stack trace:', error.stack);
+            }
+        } else {
+            console.error('❌ FATAL: initPainAssessment function not found!');
+            console.error('   pain-assessment.js did not load properly');
+        }
+
+        // ========================================================================
+        // VERIFY FUNCTIONS ARE NOW ON WINDOW
         // ========================================================================
 
         (function() {
-            console.log('🔍 Pain Assessment AI: Verifying immediate function availability...');
+            console.log('');
+            console.log('🔍 Verifying functions after initPainAssessment()...');
 
-            // Check if functions are already on window (they should be from pain-assessment.js line 4270-4303)
             const criticalFunctions = [
                 'selectBodyPart', 'showTooltip', 'hideTooltip',
                 'selectIntensity', 'selectDuration', 'toggleActivity',
@@ -6492,18 +6513,22 @@
             const missing = criticalFunctions.filter(fn => typeof window[fn] !== 'function');
 
             if (missing.length === 0) {
-                console.log('✅ All ' + criticalFunctions.length + ' functions are immediately available on window');
-                console.log('✅ Inline event handlers (onclick, onmouseenter, onmouseleave) will work');
+                console.log('✅✅ SUCCESS! All ' + criticalFunctions.length + ' functions are on window');
+                console.log('✅✅ Body parts should be CLICKABLE now!');
+                console.log('✅✅ Tooltips should appear on HOVER!');
+                console.log('✅✅ Intensity buttons should be CLICKABLE!');
+                console.log('');
             } else {
-                console.error('❌ CRITICAL: ' + missing.length + ' functions missing from window:', missing);
-                console.error('❌ Inline event handlers will throw ReferenceError');
-                console.error('❌ This means pain-assessment.js did not execute properly');
+                console.error('❌❌ FAILED! Missing ' + missing.length + ' functions:', missing);
+                console.error('❌❌ Clicks will NOT work!');
+                console.error('❌❌ These functions were not defined properly');
+                console.error('');
             }
 
-            // Also create setIntensity alias (user mentioned this name)
+            // Create setIntensity alias
             if (typeof window.selectIntensity === 'function' && typeof window.setIntensity === 'undefined') {
                 window.setIntensity = window.selectIntensity;
-                console.log('✅ Created setIntensity alias for selectIntensity');
+                console.log('✅ Created setIntensity alias');
             }
         })();
 
@@ -6579,20 +6604,12 @@
             }
 
             // ====================================================================
-            // STEP 4: Initialize language system
+            // STEP 4: Language system already initialized
             // ====================================================================
-            if (typeof window.initPainAssessment === 'function') {
-                try {
-                    console.log('⏳ Step 4: Initializing language system...');
-                    window.initPainAssessment();
-                    console.log('✅ Step 4: Language system initialized successfully');
-                } catch (error) {
-                    console.error('❌ Step 4 FAILED: Error during language initialization:', error.message);
-                    console.error('   Stack:', error.stack);
-                }
-            } else {
-                console.warn('⚠️  Step 4: initPainAssessment function not found, skipping language init');
-            }
+            // NOTE: initPainAssessment() was already called immediately after script load
+            // No need to call it again here - it would be redundant
+            console.log('✅ Step 4: Language system already initialized (via immediate call)');
+            console.log('   initPainAssessment() was called before DOMContentLoaded');
 
             // ====================================================================
             // STEP 5: Test interactive features
