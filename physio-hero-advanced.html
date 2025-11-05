@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <script src="js/translations.js"></script>
+    <!-- REMOVED: <script src="js/translations.js"></script> - DUPLICATE! Loaded again at line 6470 -->
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -5587,13 +5587,14 @@
             });
 
             // ASSESSMENT STATE
-            let assessmentData = {
-                painIntensity: 5,
-                duration: null,
-                activityLevel: null,
-                selectedPain: null,
-                bodyPart: null
-            };
+            // REMOVED: Duplicate declaration - assessmentData is already defined in pain-assessment.js
+            // let assessmentData = {
+            //     painIntensity: 5,
+            //     duration: null,
+            //     activityLevel: null,
+            //     selectedPain: null,
+            //     bodyPart: null
+            // };
 
             // PAIN DETAIL MODAL DATA
             const painDetailData = {
