@@ -4266,9 +4266,20 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
         console.log('   Type: testLanguageSwitch("ar") - to test any language');
 
 
-// Attach all functions to window for global access (for inline event handlers)
+// ==================== IMMEDIATE GLOBAL ATTACHMENT ====================
+// CRITICAL: Attach initPainAssessment to window FIRST so HTML can call it
+// This must happen at file scope, not inside any function
+// ======================================================================
 if (typeof window !== 'undefined') {
-    // Core initialization
+    window.initPainAssessment = initPainAssessment;
+    console.log('✅ initPainAssessment attached to window at file scope');
+}
+
+// Attach all functions to window for global access (for inline event handlers)
+console.log('📦 Attaching all functions to window object...');
+
+if (typeof window !== 'undefined') {
+    // Core initialization (already attached above, but keeping for clarity)
     window.initPainAssessment = initPainAssessment;
 
     // Body map and tooltips
@@ -4300,4 +4311,7 @@ if (typeof window !== 'undefined') {
     window.askFollowUp = askFollowUp;
     window.submitFeedback = submitFeedback;
     window.startVoiceInput = startVoiceAnswerInput;
+
+    console.log('✅ All functions attached to window successfully!');
+    console.log('✅ Available functions:', Object.keys(window).filter(k => typeof window[k] === 'function' && k.includes('Pain') || k.includes('select') || k.includes('show') || k.includes('hide')).join(', '));
 }
