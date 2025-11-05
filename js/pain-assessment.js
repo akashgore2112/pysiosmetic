@@ -1075,27 +1075,41 @@ Respond ONLY with valid JSON, no additional text.
 
         // ====================  API CONFIGURATION ====================
         function openConfig() {
-            document.getElementById('configModal').classList.add('active');
-            document.getElementById('openaiKey').value = API_CONFIG.openai.key;
-            document.getElementById('googleTranslateKey').value = localStorage.getItem('google_translate_api_key') || '';
-            document.getElementById('deeplKey').value = localStorage.getItem('deepl_api_key') || '';
-            document.getElementById('ttsProvider').value = API_CONFIG.tts.provider;
-            document.getElementById('openaiVoice').value = API_CONFIG.tts.openai.voice;
+            const configModal = document.getElementById('configModal');
+            const openaiKey = document.getElementById('openaiKey');
+            const googleTranslateKey = document.getElementById('googleTranslateKey');
+            const deeplKey = document.getElementById('deeplKey');
+            const ttsProvider = document.getElementById('ttsProvider');
+            const openaiVoice = document.getElementById('openaiVoice');
+
+            // NULL CHECKS for config modal elements
+            if (configModal) configModal.classList.add('active');
+            if (openaiKey) openaiKey.value = API_CONFIG.openai.key;
+            if (googleTranslateKey) googleTranslateKey.value = localStorage.getItem('google_translate_api_key') || '';
+            if (deeplKey) deeplKey.value = localStorage.getItem('deepl_api_key') || '';
+            if (ttsProvider) ttsProvider.value = API_CONFIG.tts.provider;
+            if (openaiVoice) openaiVoice.value = API_CONFIG.tts.openai.voice;
 
             // Show/hide OpenAI voice selector
             const openaiVoiceGroup = document.getElementById('openaiVoiceGroup');
-            if (API_CONFIG.tts.provider === 'openai') {
-                openaiVoiceGroup.style.display = 'block';
-            } else {
-                openaiVoiceGroup.style.display = 'none';
+            if (openaiVoiceGroup) {
+                if (API_CONFIG.tts.provider === 'openai') {
+                    openaiVoiceGroup.style.display = 'block';
+                } else {
+                    openaiVoiceGroup.style.display = 'none';
+                }
             }
 
             // Show/hide TTS key field
-            if (API_CONFIG.tts.provider !== 'browser' && API_CONFIG.tts.provider !== 'openai') {
-                document.getElementById('ttsKeyGroup').style.display = 'block';
-                document.getElementById('ttsKey').value = API_CONFIG.tts.key;
-            } else {
-                document.getElementById('ttsKeyGroup').style.display = 'none';
+            const ttsKeyGroup = document.getElementById('ttsKeyGroup');
+            const ttsKey = document.getElementById('ttsKey');
+            if (ttsKeyGroup) {
+                if (API_CONFIG.tts.provider !== 'browser' && API_CONFIG.tts.provider !== 'openai') {
+                    ttsKeyGroup.style.display = 'block';
+                    if (ttsKey) ttsKey.value = API_CONFIG.tts.key;
+                } else {
+                    ttsKeyGroup.style.display = 'none';
+                }
             }
         }
 
@@ -1122,12 +1136,25 @@ Respond ONLY with valid JSON, no additional text.
         // Duration slider is now initialized inside DOMContentLoaded event
 
         function saveConfig() {
-            const openaiKey = document.getElementById('openaiKey').value.trim();
-            const googleTranslateKey = document.getElementById('googleTranslateKey').value.trim();
-            const deeplKey = document.getElementById('deeplKey').value.trim();
-            const ttsProvider = document.getElementById('ttsProvider').value;
-            const ttsKey = document.getElementById('ttsKey').value.trim();
-            const openaiVoice = document.getElementById('openaiVoice').value;
+            const openaiKeyEl = document.getElementById('openaiKey');
+            const googleTranslateKeyEl = document.getElementById('googleTranslateKey');
+            const deeplKeyEl = document.getElementById('deeplKey');
+            const ttsProviderEl = document.getElementById('ttsProvider');
+            const ttsKeyEl = document.getElementById('ttsKey');
+            const openaiVoiceEl = document.getElementById('openaiVoice');
+
+            // NULL CHECKS for config elements
+            if (!openaiKeyEl || !googleTranslateKeyEl || !deeplKeyEl || !ttsProviderEl || !ttsKeyEl || !openaiVoiceEl) {
+                console.error('❌ Config form elements not found');
+                return;
+            }
+
+            const openaiKey = openaiKeyEl.value.trim();
+            const googleTranslateKey = googleTranslateKeyEl.value.trim();
+            const deeplKey = deeplKeyEl.value.trim();
+            const ttsProvider = ttsProviderEl.value;
+            const ttsKey = ttsKeyEl.value.trim();
+            const openaiVoice = openaiVoiceEl.value;
 
             if (!openaiKey) {
                 alert('Please enter your OpenAI API key');
@@ -1161,7 +1188,11 @@ Respond ONLY with valid JSON, no additional text.
             API_CONFIG.tts.key = ttsKey;
             API_CONFIG.tts.openai.voice = openaiVoice;
 
-            document.getElementById('configModal').classList.remove('active');
+            // NULL CHECK for configModal
+            const configModal = document.getElementById('configModal');
+            if (configModal) {
+                configModal.classList.remove('active');
+            }
             speak('Configuration saved successfully');
         }
 
@@ -1596,11 +1627,21 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             document.querySelectorAll('.gender-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector(`[data-gender="${gender}"]`).classList.add('active');
 
-            // Toggle SVG visibility
-            document.getElementById('maleSvg').style.display = gender === 'male' ? 'block' : 'none';
-            document.getElementById('femaleSvg').style.display = gender === 'female' ? 'block' : 'none';
+            const genderBtn = document.querySelector(`[data-gender="${gender}"]`);
+            if (genderBtn) {
+                genderBtn.classList.add('active');
+            }
+
+            // Toggle SVG visibility - NULL CHECK
+            const maleSvg = document.getElementById('maleSvg');
+            const femaleSvg = document.getElementById('femaleSvg');
+            if (maleSvg) {
+                maleSvg.style.display = gender === 'male' ? 'block' : 'none';
+            }
+            if (femaleSvg) {
+                femaleSvg.style.display = gender === 'female' ? 'block' : 'none';
+            }
 
             if (save) saveSession();
         }
@@ -1644,7 +1685,10 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
         function hideTooltip() {
             clearTimeout(tooltipTimeout);
-            document.getElementById('painTooltip').classList.remove('show');
+            const tooltip = document.getElementById('painTooltip');
+            if (tooltip) {
+                tooltip.classList.remove('show');
+            }
         }
 
         // BODY PART SELECTION - Multi-selection with toggle support
@@ -2282,13 +2326,21 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
 
             if (index > -1) {
                 assessmentData.activities.splice(index, 1);
-                card.classList.remove('selected');
+                if (card) {
+                    card.classList.remove('selected');
+                }
             } else {
                 assessmentData.activities.push(activity);
-                card.classList.add('selected');
+                if (card) {
+                    card.classList.add('selected');
+                }
             }
 
-            document.getElementById('nextBtn').disabled = assessmentData.activities.length === 0;
+            // NULL CHECK for nextBtn
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.disabled = assessmentData.activities.length === 0;
+            }
             saveSession();
         }
 
@@ -2347,9 +2399,18 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             updateProgress();
 
             document.querySelectorAll('.step-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(`step${step}`).classList.add('active');
 
-            document.getElementById('backBtn').style.display = step > 1 ? 'inline-flex' : 'none';
+            // NULL CHECK for step element
+            const stepElement = document.getElementById(`step${step}`);
+            if (stepElement) {
+                stepElement.classList.add('active');
+            }
+
+            // NULL CHECK for backBtn
+            const backBtn = document.getElementById('backBtn');
+            if (backBtn) {
+                backBtn.style.display = step > 1 ? 'inline-flex' : 'none';
+            }
 
             checkNextButtonState();
             updateNextButton();
@@ -2397,7 +2458,11 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
                     break;
             }
 
-            document.getElementById('nextBtn').disabled = !enabled;
+            // NULL CHECK: Only update if button exists
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.disabled = !enabled;
+            }
         }
 
         function updateProgress() {
@@ -2444,17 +2509,22 @@ Keep each section concise, evidence-based, and patient-friendly. Use professiona
             const nextBtnText = document.getElementById('nextBtnText');
             const nextBtn = document.getElementById('nextBtn');
 
+            // NULL CHECK: Only update if elements exist
+            if (!nextBtnText || !nextBtn) {
+                return; // Exit early if elements don't exist
+            }
+
             if (step === 3) {
                 nextBtnText.textContent = t('analyzeBtn');
-                if (nextBtn && !nextBtn.disabled) {
+                if (!nextBtn.disabled) {
                     nextBtn.classList.add('pulse');
                 }
             } else if (step === 4) {
                 nextBtnText.textContent = t('bookBtn');
-                if (nextBtn) nextBtn.classList.remove('pulse');
+                nextBtn.classList.remove('pulse');
             } else {
                 nextBtnText.textContent = t('continueBtn');
-                if (nextBtn) nextBtn.classList.remove('pulse');
+                nextBtn.classList.remove('pulse');
             }
         }
 
